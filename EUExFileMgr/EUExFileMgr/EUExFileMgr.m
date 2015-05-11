@@ -345,7 +345,6 @@
     if ([inArguments count] > 0) {
         inPath = [self absPath:[inArguments objectAtIndex:0]];
     }
-<<<<<<< .working
 	FileListViewController* filesView = [[[FileListViewController alloc] init] autorelease];
     if ([inPath length] > 0) {
         filesView.rootPath = inPath;
@@ -355,13 +354,7 @@
 	UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:filesView];
 	[EUtility brwView:[super meBrwView] presentModalViewController:nav animated:(BOOL)YES];
 	[nav release];
-=======
-    FileListViewController* filesView = [[[FileListViewController alloc] init] autorelease];
-    filesView.callBack = self;
-    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:filesView];
-    [EUtility brwView:[super meBrwView] presentModalViewController:nav animated:(BOOL)YES];
-    [nav release];
->>>>>>> .merge-right.r2249
+
 }
 //12.设置文件偏移
 -(void)seekFile:(NSMutableArray *)inArguments {

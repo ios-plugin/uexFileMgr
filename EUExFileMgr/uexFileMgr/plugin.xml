@@ -28,10 +28,7 @@
         <method name="readNext"></method>
         <method name="readPre"></method>
         <method name="getFileRealPath"></method>
-<<<<<<< .working
         <method name="getFileCreateTime"></method>
-=======
-        <method name="getFileListByPath"></method>
->>>>>>> .merge-right.r2249
+
 	</plugin>
 </uexplugins>

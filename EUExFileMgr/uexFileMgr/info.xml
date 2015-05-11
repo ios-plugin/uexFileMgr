@@ -9,11 +9,6 @@
         <build>5:修改8.0以上系统崩溃问题</build>
         <build>4:适配文件浏览器横屏</build>
         <build>3:修复文件单选浏览器，文件多时无法滑动到底的BUG；修复单选和多选浏览器状态栏标题不一致问题</build>
-=======
-        uexName="uexFileMgr" version="3.0.4" build="4">
-        <info>4:增加获得某个文件夹下的所有文件和子文件夹的接口</info>
-        <build>3:修复文件单选浏览器，文件多时无法滑动到底的BUG；修复单选和多选浏览器状态栏标题不一致问题</build>
->>>>>>> .merge-right.r2249
         <build>2:修复uexFileMgr.seekFile方法指定位置后uexFileMgr.readNext方法还是从头读取的BUG</build>
         <build>1:修复选择本地照片崩溃的bug</build>
     </plugin>
