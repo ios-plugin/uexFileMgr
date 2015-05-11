@@ -1,0 +1,367 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5A501098188FB69B0022E07C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A501097188FB69B0022E07C /* Foundation.framework */; };
+		5A50109F188FB69B0022E07C /* EUExFileMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A50109E188FB69B0022E07C /* EUExFileMgr.m */; };
+		5A5010D8188FB6E20022E07C /* EUExFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5010C3188FB6E20022E07C /* EUExFile.m */; };
+		5A5010D9188FB6E20022E07C /* File.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5010C5188FB6E20022E07C /* File.m */; };
+		5A5010DA188FB6E20022E07C /* FileListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5010D0188FB6E20022E07C /* FileListViewController.m */; };
+		5A5010DB188FB6E20022E07C /* FileExplorer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5010D3188FB6E20022E07C /* FileExplorer.m */; };
+		5A5010DC188FB6E20022E07C /* FileExplorerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5010D5188FB6E20022E07C /* FileExplorerItem.m */; };
+		5A5010DD188FB6E20022E07C /* FileSelectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5010D7188FB6E20022E07C /* FileSelectorViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		5A501092188FB69B0022E07C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		5A501094188FB69B0022E07C /* libuexFileMgr.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libuexFileMgr.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5A501097188FB69B0022E07C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		5A50109B188FB69B0022E07C /* EUExFileMgr-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EUExFileMgr-Prefix.pch"; sourceTree = "<group>"; };
+		5A50109E188FB69B0022E07C /* EUExFileMgr.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EUExFileMgr.m; sourceTree = "<group>"; };
+		5A5010BE188FB6E20022E07C /* EUExBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EUExBase.h; sourceTree = "<group>"; };
+		5A5010BF188FB6E20022E07C /* EUExBaseDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EUExBaseDefine.h; sourceTree = "<group>"; };
+		5A5010C0188FB6E20022E07C /* EUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EUtility.h; sourceTree = "<group>"; };
+		5A5010C2188FB6E20022E07C /* EUExFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EUExFile.h; sourceTree = "<group>"; };
+		5A5010C3188FB6E20022E07C /* EUExFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EUExFile.m; sourceTree = "<group>"; };
+		5A5010C4188FB6E20022E07C /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = File.h; sourceTree = "<group>"; };
+		5A5010C5188FB6E20022E07C /* File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = File.m; sourceTree = "<group>"; };
+		5A5010C7188FB6E20022E07C /* JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSON.h; sourceTree = "<group>"; };
+		5A5010C8188FB6E20022E07C /* NSObject+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJSON.h"; sourceTree = "<group>"; };
+		5A5010C9188FB6E20022E07C /* NSString+SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+SBJSON.h"; sourceTree = "<group>"; };
+		5A5010CA188FB6E20022E07C /* SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJSON.h; sourceTree = "<group>"; };
+		5A5010CB188FB6E20022E07C /* SBJsonBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonBase.h; sourceTree = "<group>"; };
+		5A5010CC188FB6E20022E07C /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonParser.h; sourceTree = "<group>"; };
+		5A5010CD188FB6E20022E07C /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
+		5A5010CF188FB6E20022E07C /* FileListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileListViewController.h; sourceTree = "<group>"; };
+		5A5010D0188FB6E20022E07C /* FileListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileListViewController.m; sourceTree = "<group>"; };
+		5A5010D2188FB6E20022E07C /* FileExplorer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileExplorer.h; sourceTree = "<group>"; };
+		5A5010D3188FB6E20022E07C /* FileExplorer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileExplorer.m; sourceTree = "<group>"; };
+		5A5010D4188FB6E20022E07C /* FileExplorerItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileExplorerItem.h; sourceTree = "<group>"; };
+		5A5010D5188FB6E20022E07C /* FileExplorerItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileExplorerItem.m; sourceTree = "<group>"; };
+		5A5010D6188FB6E20022E07C /* FileSelectorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSelectorViewController.h; sourceTree = "<group>"; };
+		5A5010D7188FB6E20022E07C /* FileSelectorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileSelectorViewController.m; sourceTree = "<group>"; };
+		A0EB589C18AB62B400F133BB /* EUExFileMgr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EUExFileMgr.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5A501091188FB69B0022E07C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A501098188FB69B0022E07C /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5A50108B188FB69B0022E07C = {
+			isa = PBXGroup;
+			children = (
+				5A501099188FB69B0022E07C /* EUExFileMgr */,
+				5A501096188FB69B0022E07C /* Frameworks */,
+				5A501095188FB69B0022E07C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5A501095188FB69B0022E07C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5A501094188FB69B0022E07C /* libuexFileMgr.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5A501096188FB69B0022E07C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5A501097188FB69B0022E07C /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5A501099188FB69B0022E07C /* EUExFileMgr */ = {
+			isa = PBXGroup;
+			children = (
+				A0EB589C18AB62B400F133BB /* EUExFileMgr.h */,
+				5A5010BD188FB6E20022E07C /* engineHeader */,
+				5A5010C1188FB6E20022E07C /* sourceCode */,
+				5A50109E188FB69B0022E07C /* EUExFileMgr.m */,
+				5A50109A188FB69B0022E07C /* Supporting Files */,
+			);
+			path = EUExFileMgr;
+			sourceTree = "<group>";
+		};
+		5A50109A188FB69B0022E07C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5A50109B188FB69B0022E07C /* EUExFileMgr-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5A5010BD188FB6E20022E07C /* engineHeader */ = {
+			isa = PBXGroup;
+			children = (
+				5A5010BE188FB6E20022E07C /* EUExBase.h */,
+				5A5010BF188FB6E20022E07C /* EUExBaseDefine.h */,
+				5A5010C0188FB6E20022E07C /* EUtility.h */,
+			);
+			path = engineHeader;
+			sourceTree = "<group>";
+		};
+		5A5010C1188FB6E20022E07C /* sourceCode */ = {
+			isa = PBXGroup;
+			children = (
+				5A5010C2188FB6E20022E07C /* EUExFile.h */,
+				5A5010C3188FB6E20022E07C /* EUExFile.m */,
+				5A5010C4188FB6E20022E07C /* File.h */,
+				5A5010C5188FB6E20022E07C /* File.m */,
+				5A5010C6188FB6E20022E07C /* JSON */,
+				5A5010CE188FB6E20022E07C /* mutiFileChoose */,
+				5A5010D1188FB6E20022E07C /* singleFileChoose */,
+			);
+			path = sourceCode;
+			sourceTree = "<group>";
+		};
+		5A5010C6188FB6E20022E07C /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				5A5010C7188FB6E20022E07C /* JSON.h */,
+				5A5010C8188FB6E20022E07C /* NSObject+SBJSON.h */,
+				5A5010C9188FB6E20022E07C /* NSString+SBJSON.h */,
+				5A5010CA188FB6E20022E07C /* SBJSON.h */,
+				5A5010CB188FB6E20022E07C /* SBJsonBase.h */,
+				5A5010CC188FB6E20022E07C /* SBJsonParser.h */,
+				5A5010CD188FB6E20022E07C /* SBJsonWriter.h */,
+			);
+			path = JSON;
+			sourceTree = "<group>";
+		};
+		5A5010CE188FB6E20022E07C /* mutiFileChoose */ = {
+			isa = PBXGroup;
+			children = (
+				5A5010CF188FB6E20022E07C /* FileListViewController.h */,
+				5A5010D0188FB6E20022E07C /* FileListViewController.m */,
+			);
+			path = mutiFileChoose;
+			sourceTree = "<group>";
+		};
+		5A5010D1188FB6E20022E07C /* singleFileChoose */ = {
+			isa = PBXGroup;
+			children = (
+				5A5010D2188FB6E20022E07C /* FileExplorer.h */,
+				5A5010D3188FB6E20022E07C /* FileExplorer.m */,
+				5A5010D4188FB6E20022E07C /* FileExplorerItem.h */,
+				5A5010D5188FB6E20022E07C /* FileExplorerItem.m */,
+				5A5010D6188FB6E20022E07C /* FileSelectorViewController.h */,
+				5A5010D7188FB6E20022E07C /* FileSelectorViewController.m */,
+			);
+			path = singleFileChoose;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5A501093188FB69B0022E07C /* EUExFileMgr */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5A5010B7188FB69B0022E07C /* Build configuration list for PBXNativeTarget "EUExFileMgr" */;
+			buildPhases = (
+				5A501090188FB69B0022E07C /* Sources */,
+				5A501091188FB69B0022E07C /* Frameworks */,
+				5A501092188FB69B0022E07C /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EUExFileMgr;
+			productName = EUExFileMgr;
+			productReference = 5A501094188FB69B0022E07C /* libuexFileMgr.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5A50108C188FB69B0022E07C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = xll;
+			};
+			buildConfigurationList = 5A50108F188FB69B0022E07C /* Build configuration list for PBXProject "EUExFileMgr" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 5A50108B188FB69B0022E07C;
+			productRefGroup = 5A501095188FB69B0022E07C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5A501093188FB69B0022E07C /* EUExFileMgr */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5A501090188FB69B0022E07C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A5010D8188FB6E20022E07C /* EUExFile.m in Sources */,
+				5A50109F188FB69B0022E07C /* EUExFileMgr.m in Sources */,
+				5A5010DD188FB6E20022E07C /* FileSelectorViewController.m in Sources */,
+				5A5010DA188FB6E20022E07C /* FileListViewController.m in Sources */,
+				5A5010DC188FB6E20022E07C /* FileExplorerItem.m in Sources */,
+				5A5010D9188FB6E20022E07C /* File.m in Sources */,
+				5A5010DB188FB6E20022E07C /* FileExplorer.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5A5010B5188FB69B0022E07C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		5A5010B6188FB69B0022E07C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5A5010B8188FB69B0022E07C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/uexFileMgr/";
+				DSTROOT = /tmp/EUExFileMgr.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "EUExFileMgr/EUExFileMgr-Prefix.pch";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = uexFileMgr;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		5A5010B9188FB69B0022E07C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
+				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/uexFileMgr/";
+				DSTROOT = /tmp/EUExFileMgr.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "EUExFileMgr/EUExFileMgr-Prefix.pch";
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = uexFileMgr;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5A50108F188FB69B0022E07C /* Build configuration list for PBXProject "EUExFileMgr" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5A5010B5188FB69B0022E07C /* Debug */,
+				5A5010B6188FB69B0022E07C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5A5010B7188FB69B0022E07C /* Build configuration list for PBXNativeTarget "EUExFileMgr" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5A5010B8188FB69B0022E07C /* Debug */,
+				5A5010B9188FB69B0022E07C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5A50108C188FB69B0022E07C /* Project object */;
+}
