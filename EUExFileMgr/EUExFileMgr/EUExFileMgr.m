@@ -584,6 +584,46 @@
     [self jsSuccessWithName:@"uexFileMgr.cbExplorer" opId:inOpId dataType:inDataType strData:inData];
 }
 
+-(void)renameFile:(NSMutableArray *)inArguments{
+    
+    if([inArguments count]<1){
+        [self cbRenameFile:0];
+        return;
+    }
+    NSError *error=nil;
+    NSData *jsonData= [inArguments[0] dataUsingEncoding:NSUTF8StringEncoding];
+    id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                    options:NSJSONReadingMutableContainers
+                                                      error:&error];
+
+    if(error||![jsonObject objectForKey:@"oldFilePath"]||![jsonObject objectForKey:@"newFilePath"]){
+        [self cbRenameFile:0];
+        return;
+    }
+    NSFileManager *fmgr = [NSFileManager defaultManager];
+    NSString *oldFilePath=[self absPath:[jsonObject objectForKey:@"oldFilePath"]];
+    NSString *newFilePath=[self absPath:[jsonObject objectForKey:@"newFilePath"]];
+    [fmgr moveItemAtPath:oldFilePath toPath:newFilePath error:&error];
+    if(error){
+        [self cbRenameFile:0];
+    }else{
+        [self cbRenameFile:1];
+    }
+    
+}
+
+-(void)cbRenameFile:(NSInteger)type{
+    NSDictionary *dict;
+    if(type == 0){
+        dict=@{@"result":@"0"};
+    }else if(type == 1){
+        dict=@{@"result":@"1"};
+    }else return;
+
+    NSString *callBackStr=[NSString stringWithFormat:@"if(uexFileMgr.cbRenameFile != null){uexFileMgr.cbRenameFile('%@');}",[dict JSONFragment]];
+    [EUtility brwView:meBrwView evaluateScript:callBackStr];
+}
+
 -(void)clean{
     [fobjDict removeAllObjects];
 }

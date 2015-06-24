@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-<<<<<<< .working
-        uexName="uexFileMgr" version="3.0.8" build="8">
-        <info>:8:修复uexFileMgr.multiExplorer(path)中path参数无效的BUG</info>
-        <build>:7:修改创建时间接口的名称</build>
+        uexName="uexFileMgr" version="3.0.9" build="9">
+        <info>9:新增方法uexFileMgr.renameFile 重命名文件</info>
+        <build>8:修复uexFileMgr.multiExplorer(path)中path参数无效的BUG</build>
+        <build>7:修改创建时间接口的名称</build>
         <build>6:增加获取文件创建时间的新接口</build>
         <build>5:修改8.0以上系统崩溃问题</build>
         <build>4:适配文件浏览器横屏</build>

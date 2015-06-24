@@ -29,6 +29,6 @@
         <method name="readPre"></method>
         <method name="getFileRealPath"></method>
         <method name="getFileCreateTime"></method>
-
+        <method name="renameFile"></method>
 	</plugin>
 </uexplugins>
