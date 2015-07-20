@@ -388,14 +388,39 @@
 
 //15.写文件
 -(void)writeFile:(NSMutableArray *)inArguments {
-    NSString *inOpId = [inArguments objectAtIndex:0];
-    NSString *inMode = [inArguments objectAtIndex:1];
-    NSString *inData = [inArguments objectAtIndex:2];
-    EUExFile *object = [fobjDict objectForKey:inOpId];
-    if (object!=nil) {
-        [object writeWithData:inData mode:inMode];
-    }else {
+    
+    if ([inArguments count] < 3) {
+        
+        return;
+        
+    }
+    
+    NSString * inOpId = [inArguments objectAtIndex:0];
+    NSString * inMode = [inArguments objectAtIndex:1];
+    NSString * inData = [inArguments objectAtIndex:2];
+    
+    EUExFile * object = [fobjDict objectForKey:inOpId];
+    
+    if (object != nil) {
+        
+        BOOL ret = [object writeWithData:inData mode:inMode];
+        
+        if (ret) {
+            
+            [self jsSuccessWithName:@"uexFileMgr.cbWriteFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
+            
+        } else {
+            
+            [self jsSuccessWithName:@"uexFileMgr.cbWriteFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
+            
+        }
+        
+    } else {
+        
+        [self jsSuccessWithName:@"uexFileMgr.cbWriteFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
+        
         [self jsFailedWithOpId:[inOpId intValue] errorCode:1091401 errorDes:UEX_ERROR_DESCRIBE_ARGS];
+        
     }
     
 }
