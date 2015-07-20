@@ -33,7 +33,7 @@
 @property(nonatomic, retain)NSString* keyString;
 
 -(BOOL)initWithFileType:(int)fileType_ path:(NSString *)inPath mode:(int)mode_ euexObj:(EUExFileMgr *)euexObj_;
--(void)writeWithData:(NSString*)inData mode:(NSString*)inMode;
+-(BOOL)writeWithData:(NSString*)inData mode:(NSString*)inMode;
 //读文件
 -(NSString*)read:(NSString*)len;
 //获得文件大小
