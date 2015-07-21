@@ -412,9 +412,9 @@
             
             NSString * retStr = [NSString stringWithFormat:@"%d",ret];
             
-            NSDictionary * userInfo = [NSDictionary dictionaryWithObjectsAndKeys:inOpId,@"opId",retStr,@"ret", nil];
+            NSDictionary * userInfo = [NSDictionary dictionaryWithObjectsAndKeys:inOpId,@"opId",retStr,@"ret",@"uexFileMgr.cbWriteFile",@"method", nil];
             
-            [weakSelf performSelectorOnMainThread:@selector(writeFileCallBack:) withObject:userInfo waitUntilDone:NO];
+            [weakSelf performSelectorOnMainThread:@selector(uexCallBack:) withObject:userInfo waitUntilDone:NO];
             
         });
         
@@ -428,18 +428,24 @@
     
 }
 
-- (void)writeFileCallBack:(id)userInfo {
+- (void)uexCallBack:(id)userInfo {
     
     NSDictionary * dic = (NSDictionary *)userInfo;
     
     BOOL ret = [[dic objectForKey:@"ret"] boolValue];
     
     NSString * opId = [dic objectForKey:@"opId"];
+    
+    NSString * methodName = [dic objectForKey:@"method"];
 
     if (ret) {
-        [self jsSuccessWithName:@"uexFileMgr.cbWriteFile" opId:[opId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
+        
+        [self jsSuccessWithName:methodName opId:[opId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
+        
     } else {
-        [self jsSuccessWithName:@"uexFileMgr.cbWriteFile" opId:[opId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
+        
+        [self jsSuccessWithName:methodName opId:[opId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
+        
     }
     
 }
