@@ -403,17 +403,20 @@
     
     if (object != nil) {
         
-        BOOL ret = [object writeWithData:inData mode:inMode];
+        __block typeof(self) weakSelf = self;
+        __block typeof(object) weakObject = object;
         
-        if (ret) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             
-            [self jsSuccessWithName:@"uexFileMgr.cbWriteFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
+            BOOL ret = [weakObject writeWithData:inData mode:inMode];
             
-        } else {
+            NSString * retStr = [NSString stringWithFormat:@"%d",ret];
             
-            [self jsSuccessWithName:@"uexFileMgr.cbWriteFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
+            NSDictionary * userInfo = [NSDictionary dictionaryWithObjectsAndKeys:inOpId,@"opId",retStr,@"ret", nil];
             
-        }
+            [weakSelf performSelectorOnMainThread:@selector(writeFileCallBack:) withObject:userInfo waitUntilDone:NO];
+            
+        });
         
     } else {
         
@@ -424,6 +427,23 @@
     }
     
 }
+
+- (void)writeFileCallBack:(id)userInfo {
+    
+    NSDictionary * dic = (NSDictionary *)userInfo;
+    
+    BOOL ret = [[dic objectForKey:@"ret"] boolValue];
+    
+    NSString * opId = [dic objectForKey:@"opId"];
+
+    if (ret) {
+        [self jsSuccessWithName:@"uexFileMgr.cbWriteFile" opId:[opId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
+    } else {
+        [self jsSuccessWithName:@"uexFileMgr.cbWriteFile" opId:[opId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
+    }
+    
+}
+
 
 //16.读文件
 -(void)readFile:(NSMutableArray *)inArguments {
