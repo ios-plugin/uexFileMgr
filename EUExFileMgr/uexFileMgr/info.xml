@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-        uexName="uexFileMgr" version="3.0.11" build="11">
-        <info>11:新增cbWriteFile回调方法，优化RC4加密</info>
+        uexName="uexFileMgr" version="3.0.12" build="12">
+        <info>12:新增getFileListByPath</info>
+        <build>11:新增cbWriteFile回调方法，优化RC4加密</build>
         <build>10:解决多选文件打开浏览器显示空白问题</build>
         <build>9:新增方法uexFileMgr.renameFile 重命名文件</build>
         <build>8:修复uexFileMgr.multiExplorer(path)中path参数无效的BUG</build>
