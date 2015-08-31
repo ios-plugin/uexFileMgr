@@ -403,17 +403,20 @@
     
     if (object != nil) {
         
-        BOOL ret = [object writeWithData:inData mode:inMode];
+        __block typeof(self) weakSelf = self;
+        __block typeof(object) weakObject = object;
         
-        if (ret) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             
-            [self jsSuccessWithName:@"uexFileMgr.cbWriteFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
+            BOOL ret = [weakObject writeWithData:inData mode:inMode];
             
-        } else {
+            NSString * retStr = [NSString stringWithFormat:@"%d",ret];
             
-            [self jsSuccessWithName:@"uexFileMgr.cbWriteFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
+            NSDictionary * userInfo = [NSDictionary dictionaryWithObjectsAndKeys:inOpId,@"opId",retStr,@"ret",@"uexFileMgr.cbWriteFile",@"method", nil];
             
-        }
+            [weakSelf performSelectorOnMainThread:@selector(uexCallBack:) withObject:userInfo waitUntilDone:NO];
+            
+        });
         
     } else {
         
@@ -424,6 +427,29 @@
     }
     
 }
+
+- (void)uexCallBack:(id)userInfo {
+    
+    NSDictionary * dic = (NSDictionary *)userInfo;
+    
+    BOOL ret = [[dic objectForKey:@"ret"] boolValue];
+    
+    NSString * opId = [dic objectForKey:@"opId"];
+    
+    NSString * methodName = [dic objectForKey:@"method"];
+
+    if (ret) {
+        
+        [self jsSuccessWithName:methodName opId:[opId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
+        
+    } else {
+        
+        [self jsSuccessWithName:methodName opId:[opId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
+        
+    }
+    
+}
+
 
 //16.读文件
 -(void)readFile:(NSMutableArray *)inArguments {
@@ -552,11 +578,33 @@
 
 //真实路径
 -(void)getFileRealPath:(NSMutableArray *)inArguments {
-    NSString *inPath = [inArguments objectAtIndex:0];
-    NSString *outPath = [super absPath:inPath];
-    if (outPath) {
-        [self jsSuccessWithName:@"uexFileMgr.cbGetFileRealPath" opId:0 dataType:UEX_CALLBACK_DATATYPE_TEXT strData:outPath];
+    
+    if ([inArguments count] < 1) {
+        return;
     }
+    
+    NSString *inPath = [inArguments objectAtIndex:0];
+    
+    NSString *outPath = [self absPath:inPath];
+    
+    if ([inArguments count] > 1) {
+        NSString * fun = [inArguments objectAtIndex:1];
+        
+        if (outPath) {
+            NSString * jsStr = [NSString stringWithFormat:@"uexFileMgr.%@(\"%@\")",fun,outPath];
+            
+            [(UIWebView *)self.meBrwView stringByEvaluatingJavaScriptFromString:jsStr];
+        }
+        
+    } else {
+        
+        if (outPath) {
+            [self jsSuccessWithName:@"uexFileMgr.cbGetFileRealPath" opId:0 dataType:UEX_CALLBACK_DATATYPE_TEXT strData:outPath];
+        }
+        
+    }
+    
+    
 }
 
 //真实路径
@@ -647,6 +695,9 @@
 }
 
 -(void)clean{
+    if (meBrwView) {
+        meBrwView = nil;
+    }
     [fobjDict removeAllObjects];
 }
 
