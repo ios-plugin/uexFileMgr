@@ -578,11 +578,33 @@
 
 //真实路径
 -(void)getFileRealPath:(NSMutableArray *)inArguments {
-    NSString *inPath = [inArguments objectAtIndex:0];
-    NSString *outPath = [super absPath:inPath];
-    if (outPath) {
-        [self jsSuccessWithName:@"uexFileMgr.cbGetFileRealPath" opId:0 dataType:UEX_CALLBACK_DATATYPE_TEXT strData:outPath];
+    
+    if ([inArguments count] < 1) {
+        return;
     }
+    
+    NSString *inPath = [inArguments objectAtIndex:0];
+    
+    NSString *outPath = [self absPath:inPath];
+    
+    if ([inArguments count] > 1) {
+        NSString * fun = [inArguments objectAtIndex:1];
+        
+        if (outPath) {
+            NSString * jsStr = [NSString stringWithFormat:@"uexFileMgr.%@(\"%@\")",fun,outPath];
+            
+            [(UIWebView *)self.meBrwView stringByEvaluatingJavaScriptFromString:jsStr];
+        }
+        
+    } else {
+        
+        if (outPath) {
+            [self jsSuccessWithName:@"uexFileMgr.cbGetFileRealPath" opId:0 dataType:UEX_CALLBACK_DATATYPE_TEXT strData:outPath];
+        }
+        
+    }
+    
+    
 }
 
 //真实路径
@@ -673,6 +695,9 @@
 }
 
 -(void)clean{
+    if (meBrwView) {
+        meBrwView = nil;
+    }
     [fobjDict removeAllObjects];
 }
 

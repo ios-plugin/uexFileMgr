@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-        uexName="uexFileMgr" version="3.0.12" build="12">
-        <info>12:新增getFileListByPath</info>
+        uexName="uexFileMgr" version="3.0.13" build="13">
+        <info>13:getFileRealPath可以设定回调方法</info>
+        <build>12:新增getFileListByPath</build>
         <build>11:新增cbWriteFile回调方法，优化RC4加密</build>
         <build>10:解决多选文件打开浏览器显示空白问题</build>
         <build>9:新增方法uexFileMgr.renameFile 重命名文件</build>
