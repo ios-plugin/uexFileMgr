@@ -26,6 +26,9 @@
 #define F_FILE_EXIST		0
 #define F_FILE_NOT_EXIST	1
 
+#define KUEXIS_NSString(x) ([x isKindOfClass:[NSString class]] && x.length>0)
+#define KUEXIS_NSMutableArray(x) ([x isKindOfClass:[NSMutableArray class]] && [x count]>0)
+
 @interface EUExFileMgr : EUExBase {
 	NSMutableDictionary *fobjDict;
 	FileExplorer *fExplorer;

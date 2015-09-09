@@ -322,23 +322,46 @@
         [self jsFailedWithOpId:0 errorCode:1090901 errorDes:UEX_ERROR_DESCRIBE_ARGS];
     }
 }
-//11.文件浏览器
 
--(void)explorer:(NSMutableArray *)inArguments {
-    NSString *inPath = [inArguments objectAtIndex:0];
-    if (inPath == nil) {
+/**
+ * @brief 文件浏览器
+ * @param 协议路径(必须为文件夹路径),若不传或者参数为空,默认为Documents文件
+ *
+ **/
+
+- (void)explorer:(NSMutableArray *)inArguments {
+    
+    NSString *inPath = @"";
+    
+    if (KUEXIS_NSMutableArray(inArguments)) {
+        
+        inPath = [inArguments objectAtIndex:0];
+        
+    }
+    
+    if ([inPath length] == 0) {
+        
+        inPath = [File getDocumentsPath:inPath];
+        
+    } else {
+        
+        inPath = [super absPath:inPath];
+        
+    }
+    
+    if (KUEXIS_NSString(inPath) && [File fileisDirectoy:inPath] ) {
+        
+        fExplorer = [[FileExplorer alloc] init];
+        [fExplorer openWithEuex:self rootPath:inPath];
+        
+    } else {
+        
         [super jsFailedWithOpId:0 errorCode:1091001 errorDes:UEX_ERROR_DESCRIBE_ARGS];
+        
     }
-    if ([inPath length]==0) {
-        inPath = [File getDocumentsPath:@""];
-    }else {
-        inPath =[super absPath:inPath];
-    }
-    //open a file explorer
-    fExplorer = [[FileExplorer alloc] init];
-    [fExplorer openWithEuex:self rootPath:inPath];
     
 }
+
 //multiExplorer
 -(void)multiExplorer:(NSMutableArray*)inArguments{
     NSString * inPath = nil;
