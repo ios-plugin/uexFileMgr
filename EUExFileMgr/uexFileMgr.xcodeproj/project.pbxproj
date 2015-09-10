@@ -23,6 +23,7 @@
 		3CFA59F418C0996B00B636E9 /* FileExplorer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CFA59EB18C0996B00B636E9 /* FileExplorer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3CFA59F518C0996B00B636E9 /* FileExplorerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CFA59ED18C0996B00B636E9 /* FileExplorerItem.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3CFA59F618C0996B00B636E9 /* FileSelectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CFA59EF18C0996B00B636E9 /* FileSelectorViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		42E4DF9E1BA163CD004588FB /* EUExFile+search.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E4DF9D1BA163CD004588FB /* EUExFile+search.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -73,6 +74,8 @@
 		3CFA59ED18C0996B00B636E9 /* FileExplorerItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileExplorerItem.m; sourceTree = "<group>"; };
 		3CFA59EE18C0996B00B636E9 /* FileSelectorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSelectorViewController.h; sourceTree = "<group>"; };
 		3CFA59EF18C0996B00B636E9 /* FileSelectorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileSelectorViewController.m; sourceTree = "<group>"; };
+		42E4DF9C1BA163CD004588FB /* EUExFile+search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EUExFile+search.h"; sourceTree = "<group>"; };
+		42E4DF9D1BA163CD004588FB /* EUExFile+search.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EUExFile+search.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,6 +157,8 @@
 		3CFA59D918C0996B00B636E9 /* sourceCode */ = {
 			isa = PBXGroup;
 			children = (
+				42E4DF9C1BA163CD004588FB /* EUExFile+search.h */,
+				42E4DF9D1BA163CD004588FB /* EUExFile+search.m */,
 				3CFA59DA18C0996B00B636E9 /* EUExFile.h */,
 				3CFA59DB18C0996B00B636E9 /* EUExFile.m */,
 				3CFA59DC18C0996B00B636E9 /* File.h */,
@@ -257,6 +262,7 @@
 				3CFA59F018C0996B00B636E9 /* EUExFileMgr.m in Sources */,
 				3CFA59F618C0996B00B636E9 /* FileSelectorViewController.m in Sources */,
 				3CFA59F318C0996B00B636E9 /* FileListViewController.m in Sources */,
+				42E4DF9E1BA163CD004588FB /* EUExFile+search.m in Sources */,
 				3CFA59F518C0996B00B636E9 /* FileExplorerItem.m in Sources */,
 				3CFA59F218C0996B00B636E9 /* File.m in Sources */,
 				3CFA59F418C0996B00B636E9 /* FileExplorer.m in Sources */,

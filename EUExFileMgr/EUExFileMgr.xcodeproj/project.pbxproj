@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		42E4DF921BA12A08004588FB /* EUExFile+search.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E4DF911BA12A08004588FB /* EUExFile+search.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		5A501098188FB69B0022E07C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A501097188FB69B0022E07C /* Foundation.framework */; };
 		5A50109F188FB69B0022E07C /* EUExFileMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A50109E188FB69B0022E07C /* EUExFileMgr.m */; };
 		5A5010D8188FB6E20022E07C /* EUExFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5010C3188FB6E20022E07C /* EUExFile.m */; };
@@ -30,6 +31,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		42E4DF901BA12A08004588FB /* EUExFile+search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EUExFile+search.h"; sourceTree = "<group>"; };
+		42E4DF911BA12A08004588FB /* EUExFile+search.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EUExFile+search.m"; sourceTree = "<group>"; };
 		5A501094188FB69B0022E07C /* libuexFileMgr.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libuexFileMgr.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A501097188FB69B0022E07C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		5A50109B188FB69B0022E07C /* EUExFileMgr-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "EUExFileMgr-Prefix.pch"; sourceTree = "<group>"; };
@@ -136,6 +139,8 @@
 				5A5010C6188FB6E20022E07C /* JSON */,
 				5A5010CE188FB6E20022E07C /* mutiFileChoose */,
 				5A5010D1188FB6E20022E07C /* singleFileChoose */,
+				42E4DF901BA12A08004588FB /* EUExFile+search.h */,
+				42E4DF911BA12A08004588FB /* EUExFile+search.m */,
 			);
 			path = sourceCode;
 			sourceTree = "<group>";
@@ -231,6 +236,7 @@
 				5A50109F188FB69B0022E07C /* EUExFileMgr.m in Sources */,
 				5A5010DD188FB6E20022E07C /* FileSelectorViewController.m in Sources */,
 				5A5010DA188FB6E20022E07C /* FileListViewController.m in Sources */,
+				42E4DF921BA12A08004588FB /* EUExFile+search.m in Sources */,
 				5A5010DC188FB6E20022E07C /* FileExplorerItem.m in Sources */,
 				5A5010D9188FB6E20022E07C /* File.m in Sources */,
 				5A5010DB188FB6E20022E07C /* FileExplorer.m in Sources */,

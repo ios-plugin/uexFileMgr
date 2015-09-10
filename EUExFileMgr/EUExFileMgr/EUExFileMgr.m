@@ -13,6 +13,9 @@
 #import "EUExBaseDefine.h"
 #import "FileListViewController.h"
 #import "JSON.h"
+#import "EUExFile+search.h"
+
+
 
 @implementation EUExFileMgr
 //@synthesize fobjDict;
@@ -606,6 +609,9 @@
     [self jsSuccessWithName:@"uexFileMgr.cbExplorer" opId:inOpId dataType:inDataType strData:inData];
 }
 
+/**
+ *  重命名文件
+ */
 -(void)renameFile:(NSMutableArray *)inArguments{
     
     if([inArguments count]<1){
@@ -644,6 +650,65 @@
 
     NSString *callBackStr=[NSString stringWithFormat:@"if(uexFileMgr.cbRenameFile != null){uexFileMgr.cbRenameFile('%@');}",[dict JSONFragment]];
     [EUtility brwView:meBrwView evaluateScript:callBackStr];
+}
+
+
+-(void)search:(NSMutableArray *)inArguments{
+    if([inArguments count]<1){
+        [self cbSearch:NO result:nil];
+        return;
+    }
+    id info =[inArguments[0] JSONValue];
+    if(![info isKindOfClass:[NSDictionary class]]||![info objectForKey:@"path"]||![[info objectForKey:@"path"] isKindOfClass:[NSString class]]){
+        [self cbSearch:NO result:nil];
+        return;
+    }
+    uexFilrMgrSearchOption opt =uexFilrMgrSearchNone;
+    if([info objectForKey:@"option"]){
+        NSInteger num=[[info objectForKey:@"option"] integerValue];
+        if(num >-1 && num <9){
+            opt=(uexFilrMgrSearchOption)num;
+        }
+    }
+    NSArray *keywords=nil;
+    
+    if([info objectForKey:@"keywords"] && [[info objectForKey:@"keywords"] isKindOfClass:[NSArray class]]){
+        keywords=[info objectForKey:@"keywords"];
+    }
+    NSArray * suffixes=nil;
+    if([info objectForKey:@"suffixes"] && [[info objectForKey:@"suffixes"] isKindOfClass:[NSArray class]]){
+        suffixes=[info objectForKey:@"suffixes"];
+    }
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [EUExFile searchFilesByPath:[self absPath:[info objectForKey:@"path"]]
+                             option:opt
+                           keywords:keywords
+                           suffixes:suffixes
+                         conpletion:^(BOOL isSuccess, NSArray *result) {
+                             [self cbSearch:isSuccess result:result];
+                         }];
+    });
+    
+    
+    
+}
+
+
+-(void)cbSearch:(BOOL)isSuccess result:(NSArray *)result{
+    NSMutableDictionary *dict =[NSMutableDictionary dictionary];
+    
+    if(isSuccess){
+        [dict setValue:@(YES) forKey:@"isSuccess"];
+        [dict setValue:result forKey:@"result"];
+        
+    }else{
+        [dict setValue:@(NO) forKey:@"isSuccess"];
+    }
+    NSString *cbStr=[NSString stringWithFormat:@"if(uexFileMgr.cbSearch != null){uexFileMgr.cbSearch('%@');}",[dict JSONFragment]];
+    [EUtility brwView:meBrwView evaluateScript:cbStr];
+
+    
 }
 
 -(void)clean{
