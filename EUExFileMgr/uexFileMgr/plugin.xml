@@ -30,6 +30,7 @@
         <method name="getFileRealPath"></method>
         <method name="getFileCreateTime"></method>
         <method name="renameFile"></method>
+        <method name="getFileListByPath"></method>
         <method name="search"></method>
 	</plugin>
 </uexplugins>
