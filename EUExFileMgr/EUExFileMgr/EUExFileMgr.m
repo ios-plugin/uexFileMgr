@@ -628,7 +628,7 @@
                             for (NSString *fileName in files) {
                                 NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:1];
                                 [dict setObject:fileName forKey:@"fileName"];
-                                fileName = [path stringByAppendingString:fileName];
+                                fileName = [path stringByAppendingString:[NSString stringWithFormat:@"/%@",fileName]];
                                 [dict setObject:fileName forKey:@"filePath"];
                                 if ([File fileisDirectoy:fileName]) {
                                     [dict setObject:@"1" forKey:@"fileType"];
