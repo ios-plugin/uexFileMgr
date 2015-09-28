@@ -25,7 +25,7 @@
 	}else if ([smallName hasSuffix:@"zip"]) {
 		self.fileType = FILE_TYPE_ZIP;
 		self.fileIcon = [UIImage imageNamed:@"uexFileMgr/plugin_file_zip.png"];
-	}else if ([smallName hasSuffix:@"txt"]){
+	}else if ([smallName hasSuffix:@"txt"]||[smallName hasSuffix:@"rtf"]){
 		self.fileType = FILE_TYPE_DOCUMENT;
 		self.fileIcon = [UIImage imageNamed:@"uexFileMgr/plugin_file_txt.png"];
 	}else if ([smallName hasSuffix:@"pdf"]) {
@@ -34,10 +34,10 @@
 	}else if ([smallName hasSuffix:@"doc"]||[smallName hasSuffix:@"docx"]) {
 		self.fileType = FILE_TYPE_DOCUMENT;
 		self.fileIcon = [UIImage imageNamed:@"uexFileMgr/plugin_file_doc.png"];
-	}else if ([smallName hasSuffix:@"ppt"]) {
+	}else if ([smallName hasSuffix:@"ppt"]||[smallName hasSuffix:@"pptx"]) {
 		self.fileType = FILE_TYPE_DOCUMENT;
 		self.fileIcon = [UIImage imageNamed:@"uexFileMgr/plugin_file_ppt.png"];
-	}else if ([smallName hasSuffix:@"xls"]) {
+	}else if ([smallName hasSuffix:@"xls"]||[smallName hasSuffix:@"xlsx"]) {
 		self.fileType = FILE_TYPE_DOCUMENT;
 		self.fileIcon = [UIImage imageNamed:@"uexFileMgr/plugin_file_excel.png"];
 	}else {
