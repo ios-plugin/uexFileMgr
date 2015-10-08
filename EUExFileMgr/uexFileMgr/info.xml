@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-        uexName="uexFileMgr" version="3.0.15" build="15">
-        <info>15:修复pptx和xlsx没有图标的问题</info>
+        uexName="uexFileMgr" version="3.0.16" build="16">
+        <info>16:getFileListByPath不再返回其子目录下的文件路径</info>
+        <build>15:修复pptx和xlsx没有图标的问题</build>
         <build>14:getFileRealPath可以设定回调方法</build>
         <build>13:新增getFileListByPath</build>
         <build>12:新增方法search 搜索文件/文件夹</build>

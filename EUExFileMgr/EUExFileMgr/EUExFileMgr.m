@@ -622,13 +622,19 @@
                 if ([fmanager fileExistsAtPath:path]) {
                     //判断是否是文件夹
                     if ([File fileisDirectoy:path]) {
-                        NSArray *files = [fmanager subpathsAtPath:path];
+                        //NSArray *files = [fmanager subpathsAtPath:path];
+                        NSError *error=nil;
+                        NSArray *files = [fmanager contentsOfDirectoryAtPath:path error:&error];
+                        if(error){
+                            [self jsSuccessWithName:@"uexFileMgr.cbGetFileListByPath" opId:0 dataType:UEX_CALLBACK_DATATYPE_TEXT strData:@""];
+                            return;
+                        }
                         NSMutableArray *array_ = [NSMutableArray arrayWithCapacity:2];
                         if ([files isKindOfClass:[NSArray class]] && [files count]>0) {
                             for (NSString *fileName in files) {
                                 NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:1];
                                 [dict setObject:fileName forKey:@"fileName"];
-                                fileName = [path stringByAppendingString:[NSString stringWithFormat:@"/%@",fileName]];
+                                fileName = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",fileName]];
                                 [dict setObject:fileName forKey:@"filePath"];
                                 if ([File fileisDirectoy:fileName]) {
                                     [dict setObject:@"1" forKey:@"fileType"];
