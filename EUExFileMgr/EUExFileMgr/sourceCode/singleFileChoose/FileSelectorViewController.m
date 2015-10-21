@@ -70,14 +70,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	UIBarButtonItem *cancleButton = [[[UIBarButtonItem alloc]
-									  initWithTitle:@"取消" 
+									  initWithTitle:UEX_LOCALIZEDSTRING(@"取消")
 									  style:UIBarButtonItemStylePlain 
 									  target:self
 									  action:@selector(cancelClicked)
 									  ]autorelease];
 	self.navigationItem.rightBarButtonItem = cancleButton;
-	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStylePlain target:self action:@selector(backBtnClick)]autorelease];
-    self.navigationItem.title = @"文件浏览器";
+	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:UEX_LOCALIZEDSTRING(@"返回") style:UIBarButtonItemStylePlain target:self action:@selector(backBtnClick)]autorelease];
+    self.navigationItem.title = UEX_LOCALIZEDSTRING(@"文件浏览器");
     
 
 //	 if ([UIApplication sharedApplication].statusBarHidden) {

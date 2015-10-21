@@ -59,7 +59,7 @@ enum fileType {
 		count = [[selectAllPaths allKeys] count];
 	}
 	UIBarButtonItem* confirmBarItem = [[self.toolBar items] lastObject];
-	confirmBarItem.title = [NSString stringWithFormat:@"确定(%d)",count];
+	confirmBarItem.title = [NSString stringWithFormat:UEX_LOCALIZEDSTRING(@"确定(%d)"),count];
 }
 -(void)initFilesType{
 	if (fileArray && indexpath) {
@@ -245,19 +245,19 @@ enum fileType {
 	toolBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;//这句作用是切换时宽度自适应.
     
 	UIBarButtonItem* allSelectBarItem = [[[UIBarButtonItem alloc] init] autorelease];
-    [allSelectBarItem setTitle:@"全选"];
+    [allSelectBarItem setTitle:UEX_LOCALIZEDSTRING(@"全选")];
     [allSelectBarItem setStyle:UIBarButtonItemStyleBordered];
     [allSelectBarItem setTarget:self];
     [allSelectBarItem setAction:@selector(allSelectButtonClick)];
     
 	UIBarButtonItem* cancelSelectBarItem = [[[UIBarButtonItem alloc] init] autorelease];
-    [cancelSelectBarItem setTitle:@"取消全选"];
+    [cancelSelectBarItem setTitle:UEX_LOCALIZEDSTRING(@"取消全选")];
     [cancelSelectBarItem setStyle:UIBarButtonItemStyleBordered];
     [cancelSelectBarItem setTarget:self];
     [cancelSelectBarItem setAction:@selector(CancelAllSelectButtonClick)];
     
 	UIBarButtonItem* confirmBarItem = [[[UIBarButtonItem alloc] init] autorelease];
-    [confirmBarItem setTitle:[NSString stringWithFormat:@"确定(%d)",0]];
+    [confirmBarItem setTitle:[NSString stringWithFormat:UEX_LOCALIZEDSTRING(@"确定(%d)"),0]];
     [confirmBarItem setStyle:UIBarButtonItemStyleBordered];
     [confirmBarItem setTarget:self];
     [confirmBarItem setAction:@selector(confirmButtonClick)];
@@ -277,13 +277,13 @@ enum fileType {
 -(void)rightButtonClick:(id)sender{
 	UIBarButtonItem* rightItemButton = (UIBarButtonItem*)sender;
     NSString *title = rightItemButton.title;
-	if ([title isEqualToString:@"编辑"]) {
-		rightItemButton.title = @"取消";
+	if ([title isEqualToString:UEX_LOCALIZEDSTRING(@"编辑")]) {
+		rightItemButton.title = UEX_LOCALIZEDSTRING(@"取消");
 		isEditableOrNot = 1;
 		[table setTableFooterView:[[[UIView alloc] initWithFrame:CGRectMake(0,0,[UIScreen mainScreen].applicationFrame.size.width,40)] autorelease]];
 		[self initToolbar];
 	}else {
-		rightItemButton.title = @"编辑";
+		rightItemButton.title = UEX_LOCALIZEDSTRING(@"编辑");
 		isEditableOrNot = 0;
 		[toolBar removeFromSuperview];
 		[table setTableFooterView:[[[UIView alloc] initWithFrame:CGRectZero] autorelease]];
@@ -317,11 +317,11 @@ enum fileType {
 	titleLabel.highlightedTextColor = [UIColor blackColor];
 	titleLabel.font = [UIFont boldSystemFontOfSize:18];
 	titleLabel.frame = CGRectMake(0.0, 0.0,160, 22.0);
-	titleLabel.text = @"文件浏览器";
+	titleLabel.text = UEX_LOCALIZEDSTRING(@"文件浏览器");
 	titleLabel.textAlignment = UITextAlignmentCenter;
 	self.navigationItem.titleView = titleLabel;
-	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"返回" style:UIBarButtonItemStyleBordered target:self action:@selector(backBtnClicked)] autorelease];
-	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:@"编辑" style:UIBarButtonItemStyleBordered target:self action:@selector(rightButtonClick:)] autorelease];
+	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:UEX_LOCALIZEDSTRING(@"返回") style:UIBarButtonItemStyleBordered target:self action:@selector(backBtnClicked)] autorelease];
+	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:UEX_LOCALIZEDSTRING(@"编辑") style:UIBarButtonItemStyleBordered target:self action:@selector(rightButtonClick:)] autorelease];
 	self.navigationController.navigationBar.tintColor = [UIColor blackColor];
 }
 #pragma mark -

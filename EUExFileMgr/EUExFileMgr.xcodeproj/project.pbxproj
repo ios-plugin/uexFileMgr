@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C1AD5DC1BD612070091D2A1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C1AD5DE1BD612070091D2A1 /* Localizable.strings */; };
 		42E4DF921BA12A08004588FB /* EUExFile+search.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E4DF911BA12A08004588FB /* EUExFile+search.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		5A501098188FB69B0022E07C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A501097188FB69B0022E07C /* Foundation.framework */; };
 		5A50109F188FB69B0022E07C /* EUExFileMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A50109E188FB69B0022E07C /* EUExFileMgr.m */; };
@@ -17,6 +18,16 @@
 		5A5010DC188FB6E20022E07C /* FileExplorerItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5010D5188FB6E20022E07C /* FileExplorerItem.m */; };
 		5A5010DD188FB6E20022E07C /* FileSelectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5010D7188FB6E20022E07C /* FileSelectorViewController.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3C1AD5D81BD611E90091D2A1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5A50108C188FB69B0022E07C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3C1AD5D11BD611BB0091D2A1;
+			remoteInfo = uexFileMgrBundle;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		5A501092188FB69B0022E07C /* CopyFiles */ = {
@@ -31,6 +42,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3C1AD5D21BD611BB0091D2A1 /* uexFileMgr.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = uexFileMgr.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		3C1AD5D41BD611BB0091D2A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3C1AD5DD1BD612070091D2A1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3C1AD5DF1BD612110091D2A1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		42E4DF901BA12A08004588FB /* EUExFile+search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EUExFile+search.h"; sourceTree = "<group>"; };
 		42E4DF911BA12A08004588FB /* EUExFile+search.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EUExFile+search.m"; sourceTree = "<group>"; };
 		5A501094188FB69B0022E07C /* libuexFileMgr.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libuexFileMgr.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -63,6 +78,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		3C1AD5CF1BD611BB0091D2A1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5A501091188FB69B0022E07C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -74,10 +96,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3C1AD5D31BD611BB0091D2A1 /* uexFileMgrBundle */ = {
+			isa = PBXGroup;
+			children = (
+				3C1AD5D41BD611BB0091D2A1 /* Info.plist */,
+			);
+			path = uexFileMgrBundle;
+			sourceTree = "<group>";
+		};
 		5A50108B188FB69B0022E07C = {
 			isa = PBXGroup;
 			children = (
+				3C1AD5DE1BD612070091D2A1 /* Localizable.strings */,
 				5A501099188FB69B0022E07C /* EUExFileMgr */,
+				3C1AD5D31BD611BB0091D2A1 /* uexFileMgrBundle */,
 				5A501096188FB69B0022E07C /* Frameworks */,
 				5A501095188FB69B0022E07C /* Products */,
 			);
@@ -87,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				5A501094188FB69B0022E07C /* libuexFileMgr.a */,
+				3C1AD5D21BD611BB0091D2A1 /* uexFileMgr.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -184,6 +217,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		3C1AD5D11BD611BB0091D2A1 /* uexFileMgrBundle */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3C1AD5D71BD611BB0091D2A1 /* Build configuration list for PBXNativeTarget "uexFileMgrBundle" */;
+			buildPhases = (
+				3C1AD5CE1BD611BB0091D2A1 /* Sources */,
+				3C1AD5CF1BD611BB0091D2A1 /* Frameworks */,
+				3C1AD5D01BD611BB0091D2A1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = uexFileMgrBundle;
+			productName = uexFileMgrBundle;
+			productReference = 3C1AD5D21BD611BB0091D2A1 /* uexFileMgr.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
 		5A501093188FB69B0022E07C /* EUExFileMgr */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5A5010B7188FB69B0022E07C /* Build configuration list for PBXNativeTarget "EUExFileMgr" */;
@@ -195,6 +245,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				3C1AD5D91BD611E90091D2A1 /* PBXTargetDependency */,
 			);
 			name = EUExFileMgr;
 			productName = EUExFileMgr;
@@ -209,6 +260,11 @@
 			attributes = {
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = xll;
+				TargetAttributes = {
+					3C1AD5D11BD611BB0091D2A1 = {
+						CreatedOnToolsVersion = 7.0.1;
+					};
+				};
 			};
 			buildConfigurationList = 5A50108F188FB69B0022E07C /* Build configuration list for PBXProject "EUExFileMgr" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -216,6 +272,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				"zh-Hans",
 			);
 			mainGroup = 5A50108B188FB69B0022E07C;
 			productRefGroup = 5A501095188FB69B0022E07C /* Products */;
@@ -223,11 +280,30 @@
 			projectRoot = "";
 			targets = (
 				5A501093188FB69B0022E07C /* EUExFileMgr */,
+				3C1AD5D11BD611BB0091D2A1 /* uexFileMgrBundle */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		3C1AD5D01BD611BB0091D2A1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C1AD5DC1BD612070091D2A1 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		3C1AD5CE1BD611BB0091D2A1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		5A501090188FB69B0022E07C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -245,7 +321,77 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		3C1AD5D91BD611E90091D2A1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3C1AD5D11BD611BB0091D2A1 /* uexFileMgrBundle */;
+			targetProxy = 3C1AD5D81BD611E90091D2A1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		3C1AD5DE1BD612070091D2A1 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3C1AD5DD1BD612070091D2A1 /* en */,
+				3C1AD5DF1BD612110091D2A1 /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		3C1AD5D51BD611BB0091D2A1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = $SRCROOT/uexFileMgr;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = uexFileMgrBundle/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zywx.uexFileMgrBundle;
+				PRODUCT_MODULE_NAME = uexFileMgr;
+				PRODUCT_NAME = uexFileMgr;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		3C1AD5D61BD611BB0091D2A1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				CONFIGURATION_BUILD_DIR = $SRCROOT/uexFileMgr;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = uexFileMgrBundle/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zywx.uexFileMgrBundle;
+				PRODUCT_MODULE_NAME = uexFileMgr;
+				PRODUCT_NAME = uexFileMgr;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
 		5A5010B5188FB69B0022E07C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -349,6 +495,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3C1AD5D71BD611BB0091D2A1 /* Build configuration list for PBXNativeTarget "uexFileMgrBundle" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3C1AD5D51BD611BB0091D2A1 /* Debug */,
+				3C1AD5D61BD611BB0091D2A1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		5A50108F188FB69B0022E07C /* Build configuration list for PBXProject "EUExFileMgr" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -1,0 +1,14 @@
+/* 
+  Localizable.strings
+  EUExFileMgr
+
+  Created by 黄锦 on 15/10/20.
+  Copyright © 2015年 xll. All rights reserved.
+*/
+"确定(%d)"="确定(%d)";
+"全选"="全选";
+"取消全选"="取消全选";
+"编辑"="编辑";
+"取消"="取消";
+"文件浏览器"="文件浏览器";
+"返回"="返回";
