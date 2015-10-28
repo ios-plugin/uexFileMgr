@@ -257,7 +257,7 @@ enum fileType {
     [cancelSelectBarItem setAction:@selector(CancelAllSelectButtonClick)];
     
 	UIBarButtonItem* confirmBarItem = [[[UIBarButtonItem alloc] init] autorelease];
-    [confirmBarItem setTitle:[NSString stringWithFormat:UEX_LOCALIZEDSTRING(@"确定(%d)"),0]];
+    [confirmBarItem setTitle:[NSString stringWithFormat:@"%@(%d)",UEX_LOCALIZEDSTRING(@"确定"),0]];
     [confirmBarItem setStyle:UIBarButtonItemStyleBordered];
     [confirmBarItem setTarget:self];
     [confirmBarItem setAction:@selector(confirmButtonClick)];
