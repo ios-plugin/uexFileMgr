@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3C1AD5DC1BD612070091D2A1 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C1AD5DE1BD612070091D2A1 /* Localizable.strings */; };
+		3C1C09B81BE0618B00571E72 /* Localizations.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C1C09BA1BE0618B00571E72 /* Localizations.strings */; };
 		42E4DF921BA12A08004588FB /* EUExFile+search.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E4DF911BA12A08004588FB /* EUExFile+search.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		5A501098188FB69B0022E07C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A501097188FB69B0022E07C /* Foundation.framework */; };
 		5A50109F188FB69B0022E07C /* EUExFileMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A50109E188FB69B0022E07C /* EUExFileMgr.m */; };
@@ -43,9 +43,8 @@
 
 /* Begin PBXFileReference section */
 		3C1AD5D21BD611BB0091D2A1 /* uexFileMgr.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = uexFileMgr.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
-		3C1AD5D41BD611BB0091D2A1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		3C1AD5DD1BD612070091D2A1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		3C1AD5DF1BD612110091D2A1 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		3C1C09B91BE0618B00571E72 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizations.strings; sourceTree = "<group>"; };
+		3C1C09BB1BE0618C00571E72 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizations.strings"; sourceTree = "<group>"; };
 		42E4DF901BA12A08004588FB /* EUExFile+search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EUExFile+search.h"; sourceTree = "<group>"; };
 		42E4DF911BA12A08004588FB /* EUExFile+search.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "EUExFile+search.m"; sourceTree = "<group>"; };
 		5A501094188FB69B0022E07C /* libuexFileMgr.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libuexFileMgr.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -99,7 +98,7 @@
 		3C1AD5D31BD611BB0091D2A1 /* uexFileMgrBundle */ = {
 			isa = PBXGroup;
 			children = (
-				3C1AD5D41BD611BB0091D2A1 /* Info.plist */,
+				3C1C09BA1BE0618B00571E72 /* Localizations.strings */,
 			);
 			path = uexFileMgrBundle;
 			sourceTree = "<group>";
@@ -107,7 +106,6 @@
 		5A50108B188FB69B0022E07C = {
 			isa = PBXGroup;
 			children = (
-				3C1AD5DE1BD612070091D2A1 /* Localizable.strings */,
 				5A501099188FB69B0022E07C /* EUExFileMgr */,
 				3C1AD5D31BD611BB0091D2A1 /* uexFileMgrBundle */,
 				5A501096188FB69B0022E07C /* Frameworks */,
@@ -290,7 +288,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C1AD5DC1BD612070091D2A1 /* Localizable.strings in Resources */,
+				3C1C09B81BE0618B00571E72 /* Localizations.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -330,13 +328,13 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		3C1AD5DE1BD612070091D2A1 /* Localizable.strings */ = {
+		3C1C09BA1BE0618B00571E72 /* Localizations.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3C1AD5DD1BD612070091D2A1 /* en */,
-				3C1AD5DF1BD612110091D2A1 /* zh-Hans */,
+				3C1C09B91BE0618B00571E72 /* en */,
+				3C1C09BB1BE0618C00571E72 /* zh-Hans */,
 			);
-			name = Localizable.strings;
+			name = Localizations.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -354,7 +352,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = uexFileMgrBundle/Info.plist;
+				INFOPLIST_FILE = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -379,7 +377,7 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = uexFileMgrBundle/Info.plist;
+				INFOPLIST_FILE = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -502,6 +500,7 @@
 				3C1AD5D61BD611BB0091D2A1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5A50108F188FB69B0022E07C /* Build configuration list for PBXProject "EUExFileMgr" */ = {
 			isa = XCConfigurationList;
