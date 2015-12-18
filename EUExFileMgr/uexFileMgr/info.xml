@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-        uexName="uexFileMgr" version="3.0.18" build="18">
-        <info>18:删除info.plist</info>
+        uexName="uexFileMgr" version="3.0.19" build="19">
+        <info>19:添加IDE支持</info>
+        <build>18:删除info.plist</build>
         <build>17:添加国际化支持</build>
         <build>16:getFileListByPath不再返回其子目录下的文件路径</build>
         <build>15:修复pptx和xlsx没有图标的问题</build>
