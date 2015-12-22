@@ -167,7 +167,8 @@
             [self jsSuccessWithName:@"uexFileMgr.cbOpenFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
         }
         return;
-    }else {
+    }
+    else {
         uexFile = [[EUExFile alloc] init];
     }
     
@@ -238,10 +239,12 @@
             if ([File removeFile:truePath]) {
                 [fobjDict removeObjectForKey:inOpId];
                 [self jsSuccessWithName:@"uexFileMgr.cbDeleteFileByID" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
-            }else {
+            }
+            else {
                 [self jsSuccessWithName:@"uexFileMgr.cbDeleteFileByID" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
             }
-        }else {
+        }else
+        {
             [self jsSuccessWithName:@"uexFileMgr.cbDeleteFileByID" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
         }
     }else{
@@ -328,6 +331,7 @@
 //11.文件浏览器
 
 -(void)explorer:(NSMutableArray *)inArguments {
+    
     NSString *inPath = [inArguments objectAtIndex:0];
     if (inPath == nil) {
         [super jsFailedWithOpId:0 errorCode:1091001 errorDes:UEX_ERROR_DESCRIBE_ARGS];
@@ -336,6 +340,8 @@
         inPath = [File getDocumentsPath:@""];
     }else {
         inPath =[super absPath:inPath];
+        
+        NSLog(@"++++++++++++++++++++++++++%@",inPath);
     }
     //open a file explorer
     fExplorer = [[FileExplorer alloc] init];
@@ -452,7 +458,6 @@
     }
     
 }
-
 
 //16.读文件
 -(void)readFile:(NSMutableArray *)inArguments {
