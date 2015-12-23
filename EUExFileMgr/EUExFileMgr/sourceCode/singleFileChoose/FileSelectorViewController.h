@@ -19,6 +19,7 @@
  {
 //	UITableViewController *tableController;
 	NSMutableString *currentPath;
+     NSMutableString * chuanRuPath;
 	NSMutableArray *fileItemArray;
 	id< FileSelectorDelegate > delegate;
  
@@ -33,6 +34,8 @@
 @property (nonatomic, retain) UILabel *headLabel;
 @property (nonatomic, retain) NSMutableString *currentPath;
 @property (nonatomic, retain) NSMutableArray *fileItemArray;
+
+
 @property (nonatomic,assign) id< FileSelectorDelegate > delegate;
 -(id)initWithRootPath:(NSString *)inPath;
 @end
