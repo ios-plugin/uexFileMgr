@@ -33,6 +33,8 @@
 @property (nonatomic, retain) UILabel *headLabel;
 @property (nonatomic, retain) NSMutableString *currentPath;
 @property (nonatomic, retain) NSMutableArray *fileItemArray;
+@property (nonatomic,strong)NSMutableString *chuanRuPath;
+
 @property (nonatomic,assign) id< FileSelectorDelegate > delegate;
 -(id)initWithRootPath:(NSString *)inPath;
 @end
