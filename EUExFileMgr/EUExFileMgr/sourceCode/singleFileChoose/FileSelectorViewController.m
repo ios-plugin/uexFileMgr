@@ -20,7 +20,7 @@
 -(void)loadData:(NSString *)relpath{
 	NSFileManager *fmanager = [NSFileManager defaultManager];
 	
-//	NSString *preDirStr = [relpath stringByDeletingLastPathComponent];
+	//NSString *preDirStr = [relpath stringByDeletingLastPathComponent];
 	NSRange range = [relpath rangeOfString:NSHomeDirectory()];
     NSString *subPath = [relpath substringFromIndex:range.length];
 	if (subPath) {
@@ -44,7 +44,8 @@
 }
 
 //init
--(id)initWithRootPath:(NSString *)inPath{	
+-(id)initWithRootPath:(NSString *)inPath{
+   
 	self = [super init];
 	if (self != nil) {
 		NSString *relpath;
@@ -56,6 +57,7 @@
 			 currentPath = [[NSMutableString alloc]initWithString:inPath];;
 			 relpath = inPath;
 		 }
+        chuanRuPath=[[NSMutableString alloc]initWithString:relpath];
 		[self loadData:relpath];
 	}
 	return self;
@@ -187,14 +189,21 @@
     return cell;
 }
 -(void)backBtnClick{
-	if ([currentPath isEqualToString:NSHomeDirectory()]) {
+    
+//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+//    NSString *documentsDirectory = [paths firstObject];
+//    NSString * string = NSHomeDirectory();
+//    NSString * AccessPath = [documentsDirectory stringByAppendingString:@"/Documents"];
+//    NSLog(@"currentPath:++++%@    AccessPath:++++%@",currentPath,str);
+    
+    //如果有问题换成[[NSMutableString alloc]initWithString:chuanRuPath]；
+    if ([currentPath isEqualToString:chuanRuPath]) {
 		[self.navigationItem.leftBarButtonItem setEnabled:NO];
-        
         if(delegate!=nil && [delegate respondsToSelector: @selector(fileSelectCancled:)] == YES){
             [delegate fileSelectCancled:self];
         }
         
-//		return;
+		return;
 	}
 	[currentPath setString:[currentPath stringByDeletingLastPathComponent]];
  	[self loadData:currentPath];
@@ -207,7 +216,6 @@
  
 	NSString *fileName = item.fileName;
 	[currentPath setString:[currentPath stringByAppendingPathComponent:fileName]];
-	PluginLog(@"current path = %@",currentPath);
 	if ([item.itemType intValue]==1&&[item.subItems count]==0) {
 		[currentPath setString:[currentPath stringByDeletingLastPathComponent]];
 		return;
@@ -291,6 +299,7 @@
 	
 	[fileItemArray release];
 	[currentPath release];
+    [chuanRuPath release];
     [super dealloc];
 }
 
