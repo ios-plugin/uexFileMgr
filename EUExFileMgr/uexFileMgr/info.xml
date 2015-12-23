@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-        uexName="uexFileMgr" version="3.0.19" build="19">
-        <info>19:添加IDE支持</info>
+        uexName="uexFileMgr" version="3.0.20" build="20">
+        <info>20:修改能够直接返回到应用程序界面，而不能通过该页面返回到附件的父目录下</info>
+        <build>19:添加IDE支持</build>
         <build>18:删除info.plist</build>
         <build>17:添加国际化支持</build>
         <build>16:getFileListByPath不再返回其子目录下的文件路径</build>

@@ -15,7 +15,7 @@
 @implementation FileSelectorViewController
 
 @synthesize fileItemArray,currentPath;
-@synthesize delegate,headView,fTableView,headLabel,stringssss;
+@synthesize delegate,headView,fTableView,headLabel,chuanRuPath;
 
 -(void)loadData:(NSString *)relpath{
 	NSFileManager *fmanager = [NSFileManager defaultManager];
@@ -57,8 +57,7 @@
 			 currentPath = [[NSMutableString alloc]initWithString:inPath];;
 			 relpath = inPath;
 		 }
-        stringssss=[[NSMutableString alloc]initWithString:relpath];
-        NSLog(@"path==%@",relpath);
+        chuanRuPath=[[NSMutableString alloc]initWithString:relpath];
 		[self loadData:relpath];
 	}
 	return self;
@@ -191,23 +190,15 @@
 }
 -(void)backBtnClick{
     
-    NSLog(@"点击返回+++++++++++++");
-//    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-//    NSString *documentsDirectory = [paths firstObject];
-//    NSString * string = NSHomeDirectory();
-//    NSString * AccessPath = [documentsDirectory stringByAppendingString:@"/Documents"];
-//    NSLog(@"currentPath:++++%@    AccessPath:++++%@",currentPath,str);
     
-    if ([currentPath isEqualToString:[[NSMutableString alloc]initWithString:stringssss]]) {
+    if ([currentPath isEqualToString:chuanRuPath]) {
 		[self.navigationItem.leftBarButtonItem setEnabled:NO];
-        NSLog(@"当前页面路径和所获取路径相同++++++++++++++++++++");
         if(delegate!=nil && [delegate respondsToSelector: @selector(fileSelectCancled:)] == YES){
             [delegate fileSelectCancled:self];
         }
         
 		return;
 	}
-    NSLog(@"当前页面路径和所获取路径不不不不不相同++++++++++++++++++++++++");
 	[currentPath setString:[currentPath stringByDeletingLastPathComponent]];
  	[self loadData:currentPath];
  
@@ -219,7 +210,6 @@
  
 	NSString *fileName = item.fileName;
 	[currentPath setString:[currentPath stringByAppendingPathComponent:fileName]];
-	PluginLog(@"current path = %@",currentPath);
 	if ([item.itemType intValue]==1&&[item.subItems count]==0) {
 		[currentPath setString:[currentPath stringByDeletingLastPathComponent]];
 		return;
@@ -303,6 +293,7 @@
 	
 	[fileItemArray release];
 	[currentPath release];
+    [chuanRuPath release];
     [super dealloc];
 }
 
