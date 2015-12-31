@@ -467,7 +467,20 @@
         [self jsSuccessWithName:@"uexFileMgr.cbReadFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
     }
 }
-
+//文件夹大小
+-(void)getFileSizeByPath:(NSMutableArray *)inArguments {
+    if(inArguments.count <1){
+        return;
+    }
+    NSString *inOpId = [inArguments objectAtIndex:0];
+    EUExFile *object = [fobjDict objectForKey:inOpId];
+    if (object!=nil) {
+        long outSize = [object getSize];
+        [self jsSuccessWithName:@"uexFileMgr.cbGetFileSizeByPath" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:outSize];
+    }else {
+        [self jsFailedWithOpId:[inOpId intValue] errorCode:1091601 errorDes:UEX_ERROR_DESCRIBE_ARGS];
+    }
+}
 //17.文件大小
 -(void)getFileSize:(NSMutableArray *)inArguments {
     NSString *inOpId = [inArguments objectAtIndex:0];

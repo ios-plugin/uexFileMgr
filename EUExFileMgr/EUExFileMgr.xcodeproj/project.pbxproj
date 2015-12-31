@@ -134,9 +134,9 @@
 			isa = PBXGroup;
 			children = (
 				A0EB589C18AB62B400F133BB /* EUExFileMgr.h */,
+				5A50109E188FB69B0022E07C /* EUExFileMgr.m */,
 				5A5010BD188FB6E20022E07C /* engineHeader */,
 				5A5010C1188FB6E20022E07C /* sourceCode */,
-				5A50109E188FB69B0022E07C /* EUExFileMgr.m */,
 				5A50109A188FB69B0022E07C /* Supporting Files */,
 			);
 			path = EUExFileMgr;

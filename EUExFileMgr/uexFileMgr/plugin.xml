@@ -2,28 +2,29 @@
 <uexplugins>
     <plugin name="uexFileMgr">
         <method name="createSecure"></method>
-		<method name="openSecure"></method>
+        <method name="openSecure"></method>
         <method name="createFile"></method>
-		<method name="createDir"></method>
+        <method name="createDir"></method>
         <method name="openFile"></method>
         <method name="openDir"></method>
-		<method name="deleteFileByPath"></method>
+        <method name="deleteFileByPath"></method>
         <method name="deleteFileByID"></method>
         <method name="getFileTypeByPath"></method>
-		<method name="getFileTypeByID"></method>
+        <method name="getFileTypeByID"></method>
         <method name="isFileExistByPath"></method>
         <method name="isFileExistByID"></method>
-		<method name="explorer"></method>
+        <method name="explorer"></method>
         <method name="multiExplorer"></method>
         <method name="seekFile"></method>
         <method name="seekBeginOfFile"></method>
-		<method name="seekEndOfFile"></method>
+        <method name="seekEndOfFile"></method>
         <method name="readFile"></method>
-         <method name="writeFile"></method>
-         <method name="getFileSize"></method>
-         <method name="getFilePath"></method>
+        <method name="writeFile"></method>
+        <method name="getFileSize"></method>
+        <method name="getFileSizeByPath"></method>
+        <method name="getFilePath"></method>
         <method name="closeFile"></method>
-         <method name="getReaderOffset"></method>
+        <method name="getReaderOffset"></method>
         <method name="readPercent"></method>
         <method name="readNext"></method>
         <method name="readPre"></method>
@@ -32,5 +33,5 @@
         <method name="renameFile"></method>
         <method name="getFileListByPath"></method>
         <method name="search"></method>
-	</plugin>
+    </plugin>
 </uexplugins>
