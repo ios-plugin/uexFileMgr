@@ -568,6 +568,38 @@
         [self jsSuccessWithName:@"uexFileMgr.cbReadPre" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_TEXT intData:UEX_CFAILED];
     }
 }
+//24.拷贝文件
+- (void)copyFile:(NSMutableArray *)inArguments
+{
+    
+    NSString * inOpId = [inArguments objectAtIndex:0];
+    NSString * inPath = [inArguments objectAtIndex:1];
+    NSString * toPath = [inArguments objectAtIndex:2];
+    
+    NSString *string = @"/";
+    NSRange range = [inPath rangeOfString:string options:NSBackwardsSearch];
+    
+    NSString *filestring = [inPath substringFromIndex:range.location + 1];
+    NSLog(@"%@",filestring);
+    NSString *path = [NSString stringWithFormat:@"%@/%@",toPath,filestring];
+    NSLog(@"%@",path);
+    inPath = [self absPath:inPath];
+    toPath = [self absPath:path];
+    NSFileManager *manager = [NSFileManager defaultManager];
+    
+    NSError *error = [[NSError alloc]init];
+    BOOL isCopySuc = [manager copyItemAtPath:inPath toPath:toPath error:&error];
+    
+    if (isCopySuc) {
+        [self jsSuccessWithName:@"uexFileMgr.cbCopyFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
+    }
+    else
+    {
+        [self jsSuccessWithName:@"uexFileMgr.cbCopyFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
+    }
+    
+    
+}
 
 
 //获取文件的创建时间
