@@ -472,14 +472,46 @@
     if(inArguments.count <1){
         return;
     }
-    NSString *inOpId = [inArguments objectAtIndex:0];
+    id info =[inArguments[0] JSONValue];
+    NSString *inOpId = [info objectForKey:@"id"];
+    NSString *inPath = [info objectForKey:@"path"];
+    NSString *unit = [info objectForKey:@"unit"];
+    NSMutableDictionary *result=[NSMutableDictionary dictionary];
+    long long folderSize = 0;
+    int errorCode=0;
+    
     EUExFile *object = [fobjDict objectForKey:inOpId];
     if (object!=nil) {
-        long outSize = [object getSize];
-        [self jsSuccessWithName:@"uexFileMgr.cbGetFileSizeByPath" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:outSize];
+        folderSize = [object getSize];
     }else {
-        [self jsFailedWithOpId:[inOpId intValue] errorCode:1091601 errorDes:UEX_ERROR_DESCRIBE_ARGS];
+        object=[[EUExFile alloc]init];
+        inPath=[super absPath:inPath];
+        BOOL isCreateFileSuccess = [object initWithFileType:F_TYPE_FILE path:inPath mode:1 euexObj:self];
+        if(isCreateFileSuccess){
+            [fobjDict setObject:object forKey:inOpId];
+            folderSize = [object getSize];
+        }
+        else{
+            errorCode=1;
+        }
     }
+    
+    if([unit isEqualToString:@"KB"]){
+        folderSize=folderSize/1024;
+    }
+    if([unit isEqualToString:@"MB"]){
+        folderSize=folderSize/1024/1024;
+    }
+    if([unit isEqualToString:@"GB"]){
+        folderSize=folderSize/1024/1024/1024;
+    }
+    [result setValue:@(errorCode) forKey:@"errorCode"];
+    [result setValue:inOpId forKey:@"id"];
+    [result setValue:@(folderSize) forKey:@"data"];
+    [result setValue:unit forKey:@"unit"];
+    
+    NSString *cbStr=[NSString stringWithFormat:@"if(uexFileMgr.cbGetFileSizeByPath != null){uexFileMgr.cbGetFileSizeByPath('%@');}",[result JSONFragment]];
+    [EUtility  brwView:meBrwView evaluateScript:cbStr];
 }
 //17.文件大小
 -(void)getFileSize:(NSMutableArray *)inArguments {
