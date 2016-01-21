@@ -73,7 +73,7 @@
         NSDateFormatter *df = [[NSDateFormatter alloc] init];
         [df setDateFormat:@"yyyy-MM-dd"];
         NSString *dateStr = [df stringFromDate:filedate];
-        [df release];
+  
         self.fileCreateTime = dateStr;
         self.fileSize = [NSNumber numberWithInt:[File getFileLength:inPath]];
         
@@ -84,10 +84,6 @@
 }
  
 -(void)dealloc{
-	[super dealloc];
-	[fileIcon release];
-	[fileCreateTime release];
-	[fileSize release];
-	[fileName release];
+
 }
 @end

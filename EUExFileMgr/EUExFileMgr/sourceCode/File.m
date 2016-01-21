@@ -68,7 +68,7 @@
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 	NSString *documentsDirectory = [paths objectAtIndex:0];
 	NSString *docPath = [documentsDirectory stringByAppendingPathComponent:fileUtf8Name];
-	[fileUtf8Name release];
+
 	return docPath;
 }
 //获取文件长度

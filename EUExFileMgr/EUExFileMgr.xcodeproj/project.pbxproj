@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3C1C09B81BE0618B00571E72 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C1C09BA1BE0618B00571E72 /* Localizable.strings */; };
-		42E4DF921BA12A08004588FB /* EUExFile+search.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E4DF911BA12A08004588FB /* EUExFile+search.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		42E4DF921BA12A08004588FB /* EUExFile+search.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E4DF911BA12A08004588FB /* EUExFile+search.m */; };
 		5A501098188FB69B0022E07C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5A501097188FB69B0022E07C /* Foundation.framework */; };
 		5A50109F188FB69B0022E07C /* EUExFileMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A50109E188FB69B0022E07C /* EUExFileMgr.m */; };
 		5A5010D8188FB6E20022E07C /* EUExFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A5010C3188FB6E20022E07C /* EUExFile.m */; };
@@ -256,7 +256,7 @@
 		5A50108C188FB69B0022E07C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = xll;
 				TargetAttributes = {
 					3C1AD5D11BD611BB0091D2A1 = {
@@ -464,10 +464,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/uexFileMgr/";
 				DSTROOT = /tmp/EUExFileMgr.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "EUExFileMgr/EUExFileMgr-Prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = uexFileMgr;
@@ -479,10 +481,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CONFIGURATION_BUILD_DIR = "$(SRCROOT)/uexFileMgr/";
 				DSTROOT = /tmp/EUExFileMgr.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "EUExFileMgr/EUExFileMgr-Prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = uexFileMgr;

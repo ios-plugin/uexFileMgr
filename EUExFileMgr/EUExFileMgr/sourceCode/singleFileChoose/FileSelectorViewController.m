@@ -15,7 +15,7 @@
 @implementation FileSelectorViewController
 
 @synthesize fileItemArray,currentPath;
-@synthesize delegate,headView,fTableView,headLabel;
+@synthesize headView,fTableView,headLabel;
 
 -(void)loadData:(NSString *)relpath{
 	NSFileManager *fmanager = [NSFileManager defaultManager];
@@ -36,11 +36,11 @@
 		NSString *subFilePath = [relpath stringByAppendingPathComponent:subFileName];
 		FileExplorerItem *fileItem = [[FileExplorerItem alloc] initFileObjectWithPath:subFilePath];
 		[items addObject:fileItem];
-		[fileItem release];
+
 	}
 
 	self.fileItemArray = items;
-	[items release];
+
 }
 
 //init
@@ -57,28 +57,28 @@
 			 currentPath = [[NSMutableString alloc]initWithString:inPath];;
 			 relpath = inPath;
 		 }
-        chuanRuPath=[[NSMutableString alloc]initWithString:relpath];
+        _chuanRuPath=[[NSMutableString alloc]initWithString:relpath];
 		[self loadData:relpath];
 	}
 	return self;
 }
 
 -(void)cancelClicked{
-	if(delegate!=nil && [delegate respondsToSelector: @selector(fileSelectCancled:)] == YES){			
-		[delegate fileSelectCancled:self];		
+	if(_delegate!=nil && [_delegate respondsToSelector: @selector(fileSelectCancled:)] == YES){
+		[_delegate fileSelectCancled:self];		
 	}
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	UIBarButtonItem *cancleButton = [[[UIBarButtonItem alloc]
+	UIBarButtonItem *cancleButton = [[UIBarButtonItem alloc]
 									  initWithTitle:UEX_LOCALIZEDSTRING(@"取消")
 									  style:UIBarButtonItemStylePlain 
 									  target:self
 									  action:@selector(cancelClicked)
-									  ]autorelease];
+									  ];
 	self.navigationItem.rightBarButtonItem = cancleButton;
-	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:UEX_LOCALIZEDSTRING(@"返回") style:UIBarButtonItemStylePlain target:self action:@selector(backBtnClick)]autorelease];
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:UEX_LOCALIZEDSTRING(@"返回") style:UIBarButtonItemStylePlain target:self action:@selector(backBtnClick)];
     self.navigationItem.title = UEX_LOCALIZEDSTRING(@"文件浏览器");
     
 
@@ -147,7 +147,7 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
     // Set up the cell...
@@ -161,12 +161,12 @@
 		UIImageView *itemImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 60, 60)];
 		[itemImageView setImage:item.fileIcon];
 		[cell.contentView addSubview:itemImageView];
-		[itemImageView release];
+	
 		UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(80, 5, 240, 20)];
 		[nameLabel setBackgroundColor:[UIColor clearColor]];
 		nameLabel.text = item.fileName;
 		[cell.contentView addSubview:nameLabel];
-		[nameLabel release];
+
 		if ([item.itemType intValue]==1) {
 			cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 		}
@@ -176,14 +176,14 @@
 			[sizeLabel setFont:[UIFont fontWithName:@"Arial" size:14]];
 			[sizeLabel setText:[NSString stringWithFormat:@"%.2f kB",[item.fileSize intValue]/1024.0]];
 			[cell.contentView addSubview:sizeLabel];
-			[sizeLabel release];
+
 		}
 		UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(185, 35, 120, 15)];
 		[timeLabel setBackgroundColor:[UIColor clearColor]];
 		[timeLabel setFont:[UIFont fontWithName:@"Arial" size:14]];
 		[timeLabel setText:item.fileCreateTime];
 		[cell.contentView addSubview:timeLabel];
-		[timeLabel release];
+
 		
 	}		
     return cell;
@@ -197,10 +197,10 @@
 //    NSLog(@"currentPath:++++%@    AccessPath:++++%@",currentPath,str);
     
     //如果有问题换成[[NSMutableString alloc]initWithString:chuanRuPath]；
-    if ([currentPath isEqualToString:chuanRuPath]) {
+    if ([currentPath isEqualToString:_chuanRuPath]) {
 		[self.navigationItem.leftBarButtonItem setEnabled:NO];
-        if(delegate!=nil && [delegate respondsToSelector: @selector(fileSelectCancled:)] == YES){
-            [delegate fileSelectCancled:self];
+        if(_delegate!=nil && [_delegate respondsToSelector: @selector(fileSelectCancled:)] == YES){
+            [_delegate fileSelectCancled:self];
         }
         
 		return;
@@ -211,7 +211,7 @@
 	[self.fTableView reloadData];
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-   int row = [indexPath row];
+   NSInteger row = [indexPath row];
 	FileExplorerItem *item = [fileItemArray objectAtIndex:row];
  
 	NSString *fileName = item.fileName;
@@ -231,8 +231,8 @@
 		[self.fTableView reloadData];
 	}else {
 		//file
-		if(delegate!=nil && [delegate respondsToSelector: @selector(fileSelectEnded:)] == YES){			
-			[delegate fileSelectEnded:currentPath];		
+		if(_delegate!=nil && [_delegate respondsToSelector: @selector(fileSelectEnded:)] == YES){			
+			[_delegate fileSelectEnded:currentPath];		
 		}		
 		[self dismissModalViewControllerAnimated:YES];	
 	}
@@ -296,11 +296,7 @@
 
 
 - (void)dealloc {
-	
-	[fileItemArray release];
-	[currentPath release];
-    [chuanRuPath release];
-    [super dealloc];
+
 }
 
 

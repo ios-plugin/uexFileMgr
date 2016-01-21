@@ -27,18 +27,7 @@
 }
 
 -(void)dealloc{
-    if (fobjDict) {
-        for (EUExFile *file in [fobjDict allValues]) {
-            if (file) {
-                [file release];
-                file = nil;
-            }
-        }
-        [fobjDict release];
-        fobjDict = nil;
-    }
-    [fExplorer release];
-    [super dealloc];
+    [self clean];
 }
 
 //1.使用密钥创建本地文件
@@ -70,7 +59,6 @@
         [fobjDict setObject:uexFile forKey:inOpId];
         [self jsSuccessWithName:@"uexFileMgr.cbCreateSecure" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
     }
-    [uexFile release];
 }
 
 //2.使用密钥打开本地文件
@@ -103,7 +91,7 @@
         [fobjDict setObject:uexFile forKey:inOpId];
         [self jsSuccessWithName:@"uexFileMgr.cbOpenSecure" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
     }
-    [uexFile release];
+
 }
 
 //1.创建文件
@@ -128,7 +116,7 @@
         [self jsSuccessWithName:@"uexFileMgr.cbCreateFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
     }
     //12.29---xll
-    [uexFile release];
+
 }
 //2.创建目录
 -(void)createDir:(NSMutableArray *)inArguments {
@@ -150,7 +138,7 @@
         [fobjDict setObject:uexFile forKey:inOpId];
         [self jsSuccessWithName:@"uexFileMgr.cbCreateDir" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
     }
-    [uexFile release];
+
 }
 //3.打开文件
 -(void)openFile:(NSMutableArray *)inArguments {
@@ -180,7 +168,7 @@
         [fobjDict setObject:uexFile forKey:inOpId];
         [self jsSuccessWithName:@"uexFileMgr.cbOpenFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
     }
-    [uexFile release];
+
 }
 //4.打开目录
 -(void)openDir:(NSMutableArray *)inArguments {
@@ -202,7 +190,7 @@
         [fobjDict setObject:uexFile forKey:inOpId];
         [self jsSuccessWithName:@"uexFileMgr.cbOpenDir" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
     }
-    [uexFile release];
+
 }
 //5.通过path删除文件
 -(void)deleteFileByPath:(NSMutableArray *)inArguments {
@@ -349,11 +337,11 @@
         inPath = [self absPath:[inArguments objectAtIndex:0]];
     }
     
-    FileListViewController* filesView = [[[FileListViewController alloc] init] autorelease];
+    FileListViewController* filesView = [[FileListViewController alloc] init];
     filesView.callBack = self;
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:filesView];
     [EUtility brwView:[super meBrwView] presentModalViewController:nav animated:(BOOL)YES];
-    [nav release];
+
 
 }
 //12.设置文件偏移
@@ -679,8 +667,7 @@
                             for (NSString *fileName in files) {
                                 NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:1];
                                 [dict setObject:fileName forKey:@"fileName"];
-                                fileName = [path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",fileName]];
-                                [dict setObject:fileName forKey:@"filePath"];
+                                [dict setObject:[path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",fileName]] forKey:@"filePath"];
                                 if ([File fileisDirectoy:fileName]) {
                                     [dict setObject:@"1" forKey:@"fileType"];
                                 }else{
@@ -811,9 +798,7 @@
 }
 
 -(void)clean{
-    if (meBrwView) {
-        meBrwView = nil;
-    }
+
     [fobjDict removeAllObjects];
 }
 

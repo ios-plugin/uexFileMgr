@@ -51,7 +51,7 @@ enum fileType {
 #pragma mark -
 #pragma mark init data
 -(void)initSelectAllPaths{
-	self.selectAllPaths = [[[NSMutableDictionary alloc] initWithCapacity:10] autorelease];
+	self.selectAllPaths = [[NSMutableDictionary alloc] initWithCapacity:10];
 }
 -(void)updateToolbarConfirmButton{
 	NSInteger count = 0;
@@ -64,7 +64,7 @@ enum fileType {
 -(void)initFilesType{
 	if (fileArray && indexpath) {
 		NSInteger count = [fileArray count];
-		self.filesType = [[[NSMutableArray alloc] initWithCapacity:count] autorelease];
+		self.filesType = [[NSMutableArray alloc] initWithCapacity:count];
 		NSFileManager *fileManager = [NSFileManager defaultManager];
 		for (NSInteger i = 0; i < count;i++) {
 			NSString *file = (NSString*)[fileArray objectAtIndex: i];
@@ -131,7 +131,7 @@ enum fileType {
 -(void)initFileList{
 	if (self.rootPath == nil) {
 		self.rootPath = NSHomeDirectory();
-		self.pathArray = [[[NSMutableArray alloc] init] autorelease];
+		self.pathArray = [[NSMutableArray alloc] init] ;
         //		NSArray *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         //		self.rootPath = [documentPaths objectAtIndex:0];
         //		root = TRUE;
@@ -237,32 +237,32 @@ enum fileType {
     }else{
         height = 40;
     }
-	self.toolBar = [[[UIToolbar alloc] initWithFrame:CGRectMake(0, size.height-height, size.width, 40)] autorelease];
+	self.toolBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, size.height-height, size.width, 40)] ;
 	toolBar.backgroundColor = [UIColor clearColor];
     toolBar.barStyle = UIBarButtonItemStyleBordered;
 	//	toolBar.barStyle = UIBarButtonItemStylePlain;
 	[toolBar sizeToFit];
 	toolBar.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;//这句作用是切换时宽度自适应.
     
-	UIBarButtonItem* allSelectBarItem = [[[UIBarButtonItem alloc] init] autorelease];
+	UIBarButtonItem* allSelectBarItem = [[UIBarButtonItem alloc] init];
     [allSelectBarItem setTitle:UEX_LOCALIZEDSTRING(@"全选")];
     [allSelectBarItem setStyle:UIBarButtonItemStyleBordered];
     [allSelectBarItem setTarget:self];
     [allSelectBarItem setAction:@selector(allSelectButtonClick)];
     
-	UIBarButtonItem* cancelSelectBarItem = [[[UIBarButtonItem alloc] init] autorelease];
+	UIBarButtonItem* cancelSelectBarItem = [[UIBarButtonItem alloc] init] ;
     [cancelSelectBarItem setTitle:UEX_LOCALIZEDSTRING(@"取消全选")];
     [cancelSelectBarItem setStyle:UIBarButtonItemStyleBordered];
     [cancelSelectBarItem setTarget:self];
     [cancelSelectBarItem setAction:@selector(CancelAllSelectButtonClick)];
     
-	UIBarButtonItem* confirmBarItem = [[[UIBarButtonItem alloc] init] autorelease];
+	UIBarButtonItem* confirmBarItem = [[UIBarButtonItem alloc] init] ;
     [confirmBarItem setTitle:[NSString stringWithFormat:@"%@(%d)",UEX_LOCALIZEDSTRING(@"确定"),0]];
     [confirmBarItem setStyle:UIBarButtonItemStyleBordered];
     [confirmBarItem setTarget:self];
     [confirmBarItem setAction:@selector(confirmButtonClick)];
     
-	UIBarButtonItem* barItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:@selector(nullButtonClick)] autorelease];
+	UIBarButtonItem* barItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:@selector(nullButtonClick)] ;
 //    [barItem setTitle:[NSString stringWithFormat:@"确定(%d)",0]];
 //    [barItem setStyle:UIBarButtonSystemItemFlexibleSpace];
 //    [barItem setTarget:self];
@@ -280,13 +280,13 @@ enum fileType {
 	if ([title isEqualToString:UEX_LOCALIZEDSTRING(@"编辑")]) {
 		rightItemButton.title = UEX_LOCALIZEDSTRING(@"取消");
 		isEditableOrNot = 1;
-		[table setTableFooterView:[[[UIView alloc] initWithFrame:CGRectMake(0,0,[UIScreen mainScreen].applicationFrame.size.width,40)] autorelease]];
+		[table setTableFooterView:[[UIView alloc] initWithFrame:CGRectMake(0,0,[UIScreen mainScreen].applicationFrame.size.width,40)]];
 		[self initToolbar];
 	}else {
 		rightItemButton.title = UEX_LOCALIZEDSTRING(@"编辑");
 		isEditableOrNot = 0;
 		[toolBar removeFromSuperview];
-		[table setTableFooterView:[[[UIView alloc] initWithFrame:CGRectZero] autorelease]];
+		[table setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
 		[table reloadData];
 	}
 	[self initSelectAllPaths];
@@ -310,7 +310,7 @@ enum fileType {
 }
 
 - (void)initTitleBar{
-	UILabel * titleLabel = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
+	UILabel * titleLabel = [[UILabel alloc] initWithFrame:CGRectZero] ;
 	titleLabel.backgroundColor = [UIColor clearColor];
 	titleLabel.opaque = NO;
 	titleLabel.textColor = [UIColor blackColor];
@@ -320,8 +320,8 @@ enum fileType {
 	titleLabel.text = UEX_LOCALIZEDSTRING(@"文件浏览器");
 	titleLabel.textAlignment = UITextAlignmentCenter;
 	self.navigationItem.titleView = titleLabel;
-	self.navigationItem.leftBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:UEX_LOCALIZEDSTRING(@"返回") style:UIBarButtonItemStyleBordered target:self action:@selector(backBtnClicked)] autorelease];
-	self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithTitle:UEX_LOCALIZEDSTRING(@"编辑") style:UIBarButtonItemStyleBordered target:self action:@selector(rightButtonClick:)] autorelease];
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:UEX_LOCALIZEDSTRING(@"返回") style:UIBarButtonItemStyleBordered target:self action:@selector(backBtnClicked)];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:UEX_LOCALIZEDSTRING(@"编辑") style:UIBarButtonItemStyleBordered target:self action:@selector(rightButtonClick:)];
 	self.navigationController.navigationBar.tintColor = [UIColor blackColor];
 }
 #pragma mark -
@@ -370,7 +370,7 @@ enum fileType {
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] ;
     }
 	
 	NSInteger row = [indexPath row];
@@ -391,7 +391,7 @@ enum fileType {
 	{
 		cell.accessoryType = UITableViewCellAccessoryNone;
 		if (isEditableOrNot && flag == 0) {
-			NSString* key = [NSString stringWithFormat:@"%@X%d)",indexpath,row];
+			NSString* key = [NSString stringWithFormat:@"%@X%ld)",indexpath,(long)row];
 			NSString* value = [selectAllPaths objectForKey:key];
 			if (value) {
 				[selectFiles replaceObjectAtIndex:row withObject:@"1"];
@@ -402,7 +402,7 @@ enum fileType {
 			UIImage *image = [UIImage imageNamed:@"uexFileMgr/plugin_file_Selected.png"];
 			UIImageView* imageView = [[UIImageView alloc] initWithImage:image];
 			cell.accessoryView = imageView;
-            [imageView release];
+    
 		}else {
 			cell.accessoryView = nil;
 		}
@@ -498,7 +498,6 @@ enum fileType {
 				UIImage *image = [UIImage imageNamed:@"uexFileMgr/plugin_file_Selected.png"];
 				UIImageView* imageView = [[UIImageView alloc] initWithImage:image];
 				cell.accessoryView = imageView;
-                [imageView release];
 				[selectFiles replaceObjectAtIndex:row withObject:@"1"];
 				[selectAllPaths setObject:[indexpath stringByAppendingPathComponent:[fileArray objectAtIndex:row]] forKey:key];
 			}
@@ -595,16 +594,6 @@ CGRect getClientRect( BOOL isHorz)
 
 
 - (void)dealloc {
-	[table release];
-	[fileArray release];
-	[pathArray release];
-	[selectFiles release];
-	[filesType release];
-	[selectAllPaths release];
-	[rootPath release];
-	[indexpath release];
-	[toolBar release];
-	[callBack release];
-    [super dealloc];
+
 }
 @end

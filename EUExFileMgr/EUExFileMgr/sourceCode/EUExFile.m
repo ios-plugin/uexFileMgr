@@ -164,7 +164,7 @@
 
 - (NSData *)rc4WithInput:(NSData *)aData key:(NSString *)aKey {
     
-    NSString * aInput = [[[NSString alloc] initWithData:aData encoding:NSUTF8StringEncoding] autorelease];
+    NSString * aInput = [[NSString alloc] initWithData:aData encoding:NSUTF8StringEncoding];
     
     NSMutableArray * iS = [[NSMutableArray alloc] initWithCapacity:256];
     NSMutableArray * iK = [[NSMutableArray alloc] initWithCapacity:256];
@@ -233,8 +233,7 @@
         
     }
     
-    [iS release];
-    [iK release];
+
     
     resultData = [result dataUsingEncoding:NSUTF8StringEncoding];
     
@@ -335,7 +334,7 @@
 	if (fileHandle!=nil) {
 		for (int i =0 ; i<6; i++) {
 			readData = [fileHandle readDataOfLength:readLenth];
-			readString = [[[NSString alloc] initWithData:readData encoding:NSUTF8StringEncoding] autorelease];
+			readString = [[NSString alloc] initWithData:readData encoding:NSUTF8StringEncoding];
 			if (readString!=nil) {
 				offset +=[readData length]; 
 				break;
@@ -345,14 +344,14 @@
 			}
 		}
 		int readLengthSuf = inLen;
-		int offsetSuf = offset;
+		NSInteger offsetSuf = offset;
 		if (readString==nil) {
 			for (int j = 0; j<6; j++) {
 				offsetSuf-=1;
 				if (offsetSuf >=0) {
 					[fileHandle seekToFileOffset:offsetSuf];
 					readData = [fileHandle readDataOfLength:readLengthSuf];
-					readString = [[[NSString alloc] initWithData:readData encoding:NSUTF8StringEncoding] autorelease];
+					readString = [[NSString alloc] initWithData:readData encoding:NSUTF8StringEncoding];
 					if(readString!=nil){
 						offset =offsetSuf +[readData length];
 						break;
@@ -375,7 +374,7 @@
 					if (offsetPre>=0) {
 						[fileHandle seekToFileOffset:offsetPre];
 						readData = [fileHandle readDataOfLength:readLengthPre];
-						readString = [[[NSString alloc] initWithData:readData encoding:NSUTF8StringEncoding] autorelease];
+						readString = [[NSString alloc] initWithData:readData encoding:NSUTF8StringEncoding];
 						if (readString!=nil) {
 							offset = offsetPre+[readData length];
 							break;	
@@ -412,16 +411,12 @@
 //	return NO;
 //}
 -(void)dealloc{
-	[appFilePath release];
 	appFilePath = nil;
 	if (fileUrl) {
-		[fileUrl release];
 		fileUrl = nil;
 	}
-	[OS_offset release];
     if (keyString) {
         self.keyString=nil;
     }
-	[super dealloc];
 }
 @end

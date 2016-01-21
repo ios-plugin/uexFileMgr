@@ -16,26 +16,14 @@
 @end
 
 @interface FileSelectorViewController : UIViewController<UITableViewDelegate,UITableViewDataSource>
- {
-//	UITableViewController *tableController;
-	NSMutableString *currentPath;
-     NSMutableString * chuanRuPath;
-	NSMutableArray *fileItemArray;
-	id< FileSelectorDelegate > delegate;
- 
-	 UIView *headView;
-	 UILabel *headLabel;
-	 UITableView *fTableView;
- 
-}
- 
-@property (nonatomic, retain) UITableView *fTableView;
-@property (nonatomic, retain) UIView *headView;
-@property (nonatomic, retain) UILabel *headLabel;
-@property (nonatomic, retain) NSMutableString *currentPath;
-@property (nonatomic, retain) NSMutableArray *fileItemArray;
 
+@property (nonatomic, strong) UITableView *fTableView;
+@property (nonatomic, strong) UIView *headView;
+@property (nonatomic, strong) UILabel *headLabel;
+@property (nonatomic, strong) NSMutableString *currentPath;
+@property (nonatomic, strong) NSMutableArray *fileItemArray;
+@property (nonatomic, strong) NSString *chuanRuPath;
 
-@property (nonatomic,assign) id< FileSelectorDelegate > delegate;
+@property (nonatomic,weak) id<FileSelectorDelegate> delegate;
 -(id)initWithRootPath:(NSString *)inPath;
 @end

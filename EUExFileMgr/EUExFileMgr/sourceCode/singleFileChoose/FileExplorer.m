@@ -27,23 +27,20 @@ NSString *g_filePath = nil;
 	[nav setModalPresentationStyle:UIModalPresentationCurrentContext];
     [EUtility brwView:euexObj.meBrwView presentModalViewController:nav animated:YES];
      
-	[fileController release];
-	[nav release];
+
 }
 - (void)fileSelectEnded:(NSString *)filepath{	
 	if (g_filePath) {
-		[g_filePath release];
+
 		g_filePath = nil;
 	}
 	g_filePath = filepath;
-	[g_filePath retain];
+
  	[euexObj uexOnFileMgrExplorerWithOpId:0 dataType:UEX_CALLBACK_DATATYPE_TEXT data:g_filePath];
 }
 
 -(void)fileSelectCancled:(id)filePicker{
     [(UIViewController*)filePicker  dismissModalViewControllerAnimated:YES];
  }
--(void)dealloc{
-	[super dealloc];
-}
+
 @end
