@@ -781,11 +781,11 @@
         [self cbSearch:NO result:nil];
         return;
     }
-    uexFilrMgrSearchOption opt =uexFilrMgrSearchNone;
+    uexFileMgrSearchOption opt =uexFileMgrSearchNone;
     if([info objectForKey:@"option"]){
         NSInteger num=[[info objectForKey:@"option"] integerValue];
         if(num >-1 && num <9){
-            opt=(uexFilrMgrSearchOption)num;
+            opt=(uexFileMgrSearchOption)num;
         }
     }
     NSArray *keywords=nil;

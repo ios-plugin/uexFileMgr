@@ -12,17 +12,17 @@
 
 
 +(void)searchFilesByPath:(NSString *)realPath
-                  option:(uexFilrMgrSearchOption)option
+                  option:(uexFileMgrSearchOption)option
                 keywords:(NSArray*)keywords
                 suffixes:(NSArray*)suffixes
               conpletion:(void (^)(BOOL isSuccess,NSArray * result))completion{
     
     BOOL recursively = NO;
-    if(option & uexFilrMgrSearchRecursively){
+    if(option & uexFileMgrSearchRecursively){
         recursively=YES;
     }
     BOOL isIncludingFolder = NO;
-    if(option & uexFilrMgrSearchIncludingFolder){
+    if(option & uexFileMgrSearchIncludingFolder){
         isIncludingFolder=YES;
     }
     NSArray *result =[self getFileListByPath:realPath
@@ -36,7 +36,7 @@
     }
     NSMutableArray * filterResult = [NSMutableArray array];
     BOOL exactly=NO;
-    if(option & uexFilrMgrSearchExactly){
+    if(option & uexFileMgrSearchExactly){
         exactly=YES;
     }
     

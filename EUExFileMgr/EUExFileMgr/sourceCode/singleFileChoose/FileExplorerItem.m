@@ -15,34 +15,34 @@
     NSString *smallName = [filename lowercaseString];
 	if ([smallName hasSuffix:@"jpg"]||[smallName hasSuffix:@"jpeg"]||[smallName hasSuffix:@"png"]||[smallName hasSuffix:@"gif"]) {
 		self.fileType = FILE_TYPE_IMAGE;
-		self.fileIcon = [UIImage imageNamed:@"uexFileMgr/plugin_file_photo.png"];
+        self.fileIcon = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_photo");
 	}else if ([smallName hasSuffix:@"mov"]||[smallName hasSuffix:@"mp4"]||[smallName hasSuffix:@"avi"]||[smallName hasSuffix:@"3gp"]) {
 		self.fileType = FILE_TYPE_VIDEO;
-		self.fileIcon = [UIImage imageNamed:@"uexFileMgr/plugin_file_video.png"];
+		self.fileIcon = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_video");
 	}else if ([smallName hasSuffix:@"mp3"]) {
 		self.fileType = FILE_TYPE_MUSIC;
-		self.fileIcon = [UIImage imageNamed:@"uexFileMgr/plugin_file_music.png"];
+		self.fileIcon = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_music");
 	}else if ([smallName hasSuffix:@"zip"]) {
 		self.fileType = FILE_TYPE_ZIP;
-		self.fileIcon = [UIImage imageNamed:@"uexFileMgr/plugin_file_zip.png"];
+		self.fileIcon = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_zip");
 	}else if ([smallName hasSuffix:@"txt"]||[smallName hasSuffix:@"rtf"]){
 		self.fileType = FILE_TYPE_DOCUMENT;
-		self.fileIcon = [UIImage imageNamed:@"uexFileMgr/plugin_file_txt.png"];
+		self.fileIcon = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_txt");
 	}else if ([smallName hasSuffix:@"pdf"]) {
 		self.fileType = FILE_TYPE_DOCUMENT;
-		self.fileIcon = [UIImage imageNamed:@"uexFileMgr/plugin_file_pdf.png"];
+		self.fileIcon = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_pdf");
 	}else if ([smallName hasSuffix:@"doc"]||[smallName hasSuffix:@"docx"]) {
 		self.fileType = FILE_TYPE_DOCUMENT;
-		self.fileIcon = [UIImage imageNamed:@"uexFileMgr/plugin_file_doc.png"];
+		self.fileIcon = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_doc");
 	}else if ([smallName hasSuffix:@"ppt"]||[smallName hasSuffix:@"pptx"]) {
 		self.fileType = FILE_TYPE_DOCUMENT;
-		self.fileIcon = [UIImage imageNamed:@"uexFileMgr/plugin_file_ppt.png"];
+		self.fileIcon = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_ppt");
 	}else if ([smallName hasSuffix:@"xls"]||[smallName hasSuffix:@"xlsx"]) {
 		self.fileType = FILE_TYPE_DOCUMENT;
-		self.fileIcon = [UIImage imageNamed:@"uexFileMgr/plugin_file_excel.png"];
+		self.fileIcon = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_excel");
 	}else {
 		self.fileType = FILE_TYPE_UNKNOW;
-		self.fileIcon = [UIImage imageNamed:@"uexFileMgr/plugin_file_unknown.png"];
+		self.fileIcon = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_unknown");
 	}
 
 
@@ -60,9 +60,9 @@
             self.fileType = FILE_TYPE_DIRECTORY;
             self.subItems = [[NSFileManager defaultManager] subpathsAtPath:inPath];
             if ([subItems count]>0) {
-                self.fileIcon = [UIImage imageNamed:@"uexFileMgr/plugin_file_folder.png"];
+                self.fileIcon = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_folder");
             }else {
-                self.fileIcon = [UIImage imageNamed:@"uexFileMgr/plugin_file_emptyfolder.png"];
+                self.fileIcon = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_emptyfolder");
             }
             
         }else {

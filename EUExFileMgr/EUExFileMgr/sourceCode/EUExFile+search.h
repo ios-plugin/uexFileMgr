@@ -10,18 +10,18 @@
 
 @interface EUExFile (search)
 
-typedef NS_OPTIONS(NSInteger, uexFilrMgrSearchOption){
-    uexFilrMgrSearchNone          = 0,
-    uexFilrMgrSearchIncludingFolder = 1 << 0,
-    uexFilrMgrSearchExactly       = 1 << 1,
-    uexFilrMgrSearchRecursively   = 1 << 2
+typedef NS_OPTIONS(NSInteger, uexFileMgrSearchOption){
+    uexFileMgrSearchNone          = 0,
+    uexFileMgrSearchIncludingFolder = 1 << 0,
+    uexFileMgrSearchExactly       = 1 << 1,
+    uexFileMgrSearchRecursively   = 1 << 2
 };
 
 
 
 
 +(void)searchFilesByPath:(NSString *)realPath
-                  option:(uexFilrMgrSearchOption)option
+                  option:(uexFileMgrSearchOption)option
                 keywords:(NSArray*)keywords
                 suffixes:(NSArray*)suffixes
               conpletion:(void (^)(BOOL isSuccess,NSArray * result))completion;

@@ -399,7 +399,8 @@ enum fileType {
 			}
 		}
 		if(isEditableOrNot && flag == 1) {
-			UIImage *image = [UIImage imageNamed:@"uexFileMgr/plugin_file_Selected.png"];
+            
+			UIImage *image = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_Selected");
 			UIImageView* imageView = [[UIImageView alloc] initWithImage:image];
 			cell.accessoryView = imageView;
     
@@ -414,12 +415,12 @@ enum fileType {
 		switch (typevalue) {
 			case Directory_Type:
 			{
-				cell.imageView.image = [UIImage imageNamed:@"uexFileMgr/plugin_file_folder.png"];
+				cell.imageView.image = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_folder");
 			}
 				break;
 			case EmptyDirectory_Type:
 			{
-				cell.imageView.image = [UIImage imageNamed:@"uexFileMgr/plugin_file_emptyfolder.png"];
+				cell.imageView.image = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_emptyfolder");
 			}
 				break;
 			case Image_Type:
@@ -430,47 +431,47 @@ enum fileType {
 				break;
 			case Document_type:
 			{
-				cell.imageView.image = [UIImage imageNamed:@"uexFileMgr/plugin_file_doc.png"];
+				cell.imageView.image = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_doc");
 			}
 				break;
 			case Music_Type:
 			{
-				cell.imageView.image = [UIImage imageNamed:@"uexFileMgr/plugin_file_music.png"];
+				cell.imageView.image = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_music");
 			}
 				break;
 			case Video_Type:
 			{
-				cell.imageView.image = [UIImage imageNamed:@"uexFileMgr/plugin_file_video.png"];
+				cell.imageView.image = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_video");
 			}
 				break;
 			case Zip_Type:
 			{
-				cell.imageView.image = [UIImage imageNamed:@"uexFileMgr/plugin_file_zip.png"];
+				cell.imageView.image = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_zip");
 			}
 				break;
 			case Txt_Type:
 			{
-				cell.imageView.image = [UIImage imageNamed:@"uexFileMgr/plugin_file_txt.png"];
+				cell.imageView.image = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_txt");
 			}
 				break;
 			case Pdf_Type:
 			{
-				cell.imageView.image = [UIImage imageNamed:@"uexFileMgr/plugin_file_pdf.png"];
+				cell.imageView.image = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_pdf");
 			}
 				break;
 			case Ppt_Type:
 			{
-				cell.imageView.image = [UIImage imageNamed:@"uexFileMgr/plugin_file_ppt.png"];
+				cell.imageView.image = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_ppt");
 			}
 				break;
 			case Xls_Type:
 			{
-				cell.imageView.image = [UIImage imageNamed:@"uexFileMgr/plugin_file_excel.png"];
+				cell.imageView.image = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_excel");
 			}
 				break;
 			default:
 			{
-				cell.imageView.image = [UIImage imageNamed:@"uexFileMgr/plugin_file_unknown.png"];
+				cell.imageView.image = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_unknown");
 			}
 				break;
 		}
@@ -495,7 +496,7 @@ enum fileType {
 				[selectAllPaths removeObjectForKey:key];
 			}
 			else if(flag == 0){
-				UIImage *image = [UIImage imageNamed:@"uexFileMgr/plugin_file_Selected.png"];
+				UIImage *image = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_Selected");
 				UIImageView* imageView = [[UIImageView alloc] initWithImage:image];
 				cell.accessoryView = imageView;
 				[selectFiles replaceObjectAtIndex:row withObject:@"1"];
