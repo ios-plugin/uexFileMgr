@@ -467,21 +467,12 @@
     NSMutableDictionary *result=[NSMutableDictionary dictionary];
     long long folderSize = 0;
     int errorCode=0;
-    
-    EUExFile *object = [fobjDict objectForKey:inOpId];
-    if (object!=nil) {
-        folderSize = [object getSize];
-    }else {
-        object=[[EUExFile alloc]init];
-        inPath=[super absPath:inPath];
-        BOOL isCreateFileSuccess = [object initWithFileType:F_TYPE_FILE path:inPath mode:1 euexObj:self];
-        if(isCreateFileSuccess){
-            [fobjDict setObject:object forKey:inOpId];
-            folderSize = [object getSize];
-        }
-        else{
-            errorCode=1;
-        }
+    NSFileManager* manager = [NSFileManager defaultManager];
+    if ([manager fileExistsAtPath:[self absPath:inPath]]){
+        folderSize=[self folderSizeAtPath:[self absPath:inPath]];
+    }
+    else{
+        errorCode=1;
     }
     
     if([unit isEqualToString:@"KB"]){
@@ -500,6 +491,25 @@
     
     NSString *cbStr=[NSString stringWithFormat:@"if(uexFileMgr.cbGetFileSizeByPath != null){uexFileMgr.cbGetFileSizeByPath('%@');}",[result JSONFragment]];
     [EUtility  brwView:meBrwView evaluateScript:cbStr];
+}
+- (long long) fileSizeAtPath:(NSString*) filePath{
+    NSFileManager* manager = [NSFileManager defaultManager];
+    if ([manager fileExistsAtPath:filePath]){
+        return [[manager attributesOfItemAtPath:filePath error:nil] fileSize];
+    }
+    return 0;
+}
+- (float ) folderSizeAtPath:(NSString*) folderPath{
+    NSFileManager* manager = [NSFileManager defaultManager];
+    if (![manager fileExistsAtPath:folderPath]) return 0;
+    NSEnumerator *childFilesEnumerator = [[manager subpathsAtPath:folderPath] objectEnumerator];
+    NSString* fileName;
+    long long folderSize = 0;
+    while ((fileName = [childFilesEnumerator nextObject]) != nil){
+        NSString* fileAbsolutePath = [folderPath stringByAppendingPathComponent:fileName];
+        folderSize += [self fileSizeAtPath:fileAbsolutePath];
+    }
+    return folderSize;
 }
 //17.文件大小
 -(void)getFileSize:(NSMutableArray *)inArguments {
