@@ -11,7 +11,6 @@
 		0C61E0E128A47A3C4D552A00 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1213F05307E06A6A7C181AB5 /* AudioToolbox.framework */; };
 		175F168584D682E9D3FB478C /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA8BEE4D3B0344F1A55DE3E /* libsqlite3.tbd */; };
 		23F75C1C98225220B1F13DCF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1241AFD6098EC6090FDA9508 /* CoreGraphics.framework */; };
-		3C1C09B81BE0618B00571E72 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3C1C09BA1BE0618B00571E72 /* Localizable.strings */; };
 		42E4DF921BA12A08004588FB /* EUExFile+search.m in Sources */ = {isa = PBXBuildFile; fileRef = 42E4DF911BA12A08004588FB /* EUExFile+search.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		51AF0411AE9E55F01582777F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD536285ADF95F154751F865 /* SystemConfiguration.framework */; };
 		537A95F0144FFF885F2B53A6 /* uexFileMgr.bundle in Resources */ = {isa = PBXBuildFile; fileRef = C264F288F3895D245A764868 /* uexFileMgr.bundle */; };
@@ -34,16 +33,6 @@
 		C4650612B79E3311DC37207B /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C9B682089D391D5D8F73C6A3 /* libc++.tbd */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		3C1AD5D81BD611E90091D2A1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5A50108C188FB69B0022E07C /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3C1AD5D11BD611BB0091D2A1;
-			remoteInfo = uexFileMgrBundle;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		5A501092188FB69B0022E07C /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -62,7 +51,6 @@
 		1241AFD6098EC6090FDA9508 /* CoreGraphics.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		236E37927A9C9DB59DA8E878 /* ImageIO.framework */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		3B57101CF69DC4234C03E664 /* libz.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = archive.ar; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		3C1AD5D21BD611BB0091D2A1 /* uexFileMgr.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = uexFileMgr.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C1C09B91BE0618B00571E72 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3C1C09BB1BE0618C00571E72 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		42E4DF901BA12A08004588FB /* EUExFile+search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EUExFile+search.h"; sourceTree = "<group>"; };
@@ -108,13 +96,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		3C1AD5CF1BD611BB0091D2A1 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		5A501091188FB69B0022E07C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -194,7 +175,6 @@
 			isa = PBXGroup;
 			children = (
 				5A501094188FB69B0022E07C /* uexFileMgr.framework */,
-				3C1AD5D21BD611BB0091D2A1 /* uexFileMgr.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -292,23 +272,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3C1AD5D11BD611BB0091D2A1 /* uexFileMgrBundle */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3C1AD5D71BD611BB0091D2A1 /* Build configuration list for PBXNativeTarget "uexFileMgrBundle" */;
-			buildPhases = (
-				3C1AD5CE1BD611BB0091D2A1 /* Sources */,
-				3C1AD5CF1BD611BB0091D2A1 /* Frameworks */,
-				3C1AD5D01BD611BB0091D2A1 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = uexFileMgrBundle;
-			productName = uexFileMgrBundle;
-			productReference = 3C1AD5D21BD611BB0091D2A1 /* uexFileMgr.bundle */;
-			productType = "com.apple.product-type.bundle";
-		};
 		5A501093188FB69B0022E07C /* EUExFileMgr */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5A5010B7188FB69B0022E07C /* Build configuration list for PBXNativeTarget "EUExFileMgr" */;
@@ -321,7 +284,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				3C1AD5D91BD611E90091D2A1 /* PBXTargetDependency */,
 			);
 			name = EUExFileMgr;
 			productName = EUExFileMgr;
@@ -336,11 +298,6 @@
 			attributes = {
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = xll;
-				TargetAttributes = {
-					3C1AD5D11BD611BB0091D2A1 = {
-						CreatedOnToolsVersion = 7.0.1;
-					};
-				};
 			};
 			buildConfigurationList = 5A50108F188FB69B0022E07C /* Build configuration list for PBXProject "EUExFileMgrIDE" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -356,20 +313,11 @@
 			projectRoot = "";
 			targets = (
 				5A501093188FB69B0022E07C /* EUExFileMgr */,
-				3C1AD5D11BD611BB0091D2A1 /* uexFileMgrBundle */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		3C1AD5D01BD611BB0091D2A1 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3C1C09B81BE0618B00571E72 /* Localizable.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		62CFDF62E1C1E27AD9FA8173 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -381,13 +329,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		3C1AD5CE1BD611BB0091D2A1 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		5A501090188FB69B0022E07C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -405,14 +346,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		3C1AD5D91BD611E90091D2A1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3C1AD5D11BD611BB0091D2A1 /* uexFileMgrBundle */;
-			targetProxy = 3C1AD5D81BD611E90091D2A1 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
 		3C1C09BA1BE0618B00571E72 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
@@ -426,56 +359,6 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		3C1AD5D51BD611BB0091D2A1 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_BUILD_DIR = $SRCROOT/uexFileMgr;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_TESTABILITY = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.zywx.uexFileMgrBundle;
-				PRODUCT_MODULE_NAME = uexFileMgr;
-				PRODUCT_NAME = uexFileMgr;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Debug;
-		};
-		3C1AD5D61BD611BB0091D2A1 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				CONFIGURATION_BUILD_DIR = $SRCROOT/uexFileMgr;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				INFOPLIST_FILE = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.zywx.uexFileMgrBundle;
-				PRODUCT_MODULE_NAME = uexFileMgr;
-				PRODUCT_NAME = uexFileMgr;
-				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Release;
-		};
 		5A5010B5188FB69B0022E07C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -629,15 +512,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3C1AD5D71BD611BB0091D2A1 /* Build configuration list for PBXNativeTarget "uexFileMgrBundle" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3C1AD5D51BD611BB0091D2A1 /* Debug */,
-				3C1AD5D61BD611BB0091D2A1 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		5A50108F188FB69B0022E07C /* Build configuration list for PBXProject "EUExFileMgrIDE" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
