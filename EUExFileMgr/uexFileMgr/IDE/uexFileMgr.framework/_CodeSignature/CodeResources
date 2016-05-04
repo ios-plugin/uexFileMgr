@@ -6,142 +6,142 @@
 	<dict>
 		<key>Info.plist</key>
 		<data>
-		UqL5yjmywKWtypzP2BglwgkETvk=
+		r4zmVNXVlUBH4sPjKvS/A5Jo17w=
 		</data>
 		<key>embedded.mobileprovision</key>
 		<data>
 		JKbXoT98W7zj86Z2W3qbeHZe/kE=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/en.lproj/Localizable.strings</key>
+		<key>uexFileMgr.bundle/en.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			qu7pe9KrjS7W3olhgTuHDvKIpOg=
+			LNDg4QOXK8Nm+NP8gosTpaDTeB0=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_Selected.png</key>
+		<key>uexFileMgr.bundle/plugin_file_Selected.png</key>
 		<data>
-		j0W9RYjRtlbZh/QU/JluE886duY=
+		fr+M20Stn90ODvSZdW7B7uq5G/w=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_apk.png</key>
+		<key>uexFileMgr.bundle/plugin_file_apk.png</key>
 		<data>
-		qtyC4FXzBQt3UoX2qLw4fwrbjn4=
+		HuQ+lfXP85CfbKDh8oW4KW1tf7s=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_apk@2x.png</key>
+		<key>uexFileMgr.bundle/plugin_file_apk@2x.png</key>
 		<data>
-		O7pzsnzvpc+tFM5kvK8gjjvi1m8=
+		YK9g5QboIKyofGC/PLhC5WxVyCA=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_doc.png</key>
+		<key>uexFileMgr.bundle/plugin_file_doc.png</key>
 		<data>
-		CVI8K7IXQvxPgRi9ebgGwsq9RwY=
+		Yht/DHqjeiqwugx0vVwzh3fMslg=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_doc@2x.png</key>
+		<key>uexFileMgr.bundle/plugin_file_doc@2x.png</key>
 		<data>
-		YjiSn/knhbieRhKMmTgTyTqpskI=
+		QgsS4UonUkp2fTwyJP7imgJZU1E=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_emptyfolder.png</key>
+		<key>uexFileMgr.bundle/plugin_file_emptyfolder.png</key>
 		<data>
-		1X3Zqm711KEFxaMwAHjWyibTjuE=
+		BcKmrZcj8z0q8pZdseD1CCP7dm8=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_emptyfolder@2x.png</key>
+		<key>uexFileMgr.bundle/plugin_file_emptyfolder@2x.png</key>
 		<data>
-		lOAl3RZxqPFtkO1T15vUYD87YNY=
+		+AiBelYjhqkp8baQjbNtirVKqDA=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_excel.png</key>
+		<key>uexFileMgr.bundle/plugin_file_excel.png</key>
 		<data>
-		qvQ9VfsaNQeEwsuOvbcms2a65lI=
+		HlDDLgGvCSAATPsAa0OjqqA5bQY=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_excel@2x.png</key>
+		<key>uexFileMgr.bundle/plugin_file_excel@2x.png</key>
 		<data>
-		+YqnkVgMzA90z7j+fTGoL5TDHis=
+		JALwVyDElpr02GBIU87L1JyVUb4=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_folder.png</key>
+		<key>uexFileMgr.bundle/plugin_file_folder.png</key>
 		<data>
-		aGVqZgjG15FWAjLBbRPpV6Y3l6M=
+		SeqzrdYU5HKY+rBef60HdPGM2m4=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_folder@2x.png</key>
+		<key>uexFileMgr.bundle/plugin_file_folder@2x.png</key>
 		<data>
-		Htft5GRBRvc6oGot2QiUonhKvOw=
+		ZCLmZ9uxc4XvmLQQvK2oq4iOFdY=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_folder_arrow.png</key>
+		<key>uexFileMgr.bundle/plugin_file_folder_arrow.png</key>
 		<data>
-		Nt2YSIvKagaoayERe1OPksW9Lko=
+		B/b3jmTK0qj/2krmlVmZbMJLTXQ=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_folder_arrow@2x.png</key>
+		<key>uexFileMgr.bundle/plugin_file_folder_arrow@2x.png</key>
 		<data>
-		PQQSDxCrD6oSyb8K1TnC8o5S/z0=
+		khMOO3cMxqNerT0LVyveeTunFcw=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_music.png</key>
+		<key>uexFileMgr.bundle/plugin_file_music.png</key>
 		<data>
-		qrVDLC/DFz7dh4DuP1/cSz57c24=
+		2EQlP19+9468H2SVR5wKa1QdcEw=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_music@2x.png</key>
+		<key>uexFileMgr.bundle/plugin_file_music@2x.png</key>
 		<data>
-		ZnJXD+9vP3KHE9fmEHRoTBUPfR4=
+		/uE9SzNeJEPPd/hk0OqDWKzXFk8=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_pdf.png</key>
+		<key>uexFileMgr.bundle/plugin_file_pdf.png</key>
 		<data>
-		Um3TdEoQ+ZW05eOKqp4v0cQQDzU=
+		zV/7pb0jknmxXnmuZ84PJBBMh1Q=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_pdf@2x.png</key>
+		<key>uexFileMgr.bundle/plugin_file_pdf@2x.png</key>
 		<data>
-		wAIb15kwqr10DzdDnqop0ghg0JA=
+		bxRUP2Sijg7LPBIgTuyWXXnbQf4=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_photo.png</key>
+		<key>uexFileMgr.bundle/plugin_file_photo.png</key>
 		<data>
-		wpOgie1Stjy7qkbCN79IYi7obYU=
+		/acbcUeS6u5YdMgRYW0KvNbkBR0=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_photo@2x.png</key>
+		<key>uexFileMgr.bundle/plugin_file_photo@2x.png</key>
 		<data>
-		bGdntdyM3fg6Zh711sgC7uaTAA0=
+		3CDPUmnOLgmC76u3fCPawv+ZXVg=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_ppt.png</key>
+		<key>uexFileMgr.bundle/plugin_file_ppt.png</key>
 		<data>
-		PnFbK83FhKJMMs8zdFudb8Yk4ro=
+		C9NeGtXrVwC3RkRPxvRDdh+oGk8=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_ppt@2x.png</key>
+		<key>uexFileMgr.bundle/plugin_file_ppt@2x.png</key>
 		<data>
-		FoKRzB4Xafdi1qFQsrlyeEnNWpI=
+		ArtjW697bb0iRssFsXjikSzx8yw=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_txt.png</key>
+		<key>uexFileMgr.bundle/plugin_file_txt.png</key>
 		<data>
-		vjKcEfjU9dbBWD14TFGHYioTnkI=
+		J0lrv8sxh+WDd6uR1zzVMkr2X4M=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_txt@2x.png</key>
+		<key>uexFileMgr.bundle/plugin_file_txt@2x.png</key>
 		<data>
-		PGbS9V01VcSU2QWOsNXbjQ+YG/k=
+		wi1fgYQBGUNM3ztD2kFxHWzv8Vk=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_unknown.png</key>
+		<key>uexFileMgr.bundle/plugin_file_unknown.png</key>
 		<data>
-		TJpUz5+CVaaHEqzr3dkzH79SJ6s=
+		AukoJswzOQPilbjQ6L0Rlj1FL9s=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_unknown@2x.png</key>
+		<key>uexFileMgr.bundle/plugin_file_unknown@2x.png</key>
 		<data>
-		ZYAwUwyizjdfBMT4tYm2biQQhMo=
+		UMREKYO6uEyhfgMlLLktP9proCM=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_video.png</key>
+		<key>uexFileMgr.bundle/plugin_file_video.png</key>
 		<data>
-		uQLAuIDBCmN5bAR3Fd8NE5levKU=
+		B6jPWc9XedyblFK15X51ybkmkdA=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_video@2x.png</key>
+		<key>uexFileMgr.bundle/plugin_file_video@2x.png</key>
 		<data>
-		WmQ/Sfp8QNZadxcx7U6N6tlItm8=
+		Vv5EhP3VdBmk8BJWV5n0O3/LokM=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_zip.png</key>
+		<key>uexFileMgr.bundle/plugin_file_zip.png</key>
 		<data>
-		G3b3MjUcI9Rhm7B1H+1CuMPFHvo=
+		jkLLUiDpjLAzZKF+T0jJ9/aJTZ8=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_zip@2x.png</key>
+		<key>uexFileMgr.bundle/plugin_file_zip@2x.png</key>
 		<data>
-		atUex/5NTCvtb+RNEQTbWuLCCxo=
+		lHKeFM+4WoRYiyTbBxDBoMAjRJo=
 		</data>
-		<key>uexFileMgr.bundle/Contents/Resources/zh-Hans.lproj/Localizable.strings</key>
+		<key>uexFileMgr.bundle/zh-Hans.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			zHV7G648abs69MLz9pE0Y1pPWkM=
+			w9cURdYeDpMnQ/UARVmsD6yJ6IM=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -150,357 +150,139 @@
 	<key>files2</key>
 	<dict>
 		<key>embedded.mobileprovision</key>
+		<data>
+		JKbXoT98W7zj86Z2W3qbeHZe/kE=
+		</data>
+		<key>uexFileMgr.bundle/en.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			JKbXoT98W7zj86Z2W3qbeHZe/kE=
-			</data>
-			<key>hash2</key>
-			<data>
-			0p8akoZIUNhnEHSrm+cwtP59I1VEbMUe0Gn2IpgCK98=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/en.lproj/Localizable.strings</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			qu7pe9KrjS7W3olhgTuHDvKIpOg=
-			</data>
-			<key>hash2</key>
-			<data>
-			KHukho5Y+uY5MPrcAtUvpeQMazXf5r0V2FolgSM/mt0=
+			LNDg4QOXK8Nm+NP8gosTpaDTeB0=
 			</data>
 			<key>optional</key>
 			<true/>
 		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_Selected.png</key>
+		<key>uexFileMgr.bundle/plugin_file_Selected.png</key>
+		<data>
+		fr+M20Stn90ODvSZdW7B7uq5G/w=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_apk.png</key>
+		<data>
+		HuQ+lfXP85CfbKDh8oW4KW1tf7s=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_apk@2x.png</key>
+		<data>
+		YK9g5QboIKyofGC/PLhC5WxVyCA=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_doc.png</key>
+		<data>
+		Yht/DHqjeiqwugx0vVwzh3fMslg=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_doc@2x.png</key>
+		<data>
+		QgsS4UonUkp2fTwyJP7imgJZU1E=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_emptyfolder.png</key>
+		<data>
+		BcKmrZcj8z0q8pZdseD1CCP7dm8=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_emptyfolder@2x.png</key>
+		<data>
+		+AiBelYjhqkp8baQjbNtirVKqDA=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_excel.png</key>
+		<data>
+		HlDDLgGvCSAATPsAa0OjqqA5bQY=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_excel@2x.png</key>
+		<data>
+		JALwVyDElpr02GBIU87L1JyVUb4=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_folder.png</key>
+		<data>
+		SeqzrdYU5HKY+rBef60HdPGM2m4=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_folder@2x.png</key>
+		<data>
+		ZCLmZ9uxc4XvmLQQvK2oq4iOFdY=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_folder_arrow.png</key>
+		<data>
+		B/b3jmTK0qj/2krmlVmZbMJLTXQ=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_folder_arrow@2x.png</key>
+		<data>
+		khMOO3cMxqNerT0LVyveeTunFcw=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_music.png</key>
+		<data>
+		2EQlP19+9468H2SVR5wKa1QdcEw=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_music@2x.png</key>
+		<data>
+		/uE9SzNeJEPPd/hk0OqDWKzXFk8=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_pdf.png</key>
+		<data>
+		zV/7pb0jknmxXnmuZ84PJBBMh1Q=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_pdf@2x.png</key>
+		<data>
+		bxRUP2Sijg7LPBIgTuyWXXnbQf4=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_photo.png</key>
+		<data>
+		/acbcUeS6u5YdMgRYW0KvNbkBR0=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_photo@2x.png</key>
+		<data>
+		3CDPUmnOLgmC76u3fCPawv+ZXVg=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_ppt.png</key>
+		<data>
+		C9NeGtXrVwC3RkRPxvRDdh+oGk8=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_ppt@2x.png</key>
+		<data>
+		ArtjW697bb0iRssFsXjikSzx8yw=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_txt.png</key>
+		<data>
+		J0lrv8sxh+WDd6uR1zzVMkr2X4M=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_txt@2x.png</key>
+		<data>
+		wi1fgYQBGUNM3ztD2kFxHWzv8Vk=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_unknown.png</key>
+		<data>
+		AukoJswzOQPilbjQ6L0Rlj1FL9s=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_unknown@2x.png</key>
+		<data>
+		UMREKYO6uEyhfgMlLLktP9proCM=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_video.png</key>
+		<data>
+		B6jPWc9XedyblFK15X51ybkmkdA=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_video@2x.png</key>
+		<data>
+		Vv5EhP3VdBmk8BJWV5n0O3/LokM=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_zip.png</key>
+		<data>
+		jkLLUiDpjLAzZKF+T0jJ9/aJTZ8=
+		</data>
+		<key>uexFileMgr.bundle/plugin_file_zip@2x.png</key>
+		<data>
+		lHKeFM+4WoRYiyTbBxDBoMAjRJo=
+		</data>
+		<key>uexFileMgr.bundle/zh-Hans.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			j0W9RYjRtlbZh/QU/JluE886duY=
-			</data>
-			<key>hash2</key>
-			<data>
-			J791hMjT4nIkWnX4FkYtiqacass2g1NtITcC9j3aVsA=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_apk.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			qtyC4FXzBQt3UoX2qLw4fwrbjn4=
-			</data>
-			<key>hash2</key>
-			<data>
-			jkRSgdYntNcKSKx/ruv43P1tgZCbRB5HnJISkaF0eDw=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_apk@2x.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			O7pzsnzvpc+tFM5kvK8gjjvi1m8=
-			</data>
-			<key>hash2</key>
-			<data>
-			tf9i7Ws6AQUwQrS2YUmY0VLCeYx6EopG6d0ryus2Ydg=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_doc.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			CVI8K7IXQvxPgRi9ebgGwsq9RwY=
-			</data>
-			<key>hash2</key>
-			<data>
-			Rlevn7l42qjozCnbP3f+iz1yEIiGkDkHYt5gapt/qg0=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_doc@2x.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			YjiSn/knhbieRhKMmTgTyTqpskI=
-			</data>
-			<key>hash2</key>
-			<data>
-			a0TGG6+nvh7BRVzdW7Z68wShdJaz116ridJx6l54QmA=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_emptyfolder.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			1X3Zqm711KEFxaMwAHjWyibTjuE=
-			</data>
-			<key>hash2</key>
-			<data>
-			HpIGWcmNrt0vz5cSvQTvKuj/o/CjsqYBQTRprve4ujY=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_emptyfolder@2x.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			lOAl3RZxqPFtkO1T15vUYD87YNY=
-			</data>
-			<key>hash2</key>
-			<data>
-			zMkiNrc46qRX1S23WDR7JqTEVLv/hMmFGN+oudTk5XI=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_excel.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			qvQ9VfsaNQeEwsuOvbcms2a65lI=
-			</data>
-			<key>hash2</key>
-			<data>
-			F1QFJZCjTrehfGl3Ldp9Uvrejz8bfwKLRbCUOU/uO64=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_excel@2x.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			+YqnkVgMzA90z7j+fTGoL5TDHis=
-			</data>
-			<key>hash2</key>
-			<data>
-			OGDec8gYGELu13F/DR8QYJDk8AeSckkA0F8FYBEEUeQ=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_folder.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			aGVqZgjG15FWAjLBbRPpV6Y3l6M=
-			</data>
-			<key>hash2</key>
-			<data>
-			0+i/AV0iq1CcZ4+FAbZVmDEzdm21UtRC03v4l552Hu8=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_folder@2x.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			Htft5GRBRvc6oGot2QiUonhKvOw=
-			</data>
-			<key>hash2</key>
-			<data>
-			VBoBkHw1nVjvyXLWYJ/tol2mNllrBFOk7VLBmGvkpY8=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_folder_arrow.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			Nt2YSIvKagaoayERe1OPksW9Lko=
-			</data>
-			<key>hash2</key>
-			<data>
-			p1mdOnGXQcxa4KLPUgEqs083FuJ3jDPaqqxbpQs8nwc=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_folder_arrow@2x.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			PQQSDxCrD6oSyb8K1TnC8o5S/z0=
-			</data>
-			<key>hash2</key>
-			<data>
-			rqFGmE42imcAV6n1izqCk4Wws4dSogEKlgB7pu3/2UM=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_music.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			qrVDLC/DFz7dh4DuP1/cSz57c24=
-			</data>
-			<key>hash2</key>
-			<data>
-			LdWMbm5n3agHfM9dsE2KCL34PLMLoH8sfZcQTIHhK60=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_music@2x.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			ZnJXD+9vP3KHE9fmEHRoTBUPfR4=
-			</data>
-			<key>hash2</key>
-			<data>
-			1tzN8vjymHNweIo9krAwcMaUavUvoNTOh15haDzx7KM=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_pdf.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			Um3TdEoQ+ZW05eOKqp4v0cQQDzU=
-			</data>
-			<key>hash2</key>
-			<data>
-			Jqi/gGLkSic6djqE2LBrDd7ruwp/4NcAv1BvDi7J2JM=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_pdf@2x.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			wAIb15kwqr10DzdDnqop0ghg0JA=
-			</data>
-			<key>hash2</key>
-			<data>
-			bUFUNgsWLZG2wHi8SVTQ0TUbXFy2as9/wUXZkTvsaaM=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_photo.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			wpOgie1Stjy7qkbCN79IYi7obYU=
-			</data>
-			<key>hash2</key>
-			<data>
-			GuIWwVdsAq5fCfLJBFjTQM8Bd+tTjVvmyM3ZhfXXqDc=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_photo@2x.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			bGdntdyM3fg6Zh711sgC7uaTAA0=
-			</data>
-			<key>hash2</key>
-			<data>
-			kyHqVfQXFhJrCPyFihKl+9UyKdA6yWA2X7A9oySdR3U=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_ppt.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			PnFbK83FhKJMMs8zdFudb8Yk4ro=
-			</data>
-			<key>hash2</key>
-			<data>
-			Lvl8RWBGJ9wiwEFURnyBhLoWTc2fy4yGD2VKB9ScEeY=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_ppt@2x.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			FoKRzB4Xafdi1qFQsrlyeEnNWpI=
-			</data>
-			<key>hash2</key>
-			<data>
-			LLU+4FDWZFa7Az4h2mjdAhfe+XbH5toUdOWU/yh2r+8=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_txt.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			vjKcEfjU9dbBWD14TFGHYioTnkI=
-			</data>
-			<key>hash2</key>
-			<data>
-			QemYQm41QqZnDww0AETxeEuxQ/u3R+Dw4YG5L1vMybg=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_txt@2x.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			PGbS9V01VcSU2QWOsNXbjQ+YG/k=
-			</data>
-			<key>hash2</key>
-			<data>
-			0UooqFF75aGNOCVNiIfbuM1uErq75kZi0ijON4Dpk/I=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_unknown.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			TJpUz5+CVaaHEqzr3dkzH79SJ6s=
-			</data>
-			<key>hash2</key>
-			<data>
-			7QC8bcp1imQ3ENG0FnO/wYGxPitHT47kWeueVpvdRxE=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_unknown@2x.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			ZYAwUwyizjdfBMT4tYm2biQQhMo=
-			</data>
-			<key>hash2</key>
-			<data>
-			/SC+zKL9bAv2QOIsYYlg89hAj+hz9Oqg1OkUapjsOqA=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_video.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			uQLAuIDBCmN5bAR3Fd8NE5levKU=
-			</data>
-			<key>hash2</key>
-			<data>
-			P5O0MpxpegVfJH5KZvWQ/+H9JmOqBr3vXF/nSEYWLMc=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_video@2x.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			WmQ/Sfp8QNZadxcx7U6N6tlItm8=
-			</data>
-			<key>hash2</key>
-			<data>
-			BNmZ4pYpxgyl52SA1E2oIpIa0DM9lKfKjE/eLhVkbXs=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_zip.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			G3b3MjUcI9Rhm7B1H+1CuMPFHvo=
-			</data>
-			<key>hash2</key>
-			<data>
-			jdOUd7JEqm5/65hNSJYfqgcO7pkhLsStux6r5fy7Tlo=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/plugin_file_zip@2x.png</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			atUex/5NTCvtb+RNEQTbWuLCCxo=
-			</data>
-			<key>hash2</key>
-			<data>
-			I7pri9QfbEfzwwESqiM66JcFMcGluFPvk+lU1kusps0=
-			</data>
-		</dict>
-		<key>uexFileMgr.bundle/Contents/Resources/zh-Hans.lproj/Localizable.strings</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			zHV7G648abs69MLz9pE0Y1pPWkM=
-			</data>
-			<key>hash2</key>
-			<data>
-			F4CVqBJZxk0ycX87JTYZnBkWZ4nWr79CDNGK8sMtDXk=
+			w9cURdYeDpMnQ/UARVmsD6yJ6IM=
 			</data>
 			<key>optional</key>
 			<true/>
