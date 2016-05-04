@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-        uexName="uexFileMgr" version="3.0.24" build="24">
-        <info>24:改用bundle方式引用资源，修复IDE插件文件浏览器图标丢失的bug</info>
+        uexName="uexFileMgr" version="3.0.25" build="25">
+        <info>25:添加base64支持</info>
+        <build>24:改用bundle方式引用资源，修复IDE插件文件浏览器图标丢失的bug</build>
         <build>23:修改工程为ARC;修复在复用窗口中使用时回调丢失的bug</build>
         <build>22:新增copyFile接口</build>
         <build>21:新增getFileSizeByPath接口</build>

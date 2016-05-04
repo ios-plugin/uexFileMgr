@@ -203,7 +203,7 @@ enum fileType {
 			if ([[selectFiles objectAtIndex:i] intValue] == 2) {
 				continue;
 			}
-			NSString* key = [NSString stringWithFormat:@"%@X%d)",indexpath,i];
+			NSString* key = [NSString stringWithFormat:@"%@X%ld)",indexpath,(long)i];
 			[selectAllPaths setObject:[indexpath stringByAppendingPathComponent:[fileArray objectAtIndex:i]] forKey:key];
 		}
 		[self updateToolbarConfirmButton];

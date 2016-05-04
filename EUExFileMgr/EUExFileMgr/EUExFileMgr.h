@@ -26,9 +26,14 @@
 #define F_FILE_EXIST		0
 #define F_FILE_NOT_EXIST	1
 
+
+
 @interface EUExFileMgr : EUExBase {
 	NSMutableDictionary *fobjDict;
 	FileExplorer *fExplorer;
 }
+
+
+
 -(void)uexOnFileMgrExplorerWithOpId:(int)inOpId dataType:(int)inDataType data:(NSString*)inData;
 @end

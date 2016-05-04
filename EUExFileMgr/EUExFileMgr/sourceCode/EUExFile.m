@@ -84,23 +84,29 @@
 } 
 
 //写文件
--(BOOL)writeWithData:(NSString *)inData mode:(NSString *)inMode {
+-(BOOL)writeWithData:(NSString *)inData option:(uexFileMgrFileWritingOption)option {
     
 	if (appFilePath == nil) {
         
 		return NO;
         
 	}
+    NSData *writer;
+    if (option & uexFileMgrFileWritingOptionBase64Decoding) {
+        writer = [[NSData alloc]initWithBase64Encoding:inData];
+    }else{
+        writer = [inData dataUsingEncoding:NSUTF8StringEncoding];
+    }
     
-	NSData * writer = [inData dataUsingEncoding:NSUTF8StringEncoding];
+
     
-    if (writer == nil) {
+    if (!writer) {
         
         return NO;
         
     }
     
-	inMode = [inMode stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+	
     
 	fileHandle = [NSFileHandle fileHandleForWritingAtPath:appFilePath];
     
@@ -120,7 +126,7 @@
         
     } else {
         
-        if ([@"1" isEqualToString:inMode]) {
+        if (option & uexFileMgrFileWritingOptionSeekingToEnd) {
             
             [fileHandle seekToEndOfFile];
             
@@ -242,8 +248,8 @@
 }
 
 //读取字数
--(NSString*)read:(NSString*)len{ 
-	long newlen = (long)[len longLongValue];
+-(NSString*)read:(long long)len option:(uexFileMgrFileReadingOption)option{
+
 	fileHandle = [NSFileHandle fileHandleForReadingAtPath:appFilePath];
 	NSData *getData;
 	if (fileHandle==nil) {
@@ -256,16 +262,20 @@
             getData=[self rc4WithInput:getData key:self.keyString];
         }
     }else {
-        if (newlen==-1 ||newlen>=fileLength) {
+        if (len < 0 || len >= fileLength) {
             getData = [fileHandle readDataToEndOfFile];
         }else {
-            getData = [fileHandle readDataOfLength:newlen];
+            getData = [fileHandle readDataOfLength:len];
         }
     }
-    
-    NSString *resultString = [EUtility transferredString:getData];
-	[fileHandle closeFile];
-	return resultString;
+    [fileHandle closeFile];
+    NSString *result;
+    if (option & uexFileMgrFileReadingOptionBase64Encoding) {
+        result = [getData base64Encoding];
+    }else{
+        result = [EUtility transferredString:getData];
+    }
+	return result;
 }
 
 -(long)getSize{
@@ -362,7 +372,7 @@
 			}
 		}
 		int readLengthPre = inLen;
-		int offsetPre = offset;
+		NSInteger offsetPre = offset;
 		if (readString == nil) {
 			for (int i = 0; i<6; i++) {
 				offsetPre -=1;

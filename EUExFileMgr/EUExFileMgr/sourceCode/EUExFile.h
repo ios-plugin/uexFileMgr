@@ -13,6 +13,18 @@
 #define F_PAGE_PERCENT		2
 @class EUExFileMgr;
 
+
+typedef NS_OPTIONS(NSInteger, uexFileMgrFileWritingOption) {
+    uexFileMgrFileWritingOptionSeekingToEnd = 1 << 0,
+    uexFileMgrFileWritingOptionBase64Decoding = 1 << 1
+    
+};
+
+typedef NS_OPTIONS(NSInteger, uexFileMgrFileReadingOption) {
+    uexFileMgrFileReadingOptionBase64Encoding = 1 << 0
+    
+};
+
 @interface EUExFile : NSObject {
 	EUExFileMgr *euexObj;
 	int fileType;
@@ -33,9 +45,9 @@
 @property(nonatomic, retain)NSString* keyString;
 
 -(BOOL)initWithFileType:(int)fileType_ path:(NSString *)inPath mode:(int)mode_ euexObj:(EUExFileMgr *)euexObj_;
--(BOOL)writeWithData:(NSString*)inData mode:(NSString*)inMode;
+-(BOOL)writeWithData:(NSString*)inData option:(uexFileMgrFileWritingOption)option;
 //读文件
--(NSString*)read:(NSString*)len;
+-(NSString*)read:(long long)len option:(uexFileMgrFileReadingOption)option;
 //获得文件大小
 -(long)getSize;
 -(NSString*)getFilePath;
