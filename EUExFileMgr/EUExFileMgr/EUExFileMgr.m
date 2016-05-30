@@ -451,7 +451,7 @@
                             arguments:@[inOpId,@(UEX_CALLBACK_DATATYPE_TEXT),outStr?:[NSNull null]]
                            completion:nil];
             }else{
-                NSString *jsStr = [NSString stringWithFormat:@"if(uexFileMgr.cbReadFile){uexFileMgr.cbReadFile(%@,%@,\"%@\")}",inOpId,@(UEX_CALLBACK_DATATYPE_TEXT),outStr];
+                NSString *jsStr = [NSString stringWithFormat:@"if(uexFileMgr.cbReadFile){uexFileMgr.cbReadFile(%@,%@,%@)}",inOpId,@(UEX_CALLBACK_DATATYPE_TEXT),outStr.JSONFragment];
                 [EUtility brwView:self.meBrwView evaluateScript:jsStr];
             }
         });

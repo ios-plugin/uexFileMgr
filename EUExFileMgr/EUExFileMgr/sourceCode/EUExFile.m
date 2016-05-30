@@ -273,7 +273,7 @@
     if (option & uexFileMgrFileReadingOptionBase64Encoding) {
         result = [getData base64Encoding];
     }else{
-        result = [EUtility transferredString:getData];
+        result = [[NSString alloc]initWithData:getData encoding:NSUTF8StringEncoding];
     }
 	return result;
 }
