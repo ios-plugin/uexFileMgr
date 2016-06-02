@@ -412,21 +412,17 @@
     if (object != nil) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             BOOL ret = [object writeWithData:inData option:option];
-            NSString * retStr = [NSString stringWithFormat:@"%d",ret];
-            NSString *jsStr = [NSString stringWithFormat:@"if(uexFileMgr.cbWriteFile){uexFileMgr.cbWriteFile(%@,%@,%@)}",inOpId,@(UEX_CALLBACK_DATATYPE_INT),retStr];
+            NSNumber *result = @1;
+            if (ret) {
+                result = @0;
+            }
+            NSString *jsStr = [NSString stringWithFormat:@"if(uexFileMgr.cbWriteFile){uexFileMgr.cbWriteFile(%@,%@,%@)}",inOpId,@(UEX_CALLBACK_DATATYPE_INT),result];
             [EUtility brwView:self.meBrwView evaluateScript:jsStr];
-
-            
         });
-        
     } else {
-        
         [self jsSuccessWithName:@"uexFileMgr.cbWriteFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-        
         [self jsFailedWithOpId:[inOpId intValue] errorCode:1091401 errorDes:UEX_ERROR_DESCRIBE_ARGS];
-        
     }
-    
 }
 
 
