@@ -6,18 +6,17 @@
 //  Copyright 2012 AppCan. All rights reserved.
 //
 #import "FileListViewController.h"
-#import "JSON.h"
+
 @implementation FileListViewController
 @synthesize table;
 @synthesize fileArray;
 @synthesize pathArray;
 @synthesize selectFiles;
 @synthesize filesType;
-@synthesize selectAllPaths;
-@synthesize rootPath;
+
 @synthesize indexpath;
 @synthesize toolBar;
-@synthesize callBack;
+
 
 enum fileType {
 	Unknow_Type,
@@ -33,6 +32,18 @@ enum fileType {
 	Ppt_Type,
 	Xls_Type
 };
+
+- (instancetype)initWithRootPath:(NSString *)path completion:(void (^)(NSArray<NSString *> *))completion
+{
+    self = [super init];
+    if (self) {
+        _rootPath = path;
+        _cb = completion;
+    }
+    return self;
+}
+
+
 
 -(UIImage*)scaleToSize:(UIImage*)img size:(CGSize)size
 {
@@ -50,14 +61,19 @@ enum fileType {
 }
 #pragma mark -
 #pragma mark init data
--(void)initSelectAllPaths{
-	self.selectAllPaths = [[NSMutableDictionary alloc] initWithCapacity:10];
+
+- (NSMutableDictionary *)selectAllPaths{
+    if(!_selectAllPaths){
+        _selectAllPaths = [NSMutableDictionary dictionary];
+    }
+    return _selectAllPaths;
 }
+
 -(void)updateToolbarConfirmButton{
-	NSInteger count = 0;
-	if (selectAllPaths) {
-		count = [[selectAllPaths allKeys] count];
-	}
+
+
+    NSInteger count = [[self.selectAllPaths allKeys] count];
+	
 	UIBarButtonItem* confirmBarItem = [[self.toolBar items] lastObject];
 	confirmBarItem.title = [NSString stringWithFormat:UEX_LOCALIZEDSTRING(@"确定(%d)"),count];
 }
@@ -129,14 +145,14 @@ enum fileType {
 }
 
 -(void)initFileList{
-	if (self.rootPath == nil) {
+	if (!self.rootPath || ![[NSFileManager defaultManager] fileExistsAtPath:self.rootPath]) {
 		self.rootPath = NSHomeDirectory();
 		self.pathArray = [[NSMutableArray alloc] init] ;
         //		NSArray *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         //		self.rootPath = [documentPaths objectAtIndex:0];
         //		root = TRUE;
 	}
-	NSString* tempPath = rootPath;
+	NSString* tempPath = _rootPath;
 	NSInteger count = 0;
 	if (pathArray) {
 		count = pathArray.count;
@@ -169,29 +185,16 @@ enum fileType {
 }
 #pragma mark -
 #pragma mark init UIToolBar
--(void)doCallBack:(NSString*)jsonString{
-	if (callBack) {
-		[callBack jsSuccessWithName:@"uexFileMgr.cbMultiExplorer" opId:0 dataType:1 strData:jsonString];
-	}
-}
+
 
 -(void)confirmButtonClick{
-    //	if (selectFiles && fileArray && indexpath) {
-    //		NSMutableArray* array = [[NSMutableArray alloc] init];
-    //		NSInteger count = [selectFiles count];
-    //		for (NSInteger i = 0; i < count; i++) {
-    //			NSString* flagStr = [selectFiles objectAtIndex:i];
-    //			NSInteger flag = flagStr ? [flagStr intValue]:0;
-    //			if (flag == 1) {
-    //				[array addObject:[indexpath stringByAppendingFormat:@"/%@",[fileArray objectAtIndex:i]]];
-    //			}
-    //		}
-	if (selectAllPaths) {
-		NSArray* array = [selectAllPaths allValues];
-		NSString* pjson = [array JSONRepresentation];
-		[self doCallBack:pjson];
-	}
-	[self dismissModalViewControllerAnimated:YES];
+	
+    NSArray<NSString *> * array = [self.selectAllPaths allValues];
+    if (self.cb) {
+        self.cb(array);
+    }
+	
+
 }
 -(void)allSelectButtonClick{
     //	indexSelects = [fileArray count];
@@ -204,7 +207,7 @@ enum fileType {
 				continue;
 			}
 			NSString* key = [NSString stringWithFormat:@"%@X%ld)",indexpath,(long)i];
-			[selectAllPaths setObject:[indexpath stringByAppendingPathComponent:[fileArray objectAtIndex:i]] forKey:key];
+			[self.selectAllPaths setObject:[indexpath stringByAppendingPathComponent:[fileArray objectAtIndex:i]] forKey:key];
 		}
 		[self updateToolbarConfirmButton];
 	}
@@ -219,13 +222,11 @@ enum fileType {
 			if ([[selectFiles objectAtIndex:i] intValue] == 2) {
 				continue;
 			}
-			NSString* key = [NSString stringWithFormat:@"%@X%d)",indexpath,i];
-			[selectAllPaths removeObjectForKey:key];
+			NSString* key = [NSString stringWithFormat:@"%@X%ld)",indexpath,(long)i];
+			[self.selectAllPaths removeObjectForKey:key];
 		}
 		[self updateToolbarConfirmButton];
 	}
-}
--(void)nullButtonClick{
 }
 
 -(void)initToolbar{
@@ -262,7 +263,7 @@ enum fileType {
     [confirmBarItem setTarget:self];
     [confirmBarItem setAction:@selector(confirmButtonClick)];
     
-	UIBarButtonItem* barItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:@selector(nullButtonClick)] ;
+	UIBarButtonItem* barItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:self action:nil] ;
 //    [barItem setTitle:[NSString stringWithFormat:@"确定(%d)",0]];
 //    [barItem setStyle:UIBarButtonSystemItemFlexibleSpace];
 //    [barItem setTarget:self];
@@ -289,19 +290,14 @@ enum fileType {
 		[table setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
 		[table reloadData];
 	}
-	[self initSelectAllPaths];
+
 }
 
-- (IBAction)backBtnClicked{
-    //	if(root == TRUE)
-    //	{
-    //		[self dismissModalViewControllerAnimated:YES];
-    //	}else {
-    //		[self.navigationController popViewControllerAnimated:YES];
-    //	}
+- (void)backBtnClicked{
+    
 	if (pathArray.count <= 0) {
-        //		[self.navigationItem.leftBarButtonItem setStyle:UIControlStateDisabled];
-		[self dismissModalViewControllerAnimated:YES];
+        self.cb(nil);
+		
 	}else {
 		[pathArray removeLastObject];
 		[self initFileList];
@@ -318,21 +314,16 @@ enum fileType {
 	titleLabel.font = [UIFont boldSystemFontOfSize:18];
 	titleLabel.frame = CGRectMake(0.0, 0.0,160, 22.0);
 	titleLabel.text = UEX_LOCALIZEDSTRING(@"文件浏览器");
-	titleLabel.textAlignment = UITextAlignmentCenter;
+	titleLabel.textAlignment = NSTextAlignmentCenter;
 	self.navigationItem.titleView = titleLabel;
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:UEX_LOCALIZEDSTRING(@"返回") style:UIBarButtonItemStyleBordered target:self action:@selector(backBtnClicked)];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:UEX_LOCALIZEDSTRING(@"编辑") style:UIBarButtonItemStyleBordered target:self action:@selector(rightButtonClick:)];
 	self.navigationController.navigationBar.tintColor = [UIColor blackColor];
 }
+
 #pragma mark -
 #pragma mark View lifecycle
-- (id)initWithPath:(NSString*)path{
-	self = [super init];
-	if (self) {
-		self.rootPath = path;
-	}
-	return self;
-}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     CGFloat y = 0.0;
@@ -392,7 +383,7 @@ enum fileType {
 		cell.accessoryType = UITableViewCellAccessoryNone;
 		if (isEditableOrNot && flag == 0) {
 			NSString* key = [NSString stringWithFormat:@"%@X%ld)",indexpath,(long)row];
-			NSString* value = [selectAllPaths objectForKey:key];
+			NSString* value = [self.selectAllPaths objectForKey:key];
 			if (value) {
 				[selectFiles replaceObjectAtIndex:row withObject:@"1"];
 				flag = 1;
@@ -489,18 +480,18 @@ enum fileType {
 		NSInteger flag = flagStr ? [flagStr intValue]:0;
 		if(isEditableOrNot) {
 			UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-			NSString* key = [NSString stringWithFormat:@"%@X%d)",indexpath,row];
+			NSString* key = [NSString stringWithFormat:@"%@X%ld)",indexpath,(long)row];
 			if (flag == 1) {
 				cell.accessoryView = nil;
 				[selectFiles replaceObjectAtIndex:row withObject:@"0"];
-				[selectAllPaths removeObjectForKey:key];
+				[self.selectAllPaths removeObjectForKey:key];
 			}
 			else if(flag == 0){
 				UIImage *image = UEX_FILEMGR_IMAGE_NAMED(@"plugin_file_Selected");
 				UIImageView* imageView = [[UIImageView alloc] initWithImage:image];
 				cell.accessoryView = imageView;
 				[selectFiles replaceObjectAtIndex:row withObject:@"1"];
-				[selectAllPaths setObject:[indexpath stringByAppendingPathComponent:[fileArray objectAtIndex:row]] forKey:key];
+				[self.selectAllPaths setObject:[indexpath stringByAppendingPathComponent:[fileArray objectAtIndex:row]] forKey:key];
 			}
 		}
 		if(flag == 2){

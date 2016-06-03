@@ -8,7 +8,7 @@
 
 #import "FileExplorerItem.h"
 #import "File.h"
-#import "EUtility.h"
+
 @implementation FileExplorerItem
 @synthesize itemType,fileIcon,fileCreateTime,fileSize,fileName,fileType,subItems;
 -(void)setFileTypeWithName:(NSString *)filename{

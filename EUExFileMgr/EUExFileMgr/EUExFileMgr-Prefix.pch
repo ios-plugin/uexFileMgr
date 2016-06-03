@@ -7,15 +7,16 @@
 #ifdef __OBJC__
 #import <Foundation/Foundation.h>
 #import<UIKit/UIKit.h>
-#import "EUtility.h"
-#define UEX_LOCALIZEDSTRING(...) [EUtility uexPlugin:@"uexFileMgr" localizedString:__VA_ARGS__,nil]
+#import <AppCanKit/AppCanKit.h>
+
+#define UEX_LOCALIZEDSTRING(...) [NSString ac_plugin:@"uexFileMgr" localizedString:__VA_ARGS__,nil]
 
 
 
 #define UEX_FILEMGR_IMAGE_NAMED(name) _UEX_FILEMGR_IMAGE_NAMED(name)
 
 
-#define _UEX_FILEMGR_BUNDLE ([EUtility bundleForPlugin:@"uexFileMgr"])
+#define _UEX_FILEMGR_BUNDLE ([NSBundle ac_bundleForPlugin:@"uexFileMgr"])
 #define _UEX_FILEMGR_BUNDLE_IAMGE_PATH(name,ext) ([[_UEX_FILEMGR_BUNDLE resourcePath]stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@",name,ext]])//这里不能用pathForResource 否则2x 3x会有问题
 #define _UEX_FILEMGR_IMAGE_NAMED(name) ([UIImage imageWithContentsOfFile:_UEX_FILEMGR_BUNDLE_IAMGE_PATH(name,@"png")])
 

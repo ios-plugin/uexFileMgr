@@ -10,7 +10,7 @@
 #import "EUExFileMgr.h"
 //#import "BUtility.h"
 #import "File.h"
-#import "EUtility.h"
+
 @implementation EUExFile
 @synthesize fileUrl;
 @synthesize fileHandle;
@@ -85,12 +85,10 @@
 
 //写文件
 -(BOOL)writeWithData:(NSString *)inData option:(uexFileMgrFileWritingOption)option {
-    
 	if (appFilePath == nil) {
-        
 		return NO;
-        
 	}
+    
     NSData *writer;
     if (option & uexFileMgrFileWritingOptionBase64Decoding) {
         writer = [[NSData alloc]initWithBase64Encoding:inData];
@@ -98,52 +96,30 @@
         writer = [inData dataUsingEncoding:NSUTF8StringEncoding];
     }
     
-
-    
     if (!writer) {
-        
         return NO;
-        
     }
-    
-	
     
 	fileHandle = [NSFileHandle fileHandleForWritingAtPath:appFilePath];
-    
 	if (fileHandle == nil) {
-        
 		return NO;
-        
-	}
+    }
     
     if (self.keyString) {
-        
         [fileHandle truncateFileAtOffset:0];
-        
         writer = [self rc4WithInput:writer key:self.keyString];
-            
         [fileHandle writeData:writer];
-        
     } else {
-        
         if (option & uexFileMgrFileWritingOptionSeekingToEnd) {
-            
             [fileHandle seekToEndOfFile];
-            
         } else {
-            
             [fileHandle truncateFileAtOffset:0];
-            
         }
-        
         [fileHandle writeData:writer];
-        
     }
-	
+    
  	[fileHandle closeFile];
-    
     return YES;
-    
 }
 
 -(void)seek:(NSString*)inPos{
@@ -402,13 +378,12 @@
 		self.currentLength = [NSNumber numberWithLong:[readData length]];
 	}
 	self.OS_offset = [NSNumber numberWithLong:offset];
- 	PluginLog(@"readString = %@",readString);
+
 	//将读取到的数据中的换行换成<br>
 	NSString *lTmp = [NSString stringWithFormat:@"%c",'\n'];
 	NSString *resultStr = [readString stringByReplacingOccurrencesOfString:lTmp withString:@"<br/>&nbsp;&nbsp;"];
- 	NSData *data = [resultStr dataUsingEncoding:NSUTF8StringEncoding];
-    NSString *finalString = [EUtility transferredString:data];
-	return finalString;
+
+	return resultStr;
 }
 //乱码
 //-(BOOL)isMessyCode:(NSString *)inStr{
