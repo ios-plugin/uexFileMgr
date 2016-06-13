@@ -24,5 +24,5 @@ typedef NS_OPTIONS(NSInteger, uexFileMgrSearchOption){
                   option:(uexFileMgrSearchOption)option
                 keywords:(NSArray*)keywords
                 suffixes:(NSArray*)suffixes
-              conpletion:(void (^)(BOOL isSuccess,NSArray * result))completion;
+              completion:(void (^)(BOOL isSuccess,NSArray * result))completion;
 @end

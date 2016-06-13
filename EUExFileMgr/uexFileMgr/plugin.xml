@@ -7,8 +7,8 @@
         <method name="createDir" sync="true"></method>
         <method name="openFile" sync="true"></method>
         <method name="openDir" sync="true"></method>
-        <method name="deleteFileByPath"></method>
-        <method name="deleteFileByID"></method>
+        <method name="deleteFileByPath" sync="true"></method>
+        <method name="deleteFileByID" sync="true"></method>
         <method name="getFileTypeByPath" sync="true"></method>
         <method name="getFileTypeByID"></method>
         <method name="isFileExistByPath" sync="true"></method>
@@ -22,7 +22,7 @@
         <method name="writeFile"></method>
         <method name="getFileSize" sync="true"></method>
         <method name="getFileSizeByPath" sync="true"></method>
-        <method name="getFilePath sync="true""></method>
+        <method name="getFilePath" sync="true"></method>
         <method name="closeFile" sync="true"></method>
         <method name="getReaderOffset" sync="true"></method>
         <method name="readPercent"></method>

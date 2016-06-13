@@ -179,37 +179,28 @@
 
 
 //5.通过path删除文件
-- (void)deleteFileByPath:(NSMutableArray *)inArguments {
-    __block BOOL result = NO;
-    ACArgsUnpack(NSString *inPath,ACJSFunctionRef *cb) = inArguments;
+- (NSNumber *)deleteFileByPath:(NSMutableArray *)inArguments {
+    BOOL result = NO;
+    ACArgsUnpack(NSString *inPath) = inArguments;
     inPath =[self absPath:inPath];
-    @onExit{
-        [self intCallbackWithFunc:@"uexFileMgr.cbDeleteFileByPath" opid:@"0" isSuccess:result];
-        
-        [cb executeWithArguments:ACArgsPack(@(result))];
-        
-    };
     if ([File fileIsExist:inPath] && [File removeFile:inPath]) {
         result = YES;
     }
+    [self intCallbackWithFunc:@"uexFileMgr.cbDeleteFileByPath" opid:@"0" isSuccess:result];
+    return @(result);
 }
 //6.删除一个文件通过ID
-- (void)deleteFileByID:(NSMutableArray *)inArguments {
-    __block BOOL result = NO;
+- (NSNumber *)deleteFileByID:(NSMutableArray *)inArguments {
+    BOOL result = NO;
     ACArgsUnpack(NSString *inOpId) = inArguments;
-    @onExit{
-        [self intCallbackWithFunc:@"uexFileMgr.cbDeleteFileByID" opid:inOpId isSuccess:result];
-    };
-    
     EUExFile *object = [self.fobjDict objectForKey:inOpId];;
-    if (!object) {
-        return;
-    }
     NSString *truePath = object.appFilePath;
-    if ([File fileIsExist:truePath] && [File removeFile:truePath]) {
+    if (truePath && [File fileIsExist:truePath] && [File removeFile:truePath]) {
         [self.fobjDict removeObjectForKey:inOpId];
         result = YES;
     }
+    [self intCallbackWithFunc:@"uexFileMgr.cbDeleteFileByID" opid:inOpId isSuccess:result];
+    return @(result);
 }
 //7.根据 path 判断文件类型
 - (NSNumber *)getFileTypeByPath:(NSMutableArray *)inArguments {
@@ -313,7 +304,7 @@
     FileListViewController* filesView = [[FileListViewController alloc] initWithRootPath:inPath completion:^(NSArray<NSString *> *selectedPaths) {
         @strongify(self);
         [self.multipicker dismissViewControllerAnimated:YES completion:^{
-            [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbMultiExplorer" arguments:ACArgsPack(@0,@1,selectedPaths.ac_JSONFragment)];
+            [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbMultiExplorer" arguments:ACArgsPack(@0,@1,selectedPaths)];
             [cb executeWithArguments:ACArgsPack(selectedPaths)];
             self.multipicker = nil;
         }];
@@ -363,29 +354,26 @@
 
 //15.写文件
 - (void)writeFile:(NSMutableArray *)inArguments {
-    if ([inArguments count] < 3) {
-        return;
-    }
-    
     ACArgsUnpack(NSString * inOpId,NSNumber *opt,NSString * inData) = inArguments;
+    ACJSFunctionRef *cb = JSFunctionArg(inArguments.lastObject);
     uexFileMgrFileWritingOption option = (uexFileMgrFileWritingOption)[opt integerValue];
     EUExFile * object = [self.fobjDict objectForKey:inOpId];
     if (!object) {
         [self intCallbackWithFunc:@"uexFileMgr.cbWriteFile" opid:inOpId isSuccess:NO];
+        [cb executeWithArguments:ACArgsPack(@(NO))];
         return;
     }
     UEX_DO_IN_BACKGROUND(^{
         BOOL ret = [object writeWithData:inData option:option];
         [self intCallbackWithFunc:@"uexFileMgr.cbWriteFile" opid:inOpId isSuccess:ret];
+        [cb executeWithArguments:ACArgsPack(@(ret))];
     });
 }
 
 //16.读文件
 - (void)readFile:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString * inOpId,NSNumber *length,NSNumber *opt) = inArguments;
-    
-    
-    
+    ACJSFunctionRef *cb = JSFunctionArg(inArguments.lastObject);
     long long len = [length longLongValue];
     uexFileMgrFileReadingOption option = 0;
     if (opt) {
@@ -393,11 +381,13 @@
     }
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     if (!object) {
+        [cb executeWithArguments:ACArgsPack(nil)];
         [self intCallbackWithFunc:@"uexFileMgr.cbReadFile" opid:inOpId isSuccess:NO];
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *outStr = [object read:len option:option];
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbReadFile" arguments:ACArgsPack(@(inOpId.integerValue),@0,outStr)];
+        [cb executeWithArguments:ACArgsPack(outStr)];
     });
 }
 
@@ -484,6 +474,8 @@
     }
     return path;
 }
+
+
 
 //19.关闭文件
 - (NSNumber *)closeFile:(NSMutableArray *)inArguments {
@@ -715,7 +707,7 @@
                              option:opt
                            keywords:keywords
                            suffixes:suffixes
-                         conpletion:callback];
+                         completion:callback];
     });
     
 

@@ -15,7 +15,7 @@
                   option:(uexFileMgrSearchOption)option
                 keywords:(NSArray*)keywords
                 suffixes:(NSArray*)suffixes
-              conpletion:(void (^)(BOOL isSuccess,NSArray * result))completion{
+              completion:(void (^)(BOOL isSuccess,NSArray * result))completion{
     
     BOOL recursively = NO;
     if(option & uexFileMgrSearchRecursively){
@@ -41,7 +41,7 @@
     }
     
     for(NSString * aFile in result){
-        if([self file:aFile hasSuffixes:suffixes]&&[self file:aFile fits:keywords exactly:exactly]){
+        if([self file:aFile hasSuffixes:suffixes] && [self file:aFile fits:keywords exactly:exactly]){
             [filterResult addObject:aFile];
         }
     }
