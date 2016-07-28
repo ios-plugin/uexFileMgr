@@ -88,19 +88,18 @@
     @onExit{
         [self intCallbackWithFunc:@"uexFileMgr.cbCreateFile" opid:inOpId isSuccess:result];
     };
-    EUExFile *uexFile;
+
     if ([self.fobjDict objectForKey:inOpId]) {
         return @(result);
     }
-    uexFile=[[EUExFile alloc]init];
+    EUExFile * uexFile=[[EUExFile alloc]init];
     inPath =[self absPath:inPath];
-    BOOL isCreateFileSuccess = [uexFile initWithFileType:F_TYPE_FILE path:inPath mode:F_FILE_OPEN_MODE_NEW euexObj:self];
-    if (!isCreateFileSuccess) {
-        result = YES;
-    }
+    result = [uexFile initWithFileType:F_TYPE_FILE path:inPath mode:F_FILE_OPEN_MODE_NEW euexObj:self];
+
     
     return @(result);
 }
+
 
 
 
@@ -126,6 +125,10 @@
     
     return @(result);
 }
+
+
+
+
 //3.打开文件
 - (NSNumber *)openFile:(NSMutableArray *)inArguments {
     __block BOOL result = NO;
@@ -150,9 +153,9 @@
         result = YES;
         [self.fobjDict setObject:uexFile forKey:inOpId];
     }
-    
     return @(result);
 }
+
 
 
 //4.打开目录
@@ -381,13 +384,13 @@
     }
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     if (!object) {
-        [cb executeWithArguments:ACArgsPack(nil)];
+        [cb executeWithArguments:ACArgsPack(@(NO),nil)];
         [self intCallbackWithFunc:@"uexFileMgr.cbReadFile" opid:inOpId isSuccess:NO];
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *outStr = [object read:len option:option];
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbReadFile" arguments:ACArgsPack(@(inOpId.integerValue),@0,outStr)];
-        [cb executeWithArguments:ACArgsPack(outStr)];
+        [cb executeWithArguments:ACArgsPack(@(YES),outStr)];
     });
 }
 
@@ -453,10 +456,10 @@
 //17.文件大小
 - (NSString *)getFileSize:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inOpId) = inArguments;
-    NSString *fileSize = @"0";
+    NSString *fileSize = nil;
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     if (object) {
-        fileSize = @([object getSize]).stringValue;
+        fileSize = [object getSize];
     }
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileSize" arguments:ACArgsPack(@(inOpId.integerValue),@2,fileSize)];
     return fileSize;
@@ -488,16 +491,16 @@
     return @NO;
 }
 //20. 返回阅读器的偏移值
-- (NSNumber *)getReaderOffset:(NSMutableArray *)inArguments {
+- (NSString *)getReaderOffset:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inOpId) = inArguments;
-    long offset = -1;
+    NSString *offset = nil;
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     if (object) {
-        offset =[object getReaderOffset];
+        offset = @([object getReaderOffset]).stringValue;
         
     }
-    [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetReaderOffset" arguments:ACArgsPack(@(inOpId.integerValue),@2,@(offset))];
-    return @(offset);
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetReaderOffset" arguments:ACArgsPack(@(inOpId.integerValue),@2,offset)];
+    return offset;
     
 }
 //21.以阅读器形式读取指定数据
@@ -507,11 +510,13 @@
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     UEX_DO_IN_BACKGROUND(^{
         NSString *data = nil;
+        BOOL isSuccuss = NO;
         if (object) {
             data = [object readPercent:inPercent Len:inLen];
+            isSuccuss = YES;
         }
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbReadPercent" arguments:ACArgsPack(@(inOpId.integerValue),@0,data)];
-        [cb executeWithArguments:ACArgsPack(data)];
+        [cb executeWithArguments:ACArgsPack(@(isSuccuss),data)];
         
     });
 }
@@ -526,11 +531,13 @@
     
     UEX_DO_IN_BACKGROUND(^{
         NSString *data = nil;
+        BOOL isSuccuss = NO;
         if (object) {
             data = [object readNext:inLen];
+            isSuccuss = YES;
         }
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbReadNext" arguments:ACArgsPack(@(inOpId.integerValue),@0,data)];
-        [cb executeWithArguments:ACArgsPack(data)];
+        [cb executeWithArguments:ACArgsPack(@(isSuccuss),data)];
     });
 }
 //23.以阅读器形式读取上一页
@@ -541,11 +548,13 @@
     
     UEX_DO_IN_BACKGROUND(^{
         NSString *data = nil;
+        BOOL isSuccuss = NO;
         if (object) {
             data = [object readPre:inLen];
+            isSuccuss = YES;
         }
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbReadPre" arguments:ACArgsPack(@(inOpId.integerValue),@0,data)];
-        [cb executeWithArguments:ACArgsPack(data)];
+        [cb executeWithArguments:ACArgsPack(@(isSuccuss),data)];
     });
 }
 //24.拷贝文件
@@ -773,5 +782,127 @@
     return @(result);
 }
 
+#pragma mark - 4.0 API
+
+- (NSString *)create:(NSMutableArray *)inArguments{
+    ACArgsUnpack(NSDictionary *info) = inArguments;
+    NSString *path = [self absPath:stringArg(info[@"path"])];
+    NSString *opid = stringArg(info[@"id"]) ?: newUUID();
+    if (self.fobjDict[opid] || !path) {
+        return nil;
+    }
+    
+    EUExFile *uexFile=[[EUExFile alloc] init];
+    BOOL isSuccess = [uexFile initWithFileType:F_TYPE_FILE path:path mode:F_FILE_OPEN_MODE_NEW euexObj:self];
+    if (!isSuccess) {
+        return nil;
+    }
+    
+    [self.fobjDict setValue:uexFile forKey:opid];
+    return opid;
+}
+
+- (NSNumber *)mkdir:(NSMutableArray *)inArguments{
+    ACArgsUnpack(NSString *inPath) = inArguments;
+    NSString *path = [self absPath:inPath];
+    EUExFile *uexFile = [[EUExFile alloc] init];
+    BOOL isSuccess = [uexFile initWithFileType:F_TYPE_DIR path:path mode:F_FILE_OPEN_MODE_NEW euexObj:self];
+    return @(isSuccess);
+}
+
+- (NSString *)open:(NSMutableArray *)inArguments{
+    ACArgsUnpack(NSDictionary *info) = inArguments;
+    NSString *path = [self absPath:stringArg(info[@"path"])];
+    NSNumber *modeNum = numberArg(info[@"mode"]);
+    NSString *opid = stringArg(info[@"id"]) ?: newUUID();
+    if (!path || !modeNum) {
+        return nil;
+    }
+
+    EUExFile *uexFile = [self.fobjDict objectForKey:opid];
+    if (uexFile) {
+        if ([uexFile initWithFileType:F_TYPE_FILE path:path mode:[modeNum intValue] euexObj:self]) {
+            return opid;
+        }else{
+            return nil;
+        }
+    }
+    uexFile = [[EUExFile alloc] init];
+    BOOL isSuccess = [uexFile initWithFileType:F_TYPE_FILE path:path mode:[modeNum intValue] euexObj:self];
+    if (!isSuccess) {
+        return nil;
+    }
+    [self.fobjDict setValue:uexFile forKey:opid];
+    return opid;
+}
+
+- (void)copy:(NSMutableArray *)inArguments{
+    ACArgsUnpack(NSDictionary *info,ACJSFunctionRef *cbFunc) = inArguments;
+    NSString *src = stringArg(info[@"src"]);
+    NSString *target = stringArg(info[@"target"]);
+    void (^callback)(BOOL isSuccess) = ^(BOOL isSuccess){
+        [cbFunc executeWithArguments:ACArgsPack(@(isSuccess))];
+    };
+    if (!src || !target) {
+        callback(NO);
+        return;
+    }
+    UEX_DO_IN_BACKGROUND(^{
+        NSError *error = nil;
+        NSString *srcPath = [self absPath:src];
+        NSString *desPath = [[self absPath:target] stringByAppendingPathComponent:srcPath.lastPathComponent];
+        BOOL ret = [[NSFileManager defaultManager]copyItemAtPath:srcPath toPath:desPath error:&error];
+        if (ret && !error) {
+            callback(YES);
+        }else{
+            callback(NO);
+        }
+    });
+}
+
+- (NSString *)createWithPassword:(NSMutableArray *)inArguments{
+    ACArgsUnpack(NSDictionary *info) = inArguments;
+    NSString *opid = stringArg(info[@"id"]) ?: newUUID();
+    NSString *path = stringArg(info[@"path"]);
+    NSString *password = stringArg(info[@"password"]);
+    if (!path || !password || password.length == 0 || self.fobjDict[opid]) {
+        return nil;
+    }
+    NSString *truePath = [self absPath:path];
+    EUExFile *file = [[EUExFile alloc]init];
+    if (![file initWithFileType:F_TYPE_FILE path:truePath mode:F_FILE_OPEN_MODE_NEW euexObj:self]) {
+        return nil;
+    }
+    [file setKeyString:password];
+    [self.fobjDict setValue:file forKey:opid];
+    return opid;
+}
+
+
+- (NSString *)openWithPassword:(NSMutableArray *)inArguments{
+    ACArgsUnpack(NSDictionary *info) = inArguments;
+    NSString *opid = stringArg(info[@"id"]) ?: newUUID();
+    NSString *path = stringArg(info[@"path"]);
+    NSString *password = stringArg(info[@"password"]);
+    NSNumber *modeNum = numberArg(info[@"mode"]);
+    if (!path || !password || !modeNum || self.fobjDict[opid]) {
+        return nil;
+    }
+    NSString *truePath = [self absPath:path];
+    EUExFile *file = [[EUExFile alloc]init];
+    if (![file initWithFileType:F_TYPE_FILE path:truePath mode:[modeNum intValue] euexObj:self]) {
+        return nil;
+    }
+    [file setKeyString:password];
+    [self.fobjDict setValue:file forKey:opid];
+    return opid;
+}
+
+
+#pragma mark - UUID
+
+static inline NSString * newUUID(){
+    return [NSUUID UUID].UUIDString;
+}
 
 @end

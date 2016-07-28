@@ -75,7 +75,7 @@
         NSString *dateStr = [df stringFromDate:filedate];
   
         self.fileCreateTime = dateStr;
-        self.fileSize = [NSNumber numberWithInt:[File getFileLength:inPath]];
+        self.fileSize = @([File getFileLength:inPath]);
         
         return self;
     }else{

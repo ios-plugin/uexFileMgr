@@ -231,7 +231,7 @@
 	if (fileHandle==nil) {
 		return nil;
 	}
-	long fileLength = [File getFileLength:appFilePath];
+	long long fileLength = [File getFileLength:appFilePath];
     if (self.keyString) {
         getData = [fileHandle readDataToEndOfFile];
         if (getData) {
@@ -241,7 +241,7 @@
         if (len < 0 || len >= fileLength) {
             getData = [fileHandle readDataToEndOfFile];
         }else {
-            getData = [fileHandle readDataOfLength:len];
+            getData = [fileHandle readDataOfLength:(NSUInteger)len];
         }
     }
     [fileHandle closeFile];
@@ -254,13 +254,13 @@
 	return result;
 }
 
--(long)getSize{
+-(NSString *)getSize{
 	//获得文件大小
 	if ([File fileIsExist:appFilePath]) {
-		 long fileSize =[File getFileLength:appFilePath]; 
-		return fileSize;
+		 long long fileSize =[File getFileLength:appFilePath];
+		return @(fileSize).stringValue;
 	}
-	return 0;
+	return nil;
 }
 -(void)close{
 	//关闭文件
@@ -268,13 +268,14 @@
 -(NSString*)getFilePath{
 	return  fileUrl;
 }
--(long)getReaderOffset{
-	return [self.OS_offset longValue];
+-(long long)getReaderOffset{
+	return [self.OS_offset longLongValue];
 }
 //precent
 -(NSString*)readPercent:(NSString*)inPercent Len:(NSString *)inLen{
-	offset = [inPercent intValue]*[self getSize]/100;
-	self.OS_offset = [NSNumber numberWithLong:offset];
+    long long size = [self getSize].longLongValue;
+	offset = [inPercent intValue]* size /100;
+	self.OS_offset = @(offset);
 	return [self readFilp:F_PAGE_PERCENT len:[inLen intValue]];
 }
 //pre
@@ -299,7 +300,7 @@
 		}
 		offset = offset-[currentLength longValue] - inLen;
 	}
-	long fileLen = [self getSize];
+	long long fileLen = [self getSize].longLongValue;
 	if (fileLen==0) {return nil;}
 	if (offset>=fileLen) {return nil;}
 	 
@@ -313,7 +314,7 @@
 		offset = 0;
 	}
 	if (offset>=0) {
-		[self seek:[NSString stringWithFormat:@"%ld",offset]];
+		[self seek:[NSString stringWithFormat:@"%lld",offset]];
 	}
 	NSData *readData = nil;
 	int readLenth = inLen;
@@ -330,7 +331,7 @@
 			}
 		}
 		int readLengthSuf = inLen;
-		NSInteger offsetSuf = offset;
+		long long offsetSuf = offset;
 		if (readString==nil) {
 			for (int j = 0; j<6; j++) {
 				offsetSuf-=1;
@@ -348,7 +349,7 @@
 			}
 		}
 		int readLengthPre = inLen;
-		NSInteger offsetPre = offset;
+		NSInteger offsetPre = (NSUInteger)offset;
 		if (readString == nil) {
 			for (int i = 0; i<6; i++) {
 				offsetPre -=1;
@@ -375,9 +376,9 @@
 		}
 	}
 	if (readData) {
-		self.currentLength = [NSNumber numberWithLong:[readData length]];
+		self.currentLength = @([readData length]);
 	}
-	self.OS_offset = [NSNumber numberWithLong:offset];
+	self.OS_offset = @(offset);
 
 	//将读取到的数据中的换行换成<br>
 	NSString *lTmp = [NSString stringWithFormat:@"%c",'\n'];

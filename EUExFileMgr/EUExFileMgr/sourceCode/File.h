@@ -23,7 +23,7 @@
 +(NSString *)readDir:(NSString *)dirName;
 +(NSDate *)fileCreateTime:(NSString *)fileName;
 +(int)fileAccessTime:(NSString *)fileName;
-+(long)getFileLength:(NSString *)fileName;
++(long long)getFileLength:(NSString *)fileName;
 +(NSDate *)fileModifyTime:(NSString *)fileName;
 +(int)fileisDirectoy:(NSString *)fileName;
 +(NSString *)currentDir:(NSString *)fileName;

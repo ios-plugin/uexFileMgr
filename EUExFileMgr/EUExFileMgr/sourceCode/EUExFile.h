@@ -33,7 +33,7 @@ typedef NS_OPTIONS(NSInteger, uexFileMgrFileReadingOption) {
 	NSFileHandle *fileHandle;
 	NSString *fileHasOpened;
     NSNumber *OS_offset;
-	long offset;
+	long long offset;
 	NSNumber *currentLength;
 }
 @property(nonatomic, retain)NSNumber *currentLength;
@@ -49,14 +49,14 @@ typedef NS_OPTIONS(NSInteger, uexFileMgrFileReadingOption) {
 //读文件
 -(NSString*)read:(long long)len option:(uexFileMgrFileReadingOption)option;
 //获得文件大小
--(long)getSize;
+-(NSString *)getSize;
 -(NSString*)getFilePath;
 -(void)seek:(NSString*)inPos;
 -(void)seekBeginOfFile;
 -(void)seekEndOfFile;
 -(void)close;
 //文件偏移
--(long)getReaderOffset;
+-(long long)getReaderOffset;
 -(NSString*)readPre:(NSString*)inLen;
 -(NSString*)readNext:(NSString*)inLen;
 -(NSString*)readFilp:(int)inType len:(int)inLen;

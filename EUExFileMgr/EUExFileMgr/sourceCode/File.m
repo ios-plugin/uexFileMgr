@@ -72,13 +72,13 @@
 	return docPath;
 }
 //获取文件长度
-+(long)getFileLength:(NSString *)fileName{
++(long long)getFileLength:(NSString *)fileName{
 	NSFileManager *fmanager = [NSFileManager defaultManager];
 	NSDictionary *dic = [fmanager attributesOfItemAtPath:fileName error:nil];	
 	NSNumber *fileSize = [dic objectForKey:NSFileSize];
 	
-	long sum = (long)[fileSize longLongValue];
-	return sum;
+	
+	return [fileSize longLongValue];
 }
 //遍历目录，每次返回一个子目录或文件名
 +(NSString *)readDir:(NSString *)dirName{
