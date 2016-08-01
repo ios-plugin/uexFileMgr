@@ -28,7 +28,7 @@
 #import "File.h"
 #import "FileExplorer.h"
 #import "FileListViewController.h"
-
+#import <AppCanKit/ACEXTScope.h>
 
 #define UEX_DO_IN_BACKGROUND(block) dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
 
@@ -473,6 +473,7 @@
         path = [object getFilePath];
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFilePath" arguments:ACArgsPack(@(inOpId.integerValue),@0,path)];
     }else {
+        ACLogDebug(@"file for id:%@ NOT found!",inOpId);
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFilePath" arguments:ACArgsPack(@(inOpId.integerValue),@2,@0)];
     }
     return path;
@@ -578,7 +579,8 @@
 
 //获取文件的创建时间
 - (NSString *)getFileCreateTime:(NSMutableArray *)inArguments{
-    ACArgsUnpack(NSString *inOpId,NSString *path) = inArguments;
+    NSString *path = stringArg(inArguments.lastObject);
+    NSString *inOpid = inArguments.count > 1 ? stringArg(inArguments[0]) : nil;
     NSString *dateStr = nil;
     
     NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[self absPath:path] error:nil];
@@ -589,7 +591,7 @@
         dateStr = [dateFormatter stringFromDate:creationDate];
     }
     
-    [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileCreateTime" arguments:ACArgsPack(@(inOpId.integerValue),@0,dateStr)];
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileCreateTime" arguments:ACArgsPack(@(inOpid.integerValue),@0,dateStr)];
     return dateStr;
 }
 
@@ -789,6 +791,7 @@
     NSString *path = [self absPath:stringArg(info[@"path"])];
     NSString *opid = stringArg(info[@"id"]) ?: newUUID();
     if (self.fobjDict[opid] || !path) {
+        
         return nil;
     }
     
@@ -799,6 +802,7 @@
     }
     
     [self.fobjDict setValue:uexFile forKey:opid];
+    
     return opid;
 }
 
@@ -816,6 +820,7 @@
     NSNumber *modeNum = numberArg(info[@"mode"]);
     NSString *opid = stringArg(info[@"id"]) ?: newUUID();
     if (!path || !modeNum) {
+        ACLogDebug(@"file open error - invalid parameters with path:%@ mode:%@",path,modeNum);
         return nil;
     }
 
@@ -844,19 +849,34 @@
         [cbFunc executeWithArguments:ACArgsPack(@(isSuccess))];
     };
     if (!src || !target) {
+        ACLogDebug(@"copy parameters error - src: %@ target: %@",src,target);
         callback(NO);
         return;
     }
     UEX_DO_IN_BACKGROUND(^{
+        __block BOOL ret = NO;
+        @onExit{
+            callback(ret);
+        };
         NSError *error = nil;
+        NSFileManager *fm = [NSFileManager defaultManager];
         NSString *srcPath = [self absPath:src];
-        NSString *desPath = [[self absPath:target] stringByAppendingPathComponent:srcPath.lastPathComponent];
-        BOOL ret = [[NSFileManager defaultManager]copyItemAtPath:srcPath toPath:desPath error:&error];
-        if (ret && !error) {
-            callback(YES);
-        }else{
-            callback(NO);
+
+        if (![fm fileExistsAtPath:srcPath]) {
+            ACLogDebug(@"copy error: source path invalid");
+            return;
         }
+        NSString *desFolderPath = [self absPath:target];
+        BOOL isFolder = NO;
+        if (![fm fileExistsAtPath:desFolderPath isDirectory:&isFolder] || !isFolder) {
+            ACLogDebug(@"copy error: target folder not exist");
+            return;
+        }
+        if (![[NSFileManager defaultManager]copyItemAtPath:srcPath toPath:[desFolderPath stringByAppendingPathComponent:srcPath.lastPathComponent] error:&error] || error) {
+            ACLogDebug(@"copy error: %@",error.localizedDescription);
+            return;
+        }
+        ret = YES;
     });
 }
 
