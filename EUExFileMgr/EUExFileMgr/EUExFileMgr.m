@@ -44,7 +44,16 @@
 
 @implementation EUExFileMgr
 
+#define UEX_ERROR NSNumber *
 
+
+static UEX_ERROR kError;
+static UEX_ERROR kNoError;
+
+__attribute__((constructor)) static void initUexConstant(){
+    kError = @(YES);
+    kNoError = @(NO);
+}
 
 
 
@@ -384,13 +393,13 @@
     }
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     if (!object) {
-        [cb executeWithArguments:ACArgsPack(@(NO),nil)];
+        [cb executeWithArguments:ACArgsPack(kError,nil)];
         [self intCallbackWithFunc:@"uexFileMgr.cbReadFile" opid:inOpId isSuccess:NO];
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *outStr = [object read:len option:option];
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbReadFile" arguments:ACArgsPack(@(inOpId.integerValue),@0,outStr)];
-        [cb executeWithArguments:ACArgsPack(@(YES),outStr)];
+        [cb executeWithArguments:ACArgsPack(kNoError,outStr)];
     });
 }
 
@@ -511,13 +520,13 @@
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     UEX_DO_IN_BACKGROUND(^{
         NSString *data = nil;
-        BOOL isSuccuss = NO;
+        UEX_ERROR error = kError;
         if (object) {
             data = [object readPercent:inPercent Len:inLen];
-            isSuccuss = YES;
+            error = kNoError;
         }
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbReadPercent" arguments:ACArgsPack(@(inOpId.integerValue),@0,data)];
-        [cb executeWithArguments:ACArgsPack(@(isSuccuss),data)];
+        [cb executeWithArguments:ACArgsPack(error,data)];
         
     });
 }
@@ -532,13 +541,13 @@
     
     UEX_DO_IN_BACKGROUND(^{
         NSString *data = nil;
-        BOOL isSuccuss = NO;
+        UEX_ERROR error = kError;
         if (object) {
             data = [object readNext:inLen];
-            isSuccuss = YES;
+            error = kNoError;
         }
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbReadNext" arguments:ACArgsPack(@(inOpId.integerValue),@0,data)];
-        [cb executeWithArguments:ACArgsPack(@(isSuccuss),data)];
+        [cb executeWithArguments:ACArgsPack(error,data)];
     });
 }
 //23.以阅读器形式读取上一页
@@ -549,13 +558,13 @@
     
     UEX_DO_IN_BACKGROUND(^{
         NSString *data = nil;
-        BOOL isSuccuss = NO;
+        UEX_ERROR error = kError;
         if (object) {
             data = [object readPre:inLen];
-            isSuccuss = YES;
+            error = kNoError;
         }
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbReadPre" arguments:ACArgsPack(@(inOpId.integerValue),@0,data)];
-        [cb executeWithArguments:ACArgsPack(@(isSuccuss),data)];
+        [cb executeWithArguments:ACArgsPack(error,data)];
     });
 }
 //24.拷贝文件
@@ -845,18 +854,18 @@
     ACArgsUnpack(NSDictionary *info,ACJSFunctionRef *cbFunc) = inArguments;
     NSString *src = stringArg(info[@"src"]);
     NSString *target = stringArg(info[@"target"]);
-    void (^callback)(BOOL isSuccess) = ^(BOOL isSuccess){
-        [cbFunc executeWithArguments:ACArgsPack(@(isSuccess))];
+    void (^callback)(UEX_ERROR error) = ^(UEX_ERROR error){
+        [cbFunc executeWithArguments:ACArgsPack(error)];
     };
     if (!src || !target) {
         ACLogDebug(@"copy parameters error - src: %@ target: %@",src,target);
-        callback(NO);
+        callback(kError);
         return;
     }
     UEX_DO_IN_BACKGROUND(^{
-        __block BOOL ret = NO;
+        __block UEX_ERROR err = kError;
         @onExit{
-            callback(ret);
+            callback(err);
         };
         NSError *error = nil;
         NSFileManager *fm = [NSFileManager defaultManager];
@@ -876,7 +885,7 @@
             ACLogDebug(@"copy error: %@",error.localizedDescription);
             return;
         }
-        ret = YES;
+        err = kNoError;
     });
 }
 
