@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <uexplugins>
     <plugin
-        uexName="uexFileMgr" version="3.0.26" build="26">
-        <info>26:修复readFile被错误转义的问题</info>
+        uexName="uexFileMgr" version="3.0.27" build="27">
+        
+        <info>27:增加uexFileMgr.getFileHashValue方法获取文件哈希值</info>
+        <build>26:修复readFile被错误转义的问题</build>
         <build>25:添加base64支持</build>
         <build>24:改用bundle方式引用资源，修复IDE插件文件浏览器图标丢失的bug</build>
         <build>23:修改工程为ARC;修复在复用窗口中使用时回调丢失的bug</build>

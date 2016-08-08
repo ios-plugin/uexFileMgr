@@ -34,5 +34,6 @@
         <method name="getFileListByPath"></method>
         <method name="search"></method>
         <method name="copyFile"></method>
+        <method name="getFileHashValue"></method>
     </plugin>
 </uexplugins>
