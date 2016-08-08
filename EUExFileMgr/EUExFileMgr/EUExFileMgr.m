@@ -15,6 +15,7 @@
 #import "JSON.h"
 #import "EUExFile+search.h"
 
+#import <CommonCrypto/CommonDigest.h>
 
 #define UEX_FILE_MGR_STRING_VALUE(x) \
 ({\
@@ -31,6 +32,7 @@
     }\
     result;\
 })
+#define FileHashDefaultChunkSizeForReadingData 1024*8
 
 
 @implementation EUExFileMgr
@@ -425,8 +427,202 @@
     }
 }
 
+//获取哈希值
+- (void)getFileHashValue:(NSMutableArray *)inArguments {
+    
+    id info =[inArguments[0] JSONValue];
+    
+    NSString *path = [info objectForKey:@"path"];
+    NSString *type = [info objectForKey:@"algorithm"];
+    NSString *thepath = [self absPath:path];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSString *fileHashValue = @"";
+        
+        if ([type isEqualToString:@"SHA-1"]) {
+            
+            NSData *data = [[NSFileManager defaultManager] contentsAtPath:thepath];
+            fileHashValue = [self sha1:data];
+            
+            NSLog(@"appcan-->EUExFileMgr-->getFileHashValue-->has1 = %@", fileHashValue);
+            
+        } else {
+            
+            fileHashValue = [EUExFileMgr getFileMD5WithPath:thepath];
+            
+            NSLog(@"appcan-->EUExFileMgr-->getFileHashValue-->MD5 = %@", fileHashValue);
+            
+        }
+        NSString *jsStr = @"";
+        
+        if (fileHashValue.length >0) {
+            
+            jsStr = [NSString stringWithFormat:@"if(uexFileMgr.cbGetFileHashValue!=null){uexFileMgr.cbGetFileHashValue(%d,%d,\'%@\')}",0,UEX_CALLBACK_DATATYPE_TEXT,fileHashValue];
+            
+            
+        } else {
+            
+            jsStr = [NSString stringWithFormat:@"if(uexFileMgr.cbGetFileHashValue!=null){uexFileMgr.cbGetFileHashValue(%d,%d,\'%@\')}",0,UEX_CALLBACK_DATATYPE_TEXT,@"获取失败"];
+            
+        }
+        [EUtility brwView:self.meBrwView evaluateScript:jsStr];
+        
+    });
+    
+}
 
+- (NSString*)sha1:(NSData *)data {
+    
+    //const char *cstr = [inString cStringUsingEncoding:NSUTF8StringEncoding];
+    //NSData *data = [NSData dataWithBytes:cstr length:inString.length];
+    //使用对应的CC_SHA1,CC_SHA256,CC_SHA384,CC_SHA512的长度分别是20,32,48,64
+    
+    uint8_t digest[CC_SHA1_DIGEST_LENGTH];
+    //使用对应的CC_SHA256,CC_SHA384,CC_SHA512
+    CC_SHA1(data.bytes, (unsigned int)data.length, digest);
+    
+    NSMutableString* output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
+    
+    for(int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
+        [output appendFormat:@"%02x", digest[i]];
+    
+    return output;
+    
+}
 
+- (NSString *)md5:(NSString *)inString {
+    
+    const char *cStr = [inString UTF8String];
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    
+    CC_MD5( cStr, (unsigned int)strlen(cStr), digest );
+    
+    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
+    
+    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
+        
+        [output appendFormat:@"%02x", digest[i]];
+    
+    return output;
+    
+}
+
++ (NSString *)getFileMD5WithPath:(NSString*)path {
+    
+    return (__bridge_transfer NSString *)FileMD5HashCreateWithPath((__bridge CFStringRef)path, FileHashDefaultChunkSizeForReadingData);
+}
+
+CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath,size_t chunkSizeForReadingData) {
+    
+    // Declare needed variables
+    CFStringRef result = NULL;
+    
+    CFReadStreamRef readStream = NULL;
+    
+    // Get the file URL
+    CFURLRef fileURL =
+    
+    CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
+                                  
+                                  (CFStringRef)filePath,
+                                  
+                                  kCFURLPOSIXPathStyle,
+                                  
+                                  (Boolean)false);
+    
+    if (!fileURL) goto done;
+    
+    // Create and open the read stream
+    readStream = CFReadStreamCreateWithFile(kCFAllocatorDefault,
+                                            
+                                            (CFURLRef)fileURL);
+    
+    if (!readStream) goto done;
+    
+    bool didSucceed = (bool)CFReadStreamOpen(readStream);
+    
+    if (!didSucceed) goto done;
+    
+    // Initialize the hash object
+    CC_MD5_CTX hashObject;
+    
+    CC_MD5_Init(&hashObject);
+    
+    // Make sure chunkSizeForReadingData is valid
+    if (!chunkSizeForReadingData) {
+        
+        chunkSizeForReadingData = FileHashDefaultChunkSizeForReadingData;
+        
+    }
+    
+    // Feed the data to the hash object
+    
+    bool hasMoreData = true;
+    
+    while (hasMoreData) {
+        
+        uint8_t buffer[chunkSizeForReadingData];
+        
+        CFIndex readBytesCount = CFReadStreamRead(readStream,(UInt8 *)buffer,(CFIndex)sizeof(buffer));
+        
+        if (readBytesCount == -1) break;
+        
+        if (readBytesCount == 0) {
+            
+            hasMoreData = false;
+            
+            continue;
+            
+        }
+        
+        CC_MD5_Update(&hashObject,(const void *)buffer,(CC_LONG)readBytesCount);
+        
+    }
+    
+    // Check if the read operation succeeded
+    didSucceed = !hasMoreData;
+    
+    // Compute the hash digest
+    unsigned char digest[CC_MD5_DIGEST_LENGTH];
+    
+    CC_MD5_Final(digest, &hashObject);
+    
+    // Abort if the read operation failed
+    if (!didSucceed) goto done;
+    
+    // Compute the string result
+    char hash[2 * sizeof(digest) + 1];
+    
+    for (size_t i = 0; i < sizeof(digest); ++i) {
+        
+        snprintf(hash + (2 * i), 3, "%02x", (int)(digest[i]));
+        
+    }
+    
+    result = CFStringCreateWithCString(kCFAllocatorDefault,(const char *)hash,kCFStringEncodingUTF8);
+    
+    
+    
+done:
+    
+    if (readStream) {
+        
+        CFReadStreamClose(readStream);
+        
+        CFRelease(readStream);
+        
+    }
+    
+    if (fileURL) {
+        
+        CFRelease(fileURL);
+        
+    }
+    
+    return result;
+    
+}
 
 //16.读文件
 -(void)readFile:(NSMutableArray *)inArguments {
