@@ -42,18 +42,11 @@
 @end
 
 
+
+#define UEX_FILE_NOT_FOUND_ERROR uexErrorMake(1,@"传入的file对象无效")
+
 @implementation EUExFileMgr
 
-#define UEX_ERROR NSNumber *
-
-
-static UEX_ERROR kError;
-static UEX_ERROR kNoError;
-
-__attribute__((constructor)) static void initUexConstant(){
-    kError = @(YES);
-    kNoError = @(NO);
-}
 
 
 
@@ -91,7 +84,7 @@ __attribute__((constructor)) static void initUexConstant(){
 
 
 //1.创建文件
-- (NSNumber *)createFile:(NSMutableArray *)inArguments {
+- (UEX_BOOL)createFile:(NSMutableArray *)inArguments {
     __block BOOL result = NO;
     ACArgsUnpack(NSString *inOpId,NSString *inPath) = inArguments;
     @onExit{
@@ -99,14 +92,14 @@ __attribute__((constructor)) static void initUexConstant(){
     };
 
     if ([self.fobjDict objectForKey:inOpId]) {
-        return @(result);
+        return UEX_FALSE;
     }
     EUExFile * uexFile=[[EUExFile alloc]init];
     inPath =[self absPath:inPath];
     result = [uexFile initWithFileType:F_TYPE_FILE path:inPath mode:F_FILE_OPEN_MODE_NEW euexObj:self];
 
     
-    return @(result);
+    return result ? UEX_TRUE : UEX_FALSE;
 }
 
 
@@ -115,7 +108,7 @@ __attribute__((constructor)) static void initUexConstant(){
 
 
 //2.创建目录
-- (NSNumber *)createDir:(NSMutableArray *)inArguments {
+- (UEX_BOOL)createDir:(NSMutableArray *)inArguments {
     __block BOOL result = NO;
     ACArgsUnpack(NSString *inOpId,NSString *inPath) = inArguments;
     @onExit{
@@ -123,7 +116,7 @@ __attribute__((constructor)) static void initUexConstant(){
     };
     EUExFile *uexFile;
     if ([self.fobjDict objectForKey:inOpId]) {
-        return @(result);
+        return UEX_FALSE;
     }
     uexFile = [[EUExFile alloc] init];
     inPath =[super absPath:inPath];
@@ -132,14 +125,14 @@ __attribute__((constructor)) static void initUexConstant(){
         result = YES;
     }
     
-    return @(result);
+    return result ? UEX_TRUE : UEX_FALSE;
 }
 
 
 
 
 //3.打开文件
-- (NSNumber *)openFile:(NSMutableArray *)inArguments {
+- (UEX_BOOL)openFile:(NSMutableArray *)inArguments {
     __block BOOL result = NO;
     ACArgsUnpack( NSString *inOpId,NSString *inPath,NSString *inMode) = inArguments;
     @onExit{
@@ -153,7 +146,7 @@ __attribute__((constructor)) static void initUexConstant(){
         if (isCreateFileSuccess) {
             result = YES;
         }
-        return @(result);
+        return result ? UEX_TRUE : UEX_FALSE;
     }
     uexFile = [[EUExFile alloc] init];
     inPath =[super absPath:inPath];
@@ -162,13 +155,13 @@ __attribute__((constructor)) static void initUexConstant(){
         result = YES;
         [self.fobjDict setObject:uexFile forKey:inOpId];
     }
-    return @(result);
+    return result ? UEX_TRUE : UEX_FALSE;
 }
 
 
 
 //4.打开目录
-- (NSNumber *)openDir:(NSMutableArray *)inArguments {
+- (UEX_BOOL)openDir:(NSMutableArray *)inArguments {
     __block BOOL result = NO;
     ACArgsUnpack(NSString *inOpId,NSString *inPath) = inArguments;
     @onExit{
@@ -176,7 +169,7 @@ __attribute__((constructor)) static void initUexConstant(){
     };
     EUExFile *uexFile = [self.fobjDict objectForKey:inOpId];
     if (uexFile) {
-        return @(result);
+        return UEX_FALSE;
     }
     uexFile = [[EUExFile alloc] init];
     inPath = [super absPath:inPath];
@@ -185,13 +178,13 @@ __attribute__((constructor)) static void initUexConstant(){
         result = YES;
         [self.fobjDict setObject:uexFile forKey:inOpId];
     }
-    return @(result);
+    return result ? UEX_TRUE : UEX_FALSE;
 }
 
 
 
 //5.通过path删除文件
-- (NSNumber *)deleteFileByPath:(NSMutableArray *)inArguments {
+- (UEX_BOOL)deleteFileByPath:(NSMutableArray *)inArguments {
     BOOL result = NO;
     ACArgsUnpack(NSString *inPath) = inArguments;
     inPath =[self absPath:inPath];
@@ -199,10 +192,10 @@ __attribute__((constructor)) static void initUexConstant(){
         result = YES;
     }
     [self intCallbackWithFunc:@"uexFileMgr.cbDeleteFileByPath" opid:@"0" isSuccess:result];
-    return @(result);
+    return result ? UEX_TRUE : UEX_FALSE;
 }
 //6.删除一个文件通过ID
-- (NSNumber *)deleteFileByID:(NSMutableArray *)inArguments {
+- (UEX_BOOL)deleteFileByID:(NSMutableArray *)inArguments {
     BOOL result = NO;
     ACArgsUnpack(NSString *inOpId) = inArguments;
     EUExFile *object = [self.fobjDict objectForKey:inOpId];;
@@ -212,20 +205,20 @@ __attribute__((constructor)) static void initUexConstant(){
         result = YES;
     }
     [self intCallbackWithFunc:@"uexFileMgr.cbDeleteFileByID" opid:inOpId isSuccess:result];
-    return @(result);
+    return result ? UEX_TRUE : UEX_FALSE;
 }
 //7.根据 path 判断文件类型
-- (NSNumber *)getFileTypeByPath:(NSMutableArray *)inArguments {
+- (UEX_BOOL)getFileTypeByPath:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inPath) = inArguments;
     inPath = [self absPath:inPath];
     NSInteger result = [File fileisDirectoy:inPath];
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileTypeByPath" arguments:ACArgsPack(@0,@2,@(result))];
-    return @(result);
+    return result ? UEX_TRUE : UEX_FALSE;
 }
 
 
 //8.根据 id判断文件类型
-- (NSNumber *)getFileTypeByID:(NSMutableArray *)inArguments {
+- (UEX_BOOL)getFileTypeByID:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inOpId) = inArguments;
     NSInteger result = -1;
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
@@ -234,12 +227,12 @@ __attribute__((constructor)) static void initUexConstant(){
         result = [File fileisDirectoy:truePath];
     }
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileTypeById" arguments:ACArgsPack(@0,@2,@(result))];
-    return @(result);
+    return result ? UEX_TRUE : UEX_FALSE;
 
 }
 
 //9.根据路径判断文件存在
-- (NSNumber *)isFileExistByPath:(NSMutableArray *)inArguments {
+- (UEX_BOOL)isFileExistByPath:(NSMutableArray *)inArguments {
     NSString *inOpId = nil;
     NSString *inPath = nil;
     __block BOOL result = NO;
@@ -247,7 +240,7 @@ __attribute__((constructor)) static void initUexConstant(){
         [self intCallbackWithFunc:@"uexFileMgr.cbIsFileExistByPath" opid:inOpId isSuccess:result];
     };
     if ([inArguments count] == 0) {
-        return @(result);
+        return UEX_FALSE;
     }else if([inArguments count] == 1){
         inPath = stringArg(inArguments[0]);
     }else{
@@ -259,11 +252,11 @@ __attribute__((constructor)) static void initUexConstant(){
     }
     inPath = [self absPath:inPath];
     result = [File fileIsExist:inPath];
-    return @(result);
+    return result ? UEX_TRUE : UEX_FALSE;
 }
 
 //10.根据ID判断文件存在
-- (NSNumber *)isFileExistByID:(NSMutableArray *)inArguments{
+- (UEX_BOOL)isFileExistByID:(NSMutableArray *)inArguments{
     ACArgsUnpack(NSString *inOpId) = inArguments;
     BOOL result = NO;
 
@@ -272,7 +265,7 @@ __attribute__((constructor)) static void initUexConstant(){
         result = [File fileIsExist:object.appFilePath];
     }
     [self intCallbackWithFunc:@"uexFileMgr.cbIsFileExistById" opid:inOpId isSuccess:result];
-    return @(result);
+    return result ? UEX_TRUE : UEX_FALSE;
 }
 
 //11.文件浏览器
@@ -332,36 +325,36 @@ __attribute__((constructor)) static void initUexConstant(){
 
 
 //12.设置文件偏移
-- (NSNumber *)seekFile:(NSMutableArray *)inArguments {
+- (UEX_BOOL)seekFile:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inOpId,NSString *inPos) = inArguments;
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     if (object) {
         [object seek:inPos];
-        return @YES;
+        return UEX_TRUE;
     }
-    return @NO;
+    return UEX_FALSE;
 }
 
 //13.文件偏移到开始
-- (NSNumber *)seekBeginOfFile:(NSMutableArray *)inArguments {
+- (UEX_BOOL)seekBeginOfFile:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inOpId) = inArguments;
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     if (object) {
         [object seekBeginOfFile];
-        return @YES;
+        return UEX_TRUE;
     }
-    return @NO;
+    return UEX_FALSE;
 }
 
 //14.文件偏移到最后
-- (NSNumber *)seekEndOfFile:(NSMutableArray *)inArguments {
+- (UEX_BOOL)seekEndOfFile:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inOpId) = inArguments;
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     if (object) {
         [object seekEndOfFile];
-        return @YES;
+        return UEX_TRUE;
     }
-    return @NO;
+    return UEX_FALSE;
 }
 
 //15.写文件
@@ -393,13 +386,14 @@ __attribute__((constructor)) static void initUexConstant(){
     }
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     if (!object) {
-        [cb executeWithArguments:ACArgsPack(kError,nil)];
+        UEX_ERROR err = UEX_FILE_NOT_FOUND_ERROR;
+        [cb executeWithArguments:ACArgsPack(err,nil)];
         [self intCallbackWithFunc:@"uexFileMgr.cbReadFile" opid:inOpId isSuccess:NO];
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *outStr = [object read:len option:option];
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbReadFile" arguments:ACArgsPack(@(inOpId.integerValue),@0,outStr)];
-        [cb executeWithArguments:ACArgsPack(kNoError,outStr)];
+        [cb executeWithArguments:ACArgsPack(kUexNoError,outStr)];
     });
 }
 
@@ -482,7 +476,7 @@ __attribute__((constructor)) static void initUexConstant(){
         path = [object getFilePath];
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFilePath" arguments:ACArgsPack(@(inOpId.integerValue),@0,path)];
     }else {
-        ACLogDebug(@"file for id:%@ NOT found!",inOpId);
+        UEX_FILE_NOT_FOUND_ERROR;
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFilePath" arguments:ACArgsPack(@(inOpId.integerValue),@2,@0)];
     }
     return path;
@@ -491,14 +485,14 @@ __attribute__((constructor)) static void initUexConstant(){
 
 
 //19.关闭文件
-- (NSNumber *)closeFile:(NSMutableArray *)inArguments {
+- (UEX_BOOL)closeFile:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inOpId) = inArguments;
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     if (object) {
         [self.fobjDict removeObjectForKey:inOpId];
-        return @YES;
+        return UEX_TRUE;
     }
-    return @NO;
+    return UEX_FALSE;
 }
 //20. 返回阅读器的偏移值
 - (NSString *)getReaderOffset:(NSMutableArray *)inArguments {
@@ -520,10 +514,11 @@ __attribute__((constructor)) static void initUexConstant(){
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     UEX_DO_IN_BACKGROUND(^{
         NSString *data = nil;
-        UEX_ERROR error = kError;
-        if (object) {
+        UEX_ERROR error = kUexNoError;
+        if (!object) {
+            error = UEX_FILE_NOT_FOUND_ERROR;
+        }else{
             data = [object readPercent:inPercent Len:inLen];
-            error = kNoError;
         }
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbReadPercent" arguments:ACArgsPack(@(inOpId.integerValue),@0,data)];
         [cb executeWithArguments:ACArgsPack(error,data)];
@@ -537,14 +532,14 @@ __attribute__((constructor)) static void initUexConstant(){
 - (void)readNext:(NSMutableArray *)inArguments {
     ACArgsUnpack( NSString *inOpId,NSString *inLen,ACJSFunctionRef *cb) = inArguments;
     
-    EUExFile *object = [self.fobjDict objectForKey:inOpId];
-    
     UEX_DO_IN_BACKGROUND(^{
+        EUExFile *object = [self.fobjDict objectForKey:inOpId];
         NSString *data = nil;
-        UEX_ERROR error = kError;
-        if (object) {
-            data = [object readNext:inLen];
-            error = kNoError;
+        UEX_ERROR error = kUexNoError;
+        if (!object) {
+            error = UEX_FILE_NOT_FOUND_ERROR;
+        }else{
+             data = [object readNext:inLen];
         }
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbReadNext" arguments:ACArgsPack(@(inOpId.integerValue),@0,data)];
         [cb executeWithArguments:ACArgsPack(error,data)];
@@ -554,14 +549,16 @@ __attribute__((constructor)) static void initUexConstant(){
 - (void)readPre:(NSMutableArray *)inArguments {
     ACArgsUnpack( NSString *inOpId,NSString *inLen,ACJSFunctionRef *cb) = inArguments;
     
-    EUExFile *object = [self.fobjDict objectForKey:inOpId];
+    
     
     UEX_DO_IN_BACKGROUND(^{
+        EUExFile *object = [self.fobjDict objectForKey:inOpId];
         NSString *data = nil;
-        UEX_ERROR error = kError;
-        if (object) {
+        UEX_ERROR error = kUexNoError;
+        if (!object) {
+            error = UEX_FILE_NOT_FOUND_ERROR;
+        }else{
             data = [object readPre:inLen];
-            error = kNoError;
         }
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbReadPre" arguments:ACArgsPack(@(inOpId.integerValue),@0,data)];
         [cb executeWithArguments:ACArgsPack(error,data)];
@@ -697,14 +694,16 @@ __attribute__((constructor)) static void initUexConstant(){
     NSString *path = stringArg(info[@"path"]);
     void (^callback)(BOOL isSuccess,NSArray *result) = ^(BOOL isSuccess,NSArray *result){
         NSMutableDictionary *dict =[NSMutableDictionary dictionary];
+        UEX_ERROR err = kUexNoError;
         if(isSuccess){
             [dict setValue:@(YES) forKey:@"isSuccess"];
             [dict setValue:result forKey:@"result"];
         }else{
+            err = uexErrorMake(1,@"search failed");
             [dict setValue:@(NO) forKey:@"isSuccess"];
         }
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbSearch" arguments:ACArgsPack([dict ac_JSONFragment])];
-        [cb executeWithArguments:ACArgsPack(dict)];
+        [cb executeWithArguments:ACArgsPack(err,result)];
     };
     
     if (!path || path.length == 0) {
@@ -738,7 +737,7 @@ __attribute__((constructor)) static void initUexConstant(){
 
 
 //1.使用密钥创建本地文件
-- (NSNumber *)createSecure:(NSMutableArray *)inArguments {
+- (UEX_BOOL)createSecure:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inOpId,NSString *inPath,NSString *inKey) = inArguments;
     __block BOOL result = NO;
     @onExit{
@@ -748,14 +747,14 @@ __attribute__((constructor)) static void initUexConstant(){
 
     EUExFile *uexFile;
     if ([self.fobjDict objectForKey:inOpId]) {
-        return @(result);
+        return UEX_FALSE;
     }
     uexFile=[[EUExFile alloc]init];
     inPath =[self absPath:inPath];
     
     BOOL isCreateFileSuccess = [uexFile initWithFileType:F_TYPE_FILE path:inPath mode:F_FILE_OPEN_MODE_NEW euexObj:self];
     if (!isCreateFileSuccess) {
-        return @(result);
+        return UEX_FALSE;
     }
     //保存key
     if (inKey && inKey.length > 0) {
@@ -763,11 +762,11 @@ __attribute__((constructor)) static void initUexConstant(){
     }
     [self.fobjDict setObject:uexFile forKey:inOpId];
     result = YES;
-    return @(result);
+    return UEX_TRUE;
 }
 
 //2.使用密钥打开本地文件
-- (NSNumber *)openSecure:(NSMutableArray *)inArguments {
+- (UEX_BOOL)openSecure:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inOpId,NSString *inPath,NSString *inMode,NSString *inKey) = inArguments;
     __block BOOL result = NO;
     @onExit{
@@ -775,14 +774,14 @@ __attribute__((constructor)) static void initUexConstant(){
     };
     EUExFile *uexFile = [self.fobjDict objectForKey:inOpId];
     if (uexFile) {
-        return @(result);
+        return UEX_FALSE;
     }
     uexFile = [[EUExFile alloc] init];
     inPath =[self absPath:inPath];
     BOOL isCreateFileSuccess = [uexFile initWithFileType:F_TYPE_FILE path:inPath mode:[inMode intValue] euexObj:self];
 
     if (!isCreateFileSuccess) {
-        return @(result);
+        return UEX_FALSE;
     }
     //保存key
     if (inKey && inKey.length > 0) {
@@ -790,7 +789,7 @@ __attribute__((constructor)) static void initUexConstant(){
     }
     [self.fobjDict setObject:uexFile forKey:inOpId];
     result = YES;
-    return @(result);
+    return UEX_TRUE;
 }
 
 #pragma mark - 4.0 API
@@ -800,7 +799,6 @@ __attribute__((constructor)) static void initUexConstant(){
     NSString *path = [self absPath:stringArg(info[@"path"])];
     NSString *opid = stringArg(info[@"id"]) ?: newUUID();
     if (self.fobjDict[opid] || !path) {
-        
         return nil;
     }
     
@@ -815,12 +813,12 @@ __attribute__((constructor)) static void initUexConstant(){
     return opid;
 }
 
-- (NSNumber *)mkdir:(NSMutableArray *)inArguments{
+- (UEX_BOOL)mkdir:(NSMutableArray *)inArguments{
     ACArgsUnpack(NSString *inPath) = inArguments;
     NSString *path = [self absPath:inPath];
     EUExFile *uexFile = [[EUExFile alloc] init];
     BOOL isSuccess = [uexFile initWithFileType:F_TYPE_DIR path:path mode:F_FILE_OPEN_MODE_NEW euexObj:self];
-    return @(isSuccess);
+    return isSuccess ? UEX_TRUE : UEX_FALSE;
 }
 
 - (NSString *)open:(NSMutableArray *)inArguments{
@@ -854,16 +852,17 @@ __attribute__((constructor)) static void initUexConstant(){
     ACArgsUnpack(NSDictionary *info,ACJSFunctionRef *cbFunc) = inArguments;
     NSString *src = stringArg(info[@"src"]);
     NSString *target = stringArg(info[@"target"]);
-    void (^callback)(UEX_ERROR error) = ^(UEX_ERROR error){
-        [cbFunc executeWithArguments:ACArgsPack(error)];
+    __block UEX_ERROR err = kUexNoError;
+    void (^callback)() = ^{
+        [cbFunc executeWithArguments:ACArgsPack(err)];
     };
     if (!src || !target) {
-        ACLogDebug(@"copy parameters error - src: %@ target: %@",src,target);
-        callback(kError);
+        err = uexErrorMake(1,@"copy parameters error");
+        callback();
         return;
     }
     UEX_DO_IN_BACKGROUND(^{
-        __block UEX_ERROR err = kError;
+        
         @onExit{
             callback(err);
         };
@@ -872,20 +871,19 @@ __attribute__((constructor)) static void initUexConstant(){
         NSString *srcPath = [self absPath:src];
 
         if (![fm fileExistsAtPath:srcPath]) {
-            ACLogDebug(@"copy error: source path invalid");
+            err = uexErrorMake(1,@"copy error: source path invalid");
             return;
         }
         NSString *desFolderPath = [self absPath:target];
         BOOL isFolder = NO;
         if (![fm fileExistsAtPath:desFolderPath isDirectory:&isFolder] || !isFolder) {
-            ACLogDebug(@"copy error: target folder not exist");
+            err = uexErrorMake(1,@"copy error: target folder not exist");
             return;
         }
         if (![[NSFileManager defaultManager]copyItemAtPath:srcPath toPath:[desFolderPath stringByAppendingPathComponent:srcPath.lastPathComponent] error:&error] || error) {
-            ACLogDebug(@"copy error: %@",error.localizedDescription);
+            err = uexErrorMake(1,@"copy error",@{@"info":error.localizedDescription});
             return;
         }
-        err = kNoError;
     });
 }
 
