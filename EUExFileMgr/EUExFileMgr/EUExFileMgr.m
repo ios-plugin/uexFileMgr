@@ -208,17 +208,17 @@
     return result ? UEX_TRUE : UEX_FALSE;
 }
 //7.根据 path 判断文件类型
-- (UEX_BOOL)getFileTypeByPath:(NSMutableArray *)inArguments {
+- (NSNumber *)getFileTypeByPath:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inPath) = inArguments;
     inPath = [self absPath:inPath];
     NSInteger result = [File fileisDirectoy:inPath];
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileTypeByPath" arguments:ACArgsPack(@0,@2,@(result))];
-    return result ? UEX_TRUE : UEX_FALSE;
+    return @(result);
 }
 
 
 //8.根据 id判断文件类型
-- (UEX_BOOL)getFileTypeByID:(NSMutableArray *)inArguments {
+- (NSNumber *)getFileTypeByID:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inOpId) = inArguments;
     NSInteger result = -1;
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
@@ -227,7 +227,7 @@
         result = [File fileisDirectoy:truePath];
     }
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileTypeById" arguments:ACArgsPack(@0,@2,@(result))];
-    return result ? UEX_TRUE : UEX_FALSE;
+    return @(result);
 
 }
 
