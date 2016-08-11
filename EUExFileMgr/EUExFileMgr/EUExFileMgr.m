@@ -276,9 +276,10 @@
     }
     
     ACArgsUnpack(NSString *inPath,ACJSFunctionRef *cb) = inArguments;
+    __block UEX_ERROR err = kUexNoError;
     void (^callback)(NSString *result) = ^(NSString *result){
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbExplorer" arguments:ACArgsPack(@0,@0,result)];
-        [cb executeWithArguments:ACArgsPack(result)];
+        [cb executeWithArguments:ACArgsPack(err,result)];
     };
     if (!inPath) {
         callback(nil);
@@ -289,6 +290,9 @@
     @weakify(self);
     [self.singlepicker presentControllerWithCompletion:^(NSString *selectedPath) {
         @strongify(self);
+        if (!selectedPath) {
+            err = uexErrorMake(1,@"用户取消选择");
+        }
         callback(selectedPath);
         self.singlepicker = nil;
     }];
@@ -301,16 +305,14 @@
     }
     
     ACArgsUnpack(NSString *inPath,ACJSFunctionRef *cb) = inArguments;
-    
-    
     inPath = [self absPath:inPath];
-
     @weakify(self);
     FileListViewController* filesView = [[FileListViewController alloc] initWithRootPath:inPath completion:^(NSArray<NSString *> *selectedPaths) {
+        UEX_ERROR err = selectedPaths ? kUexNoError : uexErrorMake(1,@"用户取消选择");
         @strongify(self);
         [self.multipicker dismissViewControllerAnimated:YES completion:^{
             [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbMultiExplorer" arguments:ACArgsPack(@0,@1,selectedPaths)];
-            [cb executeWithArguments:ACArgsPack(selectedPaths)];
+            [cb executeWithArguments:ACArgsPack(err,selectedPaths)];
             self.multipicker = nil;
         }];
         
@@ -655,13 +657,12 @@
  *  重命名文件
  */
 - (void)renameFile:(NSMutableArray *)inArguments{
-
-
     ACArgsUnpack(NSDictionary *info,ACJSFunctionRef *cb) = inArguments;
+    __block UEX_ERROR err = kUexNoError;
     void (^callback)(NSInteger) = ^(NSInteger result){
         NSDictionary *resultDict = @{@"result":@(result)};
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbRenameFile" arguments:ACArgsPack(resultDict.ac_JSONFragment)];
-        [cb executeWithArguments:ACArgsPack(resultDict)];
+        [cb executeWithArguments:ACArgsPack(err)];
     };
     NSString *oldPath = stringArg(info[@"oldFilePath"]);
     NSString *newPath = stringArg(info[@"newFilePath"]);
@@ -680,6 +681,7 @@
         NSInteger result = 0;
         if (suc && !error) {
             result = 1;
+            err = uexErrorMake(1,error.localizedDescription);
         }
         callback(result);
     });
