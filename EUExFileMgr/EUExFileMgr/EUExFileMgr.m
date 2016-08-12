@@ -367,13 +367,17 @@
     EUExFile * object = [self.fobjDict objectForKey:inOpId];
     if (!object) {
         [self intCallbackWithFunc:@"uexFileMgr.cbWriteFile" opid:inOpId isSuccess:NO];
-        [cb executeWithArguments:ACArgsPack(@(NO))];
+        [cb executeWithArguments:ACArgsPack(UEX_FILE_NOT_FOUND_ERROR)];
         return;
     }
     UEX_DO_IN_BACKGROUND(^{
         BOOL ret = [object writeWithData:inData option:option];
         [self intCallbackWithFunc:@"uexFileMgr.cbWriteFile" opid:inOpId isSuccess:ret];
-        [cb executeWithArguments:ACArgsPack(@(ret))];
+        UEX_ERROR err = kUexNoError;
+        if (!ret) {
+            err = uexErrorMake(1,@"文件写入失败");
+        }
+        [cb executeWithArguments:ACArgsPack(err)];
     });
 }
 
