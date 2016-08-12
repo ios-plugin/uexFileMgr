@@ -413,9 +413,14 @@
     
     UEX_DO_IN_BACKGROUND((^{
 
-        NSMutableDictionary *result = [NSMutableDictionary dictionary];
+        
         CGFloat folderSize = [self folderSizeAtPath:[self absPath:inPath]];
-        NSInteger errorCode = folderSize > 0 ? 0 : 1 ;
+        UEX_ERROR err = kUexNoError;
+        
+        NSInteger errorCode = (folderSize < 0) ? 1 : 0;
+        NSMutableDictionary *result = [NSMutableDictionary dictionary];
+
+
         if([unit isEqual:@"KB"]){
             folderSize = folderSize / 1024;
         }
@@ -425,13 +430,17 @@
         if([unit isEqual:@"GB"]){
             folderSize = folderSize / 1024 / 1024 / 1024;
         }
-
-        [result setValue:@(errorCode) forKey:@"errorCode"];
         [result setValue:inOpId forKey:@"id"];
         [result setValue:@(folderSize) forKey:@"data"];
         [result setValue:unit forKey:@"unit"];
+        [result setValue:@(errorCode) forKey:@"errorCode"];
+
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileSizeByPath" arguments:ACArgsPack(result.ac_JSONFragment)];
-        [cb executeWithArguments:ACArgsPack(result)];
+        if (folderSize < 0) {
+            err = uexErrorMake(1,@"文件或文件夹不存在");
+            result = nil;
+        }
+        [cb executeWithArguments:ACArgsPack(err,result)];
     }));
 }
 
@@ -443,18 +452,21 @@
     if ([manager fileExistsAtPath:filePath]){
         return (CGFloat)[[manager attributesOfItemAtPath:filePath error:nil] fileSize];
     }
-    return 0;
+    return -1;
 }
 - (CGFloat) folderSizeAtPath:(NSString*) folderPath{
     NSFileManager* manager = [NSFileManager defaultManager];
     if (![manager fileExistsAtPath:folderPath]){
-        return 0;
+        return -1;
     }
     NSArray<NSString *> *subpaths = [manager subpathsAtPath:folderPath];
     __block CGFloat folderSize = 0;
     [subpaths enumerateObjectsUsingBlock:^(NSString * _Nonnull fileName, NSUInteger idx, BOOL * _Nonnull stop) {
         NSString* fileAbsolutePath = [folderPath stringByAppendingPathComponent:fileName];
-        folderSize += [self fileSizeAtPath:fileAbsolutePath];
+        CGFloat fileSize = [self fileSizeAtPath:fileAbsolutePath];
+        if (fileSize >= 0) {
+            folderSize += fileSize;
+        }
     }];
     return folderSize;
 }
