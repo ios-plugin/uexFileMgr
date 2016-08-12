@@ -412,7 +412,7 @@
     NSString *unit = stringArg(info[@"unit"]).uppercaseString;
     
     UEX_DO_IN_BACKGROUND((^{
-        NSString *fileSize = @"0";
+
         NSMutableDictionary *result = [NSMutableDictionary dictionary];
         CGFloat folderSize = [self folderSizeAtPath:[self absPath:inPath]];
         NSInteger errorCode = folderSize > 0 ? 0 : 1 ;
@@ -425,10 +425,10 @@
         if([unit isEqual:@"GB"]){
             folderSize = folderSize / 1024 / 1024 / 1024;
         }
-        fileSize = [NSString stringWithFormat:@"%f",folderSize];
+
         [result setValue:@(errorCode) forKey:@"errorCode"];
         [result setValue:inOpId forKey:@"id"];
-        [result setValue:fileSize forKey:@"data"];
+        [result setValue:@(folderSize) forKey:@"data"];
         [result setValue:unit forKey:@"unit"];
         [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileSizeByPath" arguments:ACArgsPack(result.ac_JSONFragment)];
         [cb executeWithArguments:ACArgsPack(result)];
@@ -459,12 +459,12 @@
     return folderSize;
 }
 //17.文件大小
-- (NSString *)getFileSize:(NSMutableArray *)inArguments {
+- (NSNumber *)getFileSize:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inOpId) = inArguments;
-    NSString *fileSize = nil;
+    NSNumber *fileSize = nil;
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     if (object) {
-        fileSize = [object getSize];
+        fileSize = @([[object getSize] longLongValue]);
     }
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileSize" arguments:ACArgsPack(@(inOpId.integerValue),@2,fileSize)];
     return fileSize;
@@ -497,12 +497,12 @@
     return UEX_FALSE;
 }
 //20. 返回阅读器的偏移值
-- (NSString *)getReaderOffset:(NSMutableArray *)inArguments {
+- (NSNumber *)getReaderOffset:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inOpId) = inArguments;
-    NSString *offset = nil;
+    NSNumber *offset = nil;
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     if (object) {
-        offset = @([object getReaderOffset]).stringValue;
+        offset = @([object getReaderOffset]);
         
     }
     [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetReaderOffset" arguments:ACArgsPack(@(inOpId.integerValue),@2,offset)];
