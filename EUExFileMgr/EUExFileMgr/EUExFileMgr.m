@@ -473,7 +473,7 @@
 //17.文件大小
 - (NSNumber *)getFileSize:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inOpId) = inArguments;
-    NSNumber *fileSize = nil;
+    NSNumber *fileSize = @(-1);
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     if (object) {
         fileSize = @([[object getSize] longLongValue]);
@@ -511,7 +511,7 @@
 //20. 返回阅读器的偏移值
 - (NSNumber *)getReaderOffset:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inOpId) = inArguments;
-    NSNumber *offset = nil;
+    NSNumber *offset = @(-1);
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     if (object) {
         offset = @([object getReaderOffset]);
