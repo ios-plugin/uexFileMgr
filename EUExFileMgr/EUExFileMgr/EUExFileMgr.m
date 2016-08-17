@@ -731,6 +731,9 @@
     
     uexFileMgrSearchOption opt =uexFileMgrSearchNone;
     NSNumber *optNum = numberArg(info[@"option"]);
+    if (!optNum) {
+        optNum = numberArg(info[@"flag"]);
+    }
     if (optNum) {
         opt = optNum.integerValue;
     }
