@@ -31,11 +31,8 @@
         if (rangeRes.length>0) {
             self.fileUrl = [inPath substringFromIndex:rangeRes.location+4];
         }
-		if (mode_==F_FILE_OPEN_MODE_WRITE) {
-			return NO;
-		}
 	}
-	if (fileType_==F_TYPE_DIR) {
+	if (fileType_ == F_TYPE_DIR) {
 		if (![File fileIsExist:inPath]) {
 			if ([File createDir:inPath]) {
 				return YES;
@@ -46,41 +43,15 @@
 			return YES;
 		}
 	}
-	switch (mode_) {
-		case F_FILE_OPEN_MODE_NEW:
-		case F_FILE_OPEN_MODE_WRITE:
-		case F_FILE_OPEN_MODE_WRITE | F_FILE_OPEN_MODE_NEW:
-		case F_FILE_OPEN_MODE_NEW   | F_FILE_OPEN_MODE_READ:
-		case F_FILE_OPEN_MODE_READ  | F_FILE_OPEN_MODE_WRITE:	{
-			if ([File fileIsExist:inPath]) {
-				return YES;
-			} 
-            NSString *docPath = [inPath substringWithRange:NSMakeRange(0, [inPath length]-([[inPath lastPathComponent] length]))];
-			if (![File fileIsExist:docPath]) {
-				[File createDir:docPath];
-			}
-			if ([File createFile:inPath]) {
-				return YES;
-			}else {
-				return NO;
-			}
-
-		}
-			break;
-		case F_FILE_OPEN_MODE_CREADER:
-		case F_FILE_OPEN_MODE_READ:
-		{
-			if ([File fileIsExist:inPath]) {
-				return YES;
-			}else {
-				return NO;
-			}
-		}
-			break;
-		default:
-			break;
-	}
-	return NO;
+    
+    if (mode_ & (F_FILE_OPEN_MODE_NEW | F_FILE_OPEN_MODE_WRITE) && ![File fileIsExist:inPath]) {
+        NSString *docPath = [inPath substringWithRange:NSMakeRange(0, [inPath length]-([[inPath lastPathComponent] length]))];
+        if (![File fileIsExist:docPath]) {
+            [File createDir:docPath];
+        }
+        return [File createFile:inPath];
+    }
+    return [File fileIsExist:inPath];
 } 
 
 //写文件
@@ -122,26 +93,37 @@
     return YES;
 }
 
--(void)seek:(NSString*)inPos{
-	NSInteger seekLocation = (NSInteger)[inPos longLongValue];
+-(long long)seek:(NSString*)inPos{
+	long long seekLocation = [inPos longLongValue];
     offset = seekLocation;
 	//跳转到指定位置
 	fileHandle = [NSFileHandle fileHandleForReadingAtPath:appFilePath];
 	if (fileHandle==nil) {
-		return;
+		return -1;
 	}
-	[fileHandle seekToFileOffset:(long)seekLocation];
+    if(seekLocation > self.getSize.longLongValue){
+        [fileHandle seekToEndOfFile];
+    }else{
+        [fileHandle seekToFileOffset:seekLocation];
+    }
+	
+    ACLogDebug(@"offset: %lld",fileHandle.offsetInFile);
+    offset = fileHandle.offsetInFile;
+    return offset;
 }
--(void)seekBeginOfFile{
-	[self seek:0];
+-(long long)seekBeginOfFile{
+	return [self seek:0];
 	
 }
--(void)seekEndOfFile{
+-(long long)seekEndOfFile{
 	fileHandle = [NSFileHandle fileHandleForReadingAtPath:appFilePath];
 	if (fileHandle==nil) {
-		return;
+		return -1;
 	}
 	[fileHandle seekToEndOfFile];
+    offset = fileHandle.offsetInFile;
+    
+    return offset;
 }
 
 - (NSData *)rc4WithInput:(NSData *)aData key:(NSString *)aKey {

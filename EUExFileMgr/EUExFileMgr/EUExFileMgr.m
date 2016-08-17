@@ -327,36 +327,34 @@
 
 
 //12.设置文件偏移
-- (UEX_BOOL)seekFile:(NSMutableArray *)inArguments {
+- (NSNumber *)seekFile:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inOpId,NSString *inPos) = inArguments;
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     if (object) {
-        [object seek:inPos];
-        return UEX_TRUE;
+        return @([object seek:inPos]);
+
     }
-    return UEX_FALSE;
+    return @(-1);
 }
 
 //13.文件偏移到开始
-- (UEX_BOOL)seekBeginOfFile:(NSMutableArray *)inArguments {
+- (NSNumber *)seekBeginOfFile:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inOpId) = inArguments;
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     if (object) {
-        [object seekBeginOfFile];
-        return UEX_TRUE;
+        return @([object seekBeginOfFile]);
     }
-    return UEX_FALSE;
+    return @(-1);
 }
 
 //14.文件偏移到最后
-- (UEX_BOOL)seekEndOfFile:(NSMutableArray *)inArguments {
+- (NSNumber *)seekEndOfFile:(NSMutableArray *)inArguments {
     ACArgsUnpack(NSString *inOpId) = inArguments;
     EUExFile *object = [self.fobjDict objectForKey:inOpId];
     if (object) {
-        [object seekEndOfFile];
-        return UEX_TRUE;
+        return  @([object seekEndOfFile]);
     }
-    return UEX_FALSE;
+    return @(-1);
 }
 
 //15.写文件

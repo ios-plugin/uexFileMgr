@@ -51,9 +51,9 @@ typedef NS_OPTIONS(NSInteger, uexFileMgrFileReadingOption) {
 //获得文件大小
 -(NSString *)getSize;
 -(NSString*)getFilePath;
--(void)seek:(NSString*)inPos;
--(void)seekBeginOfFile;
--(void)seekEndOfFile;
+-(long long)seek:(NSString*)inPos;
+-(long long)seekBeginOfFile;
+-(long long)seekEndOfFile;
 -(void)close;
 //文件偏移
 -(long long)getReaderOffset;
