@@ -833,8 +833,8 @@
 }
 
 - (UEX_BOOL)mkdir:(NSMutableArray *)inArguments{
-    ACArgsUnpack(NSString *inPath) = inArguments;
-    NSString *path = [self absPath:inPath];
+    ACArgsUnpack(NSDictionary *info) = inArguments;
+    NSString *path = [self absPath:stringArg(info[@"path"])];
     EUExFile *uexFile = [[EUExFile alloc] init];
     BOOL isSuccess = [uexFile initWithFileType:F_TYPE_DIR path:path mode:F_FILE_OPEN_MODE_NEW euexObj:self];
     return isSuccess ? UEX_TRUE : UEX_FALSE;
