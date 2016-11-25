@@ -72,13 +72,13 @@
 	return docPath;
 }
 //获取文件长度
-+(long)getFileLength:(NSString *)fileName{
++(long long)getFileLength:(NSString *)fileName{
 	NSFileManager *fmanager = [NSFileManager defaultManager];
 	NSDictionary *dic = [fmanager attributesOfItemAtPath:fileName error:nil];	
 	NSNumber *fileSize = [dic objectForKey:NSFileSize];
 	
-	long sum = (long)[fileSize longLongValue];
-	return sum;
+	
+	return [fileSize longLongValue];
 }
 //遍历目录，每次返回一个子目录或文件名
 +(NSString *)readDir:(NSString *)dirName{
@@ -113,7 +113,7 @@
    const char *name = [fileName cStringUsingEncoding:NSUTF8StringEncoding];
 	if (stat(name, &st) == 0) {
 		time_t tt=st.st_atime;
-		return tt;
+		return (int)tt;
 	}
 	return -1;
 }
@@ -130,24 +130,16 @@
 	return date;
 }
 //文件是否是一个目录
-+(int)fileisDirectoy:(NSString *)fileName
-{
++(int)fileisDirectoy:(NSString *)fileName{
  	NSFileManager *fmanager = [NSFileManager defaultManager];
 	NSDictionary *fileInfo = [fmanager attributesOfItemAtPath:fileName error:nil];
-    
-    if ([fileName hasSuffix:@"plist"]) {
-        return 0;//not dir
-    }
-    
-	if (fileInfo!=NULL) {
-		NSString *ftype=[NSString stringWithString:[fileInfo  objectForKey:NSFileType] ];
-		if ([ ftype isEqual:NSFileTypeDirectory] ) 
-		{
+	if (fileInfo) {
+		NSString *ftype=[fileInfo  objectForKey:NSFileType];
+		if ([ftype isEqual:NSFileTypeDirectory]){
 			return 1;//is dir
 		}else {
 			return 0;//not dir
 		}
-		
 	}
 	return -1;//fail
 }

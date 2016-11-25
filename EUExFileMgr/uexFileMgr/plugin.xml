@@ -34,6 +34,15 @@
         <method name="getFileListByPath"></method>
         <method name="search"></method>
         <method name="copyFile"></method>
+<<<<<<< HEAD
         <method name="getFileHashValue"></method>
+=======
+        <method name="create"></method>
+        <method name="mkdir"></method>
+        <method name="open"></method>
+        <method name="copy"></method>
+        <method name="openWithPassword"></method>
+        <method name="createWithPassword"></method>
+>>>>>>> 4.0-dev
     </plugin>
 </uexplugins>

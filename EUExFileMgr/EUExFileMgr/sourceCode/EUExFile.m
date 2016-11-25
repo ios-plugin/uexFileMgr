@@ -10,7 +10,7 @@
 #import "EUExFileMgr.h"
 //#import "BUtility.h"
 #import "File.h"
-#import "EUtility.h"
+
 @implementation EUExFile
 @synthesize fileUrl;
 @synthesize fileHandle;
@@ -31,11 +31,8 @@
         if (rangeRes.length>0) {
             self.fileUrl = [inPath substringFromIndex:rangeRes.location+4];
         }
-		if (mode_==F_FILE_OPEN_MODE_WRITE) {
-			return NO;
-		}
 	}
-	if (fileType_==F_TYPE_DIR) {
+	if (fileType_ == F_TYPE_DIR) {
 		if (![File fileIsExist:inPath]) {
 			if ([File createDir:inPath]) {
 				return YES;
@@ -46,51 +43,23 @@
 			return YES;
 		}
 	}
-	switch (mode_) {
-		case F_FILE_OPEN_MODE_NEW:
-		case F_FILE_OPEN_MODE_WRITE:
-		case F_FILE_OPEN_MODE_WRITE | F_FILE_OPEN_MODE_NEW:
-		case F_FILE_OPEN_MODE_NEW   | F_FILE_OPEN_MODE_READ:
-		case F_FILE_OPEN_MODE_READ  | F_FILE_OPEN_MODE_WRITE:	{
-			if ([File fileIsExist:inPath]) {
-				return YES;
-			} 
-            NSString *docPath = [inPath substringWithRange:NSMakeRange(0, [inPath length]-([[inPath lastPathComponent] length]))];
-			if (![File fileIsExist:docPath]) {
-				[File createDir:docPath];
-			}
-			if ([File createFile:inPath]) {
-				return YES;
-			}else {
-				return NO;
-			}
-
-		}
-			break;
-		case F_FILE_OPEN_MODE_CREADER:
-		case F_FILE_OPEN_MODE_READ:
-		{
-			if ([File fileIsExist:inPath]) {
-				return YES;
-			}else {
-				return NO;
-			}
-		}
-			break;
-		default:
-			break;
-	}
-	return NO;
+    
+    if (mode_ & (F_FILE_OPEN_MODE_NEW | F_FILE_OPEN_MODE_WRITE) && ![File fileIsExist:inPath]) {
+        NSString *docPath = [inPath substringWithRange:NSMakeRange(0, [inPath length]-([[inPath lastPathComponent] length]))];
+        if (![File fileIsExist:docPath]) {
+            [File createDir:docPath];
+        }
+        return [File createFile:inPath];
+    }
+    return [File fileIsExist:inPath];
 } 
 
 //写文件
 -(BOOL)writeWithData:(NSString *)inData option:(uexFileMgrFileWritingOption)option {
-    
 	if (appFilePath == nil) {
-        
 		return NO;
-        
 	}
+    
     NSData *writer;
     if (option & uexFileMgrFileWritingOptionBase64Decoding) {
         writer = [[NSData alloc]initWithBase64Encoding:inData];
@@ -98,74 +67,63 @@
         writer = [inData dataUsingEncoding:NSUTF8StringEncoding];
     }
     
-
-    
     if (!writer) {
-        
         return NO;
-        
     }
-    
-	
     
 	fileHandle = [NSFileHandle fileHandleForWritingAtPath:appFilePath];
-    
 	if (fileHandle == nil) {
-        
 		return NO;
-        
-	}
+    }
     
     if (self.keyString) {
-        
         [fileHandle truncateFileAtOffset:0];
-        
         writer = [self rc4WithInput:writer key:self.keyString];
-            
         [fileHandle writeData:writer];
-        
     } else {
-        
         if (option & uexFileMgrFileWritingOptionSeekingToEnd) {
-            
             [fileHandle seekToEndOfFile];
-            
         } else {
-            
             [fileHandle truncateFileAtOffset:0];
-            
         }
-        
         [fileHandle writeData:writer];
-        
     }
-	
+    
  	[fileHandle closeFile];
-    
     return YES;
-    
 }
 
--(void)seek:(NSString*)inPos{
-	NSInteger seekLocation = (NSInteger)[inPos longLongValue];
+-(long long)seek:(NSString*)inPos{
+	long long seekLocation = [inPos longLongValue];
     offset = seekLocation;
 	//跳转到指定位置
 	fileHandle = [NSFileHandle fileHandleForReadingAtPath:appFilePath];
 	if (fileHandle==nil) {
-		return;
+		return -1;
 	}
-	[fileHandle seekToFileOffset:(long)seekLocation];
+    if(seekLocation > self.getSize.longLongValue){
+        [fileHandle seekToEndOfFile];
+    }else{
+        [fileHandle seekToFileOffset:seekLocation];
+    }
+	
+    ACLogDebug(@"offset: %lld",fileHandle.offsetInFile);
+    offset = fileHandle.offsetInFile;
+    return offset;
 }
--(void)seekBeginOfFile{
-	[self seek:0];
+-(long long)seekBeginOfFile{
+	return [self seek:0];
 	
 }
--(void)seekEndOfFile{
+-(long long)seekEndOfFile{
 	fileHandle = [NSFileHandle fileHandleForReadingAtPath:appFilePath];
 	if (fileHandle==nil) {
-		return;
+		return -1;
 	}
 	[fileHandle seekToEndOfFile];
+    offset = fileHandle.offsetInFile;
+    
+    return offset;
 }
 
 - (NSData *)rc4WithInput:(NSData *)aData key:(NSString *)aKey {
@@ -255,7 +213,7 @@
 	if (fileHandle==nil) {
 		return nil;
 	}
-	long fileLength = [File getFileLength:appFilePath];
+	long long fileLength = [File getFileLength:appFilePath];
     if (self.keyString) {
         getData = [fileHandle readDataToEndOfFile];
         if (getData) {
@@ -265,7 +223,7 @@
         if (len < 0 || len >= fileLength) {
             getData = [fileHandle readDataToEndOfFile];
         }else {
-            getData = [fileHandle readDataOfLength:len];
+            getData = [fileHandle readDataOfLength:(NSUInteger)len];
         }
     }
     [fileHandle closeFile];
@@ -278,13 +236,13 @@
 	return result;
 }
 
--(long)getSize{
+-(NSString *)getSize{
 	//获得文件大小
 	if ([File fileIsExist:appFilePath]) {
-		 long fileSize =[File getFileLength:appFilePath]; 
-		return fileSize;
+		 long long fileSize =[File getFileLength:appFilePath];
+		return @(fileSize).stringValue;
 	}
-	return 0;
+	return nil;
 }
 -(void)close{
 	//关闭文件
@@ -292,13 +250,14 @@
 -(NSString*)getFilePath{
 	return  fileUrl;
 }
--(long)getReaderOffset{
-	return [self.OS_offset longValue];
+-(long long)getReaderOffset{
+	return [self.OS_offset longLongValue];
 }
 //precent
 -(NSString*)readPercent:(NSString*)inPercent Len:(NSString *)inLen{
-	offset = [inPercent intValue]*[self getSize]/100;
-	self.OS_offset = [NSNumber numberWithLong:offset];
+    long long size = [self getSize].longLongValue;
+	offset = [inPercent intValue]* size /100;
+	self.OS_offset = @(offset);
 	return [self readFilp:F_PAGE_PERCENT len:[inLen intValue]];
 }
 //pre
@@ -323,7 +282,7 @@
 		}
 		offset = offset-[currentLength longValue] - inLen;
 	}
-	long fileLen = [self getSize];
+	long long fileLen = [self getSize].longLongValue;
 	if (fileLen==0) {return nil;}
 	if (offset>=fileLen) {return nil;}
 	 
@@ -337,7 +296,7 @@
 		offset = 0;
 	}
 	if (offset>=0) {
-		[self seek:[NSString stringWithFormat:@"%ld",offset]];
+		[self seek:[NSString stringWithFormat:@"%lld",offset]];
 	}
 	NSData *readData = nil;
 	int readLenth = inLen;
@@ -354,7 +313,7 @@
 			}
 		}
 		int readLengthSuf = inLen;
-		NSInteger offsetSuf = offset;
+		long long offsetSuf = offset;
 		if (readString==nil) {
 			for (int j = 0; j<6; j++) {
 				offsetSuf-=1;
@@ -372,7 +331,7 @@
 			}
 		}
 		int readLengthPre = inLen;
-		NSInteger offsetPre = offset;
+		NSInteger offsetPre = (NSUInteger)offset;
 		if (readString == nil) {
 			for (int i = 0; i<6; i++) {
 				offsetPre -=1;
@@ -399,16 +358,15 @@
 		}
 	}
 	if (readData) {
-		self.currentLength = [NSNumber numberWithLong:[readData length]];
+		self.currentLength = @([readData length]);
 	}
-	self.OS_offset = [NSNumber numberWithLong:offset];
- 	PluginLog(@"readString = %@",readString);
+	self.OS_offset = @(offset);
+
 	//将读取到的数据中的换行换成<br>
 	NSString *lTmp = [NSString stringWithFormat:@"%c",'\n'];
 	NSString *resultStr = [readString stringByReplacingOccurrencesOfString:lTmp withString:@"<br/>&nbsp;&nbsp;"];
- 	NSData *data = [resultStr dataUsingEncoding:NSUTF8StringEncoding];
-    NSString *finalString = [EUtility transferredString:data];
-	return finalString;
+
+	return resultStr;
 }
 //乱码
 //-(BOOL)isMessyCode:(NSString *)inStr{

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "EUExBase.h"
+#import "EUExFileMgr.h"
 
 @interface FileListViewController: UIViewController<UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate>{
 	UITableView * table;
@@ -15,13 +15,11 @@
 	NSMutableArray *pathArray;
 	NSMutableArray *selectFiles;
 	NSMutableArray *filesType;
-	NSMutableDictionary *selectAllPaths;
-	NSString *rootPath;
 	NSString *indexpath;
 	UIToolbar* toolBar;
 	NSInteger isEditableOrNot;
 	Boolean root;
-	EUExBase* callBack;
+
 }
 @property(nonatomic,retain) UITableView * table;
 @property(nonatomic,retain)	NSArray *fileArray;
@@ -32,5 +30,11 @@
 @property(nonatomic,retain)	NSMutableArray *filesType;
 @property(nonatomic,retain)	NSMutableDictionary *selectAllPaths;
 @property(nonatomic,retain) UIToolbar* toolBar;
-@property(nonatomic,retain) EUExBase* callBack;
+@property (nonatomic,weak)EUExFileMgr *euexObj;
+@property (nonatomic,strong)void (^cb)(NSArray<NSString *> *selectedPaths);
+
+- (instancetype)initWithRootPath:(NSString *)path completion:(void (^)(NSArray<NSString *> *selectedPaths))completion;
+
+
+
 @end

@@ -1,1044 +1,1007 @@
-//
-//  EUExFileMgr.m
-//  AppCan
-//
-//  Created by AppCan on 11-9-8.
-//  Copyright 2011 AppCan. All rights reserved.
-//
+/**
+ *
+ *	@file   	: EUExFileMgr.m  in EUExFileMgr
+ *
+ *	@author 	: CeriNo
+ *
+ *	@date   	: Created on 16/6/2.
+ *
+ *	@copyright 	: 2016 The AppCan Open Source Project.
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
 
 #import "EUExFileMgr.h"
-#import "EUtility.h"
+
 #import "EUExFile.h"
-#import "File.h"
-#import "EUExBaseDefine.h"
-#import "FileListViewController.h"
-#import "JSON.h"
 #import "EUExFile+search.h"
+#import "File.h"
+#import "FileExplorer.h"
+#import "FileListViewController.h"
+#import <AppCanKit/ACEXTScope.h>
+#import "uexFileHashCalculator.h"
 
-#import <CommonCrypto/CommonDigest.h>
+#define UEX_DO_IN_BACKGROUND(block) dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block);
 
-#define UEX_FILE_MGR_STRING_VALUE(x) \
-({\
-    NSString *result;\
-    id input = x;\
-    if ([input isKindOfClass:[NSNumber class]]) {\
-        result = [(NSNumber *)input stringValue];\
-    }\
-    if ([input isKindOfClass:[NSString class]]) {\
-        result = input;\
-    }\
-    if (!result) {\
-        result = @"";\
-    }\
-    result;\
-})
-#define FileHashDefaultChunkSizeForReadingData 1024*8
 
+@interface EUExFileMgr()
+
+@property (nonatomic,strong)NSMutableDictionary *fobjDict;//
+@property (nonatomic,strong)FileExplorer *singlepicker;
+@property (nonatomic,strong)UINavigationController *multipicker;
+
+
+
+@end
+
+
+
+#define UEX_FILE_NOT_FOUND_ERROR uexErrorMake(1,@"传入的file对象无效")
 
 @implementation EUExFileMgr
-//@synthesize fobjDict;
--(id)initWithBrwView:(EBrowserView *) eInBrwView{
-    if (self = [super initWithBrwView:eInBrwView]) {
-        fobjDict = [[NSMutableDictionary alloc]initWithCapacity:UEXFILEMGR_OBJECT_SIZE];
+
+
+
+
+#pragma mark - Life Cycle
+
+- (instancetype)initWithWebViewEngine:(id<AppCanWebViewEngineObject>)engine{
+    self = [super initWithWebViewEngine:engine];
+    if (self) {
+        _fobjDict = [NSMutableDictionary dictionary];
     }
     return self;
 }
 
--(void)dealloc{
-    [self clean];
+- (void)clean{
+
 }
 
-//1.使用密钥创建本地文件
--(void)createSecure:(NSMutableArray *)inArguments {
-    PluginLog(@"[EUExFileMgr createSecure]");
+#pragma mark - API
 
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    NSString *inPath = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:1]);
-    NSString *inKey  = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:2]);
-    
-    EUExFile *uexFile;
-    if ([fobjDict objectForKey:inOpId]) {
-        [self jsSuccessWithName:@"uexFileMgr.cbCreateSecure" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-        return;
-    }else {
-        uexFile=[[EUExFile alloc]init];
-    }
-    
-    inPath =[self absPath:inPath];
-    BOOL isCreateFileSuccess = [uexFile initWithFileType:F_TYPE_FILE path:inPath mode:F_FILE_OPEN_MODE_NEW euexObj:self];
-    if (!isCreateFileSuccess) {
-        [self jsSuccessWithName:@"uexFileMgr.cbCreateSecure" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-    }else {
-        //保存key
-        if (inKey && inKey.length > 0) {
-            [uexFile setKeyString:inKey];
-        }else {
-            
-        }
-        [fobjDict setObject:uexFile forKey:inOpId];
-        [self jsSuccessWithName:@"uexFileMgr.cbCreateSecure" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
+
+
+
+
+
+
+
+
+- (void )intCallbackWithFunc:(NSString *)functionKeyPath opid:(NSString *)inOpId isSuccess:(BOOL)isSuccess{
+    if (isSuccess) {
+        [self.webViewEngine callbackWithFunctionKeyPath:functionKeyPath arguments:ACArgsPack(@(inOpId.integerValue),@2,@0)];
+    }else{
+        [self.webViewEngine callbackWithFunctionKeyPath:functionKeyPath arguments:ACArgsPack(@(inOpId.integerValue),@2,@1)];
     }
 }
 
-//2.使用密钥打开本地文件
--(void)openSecure:(NSMutableArray *)inArguments {
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    NSString *inPath = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:1]);
-    NSString *inMode = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:2]);
-    NSString *inKey =  UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:3]);
-    
-    EUExFile *uexFile = [fobjDict objectForKey:inOpId];
-    if (uexFile) {
-        [self jsSuccessWithName:@"uexFileMgr.cbOpenSecure" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-        return;
-    }else {
-        uexFile = [[EUExFile alloc] init];
-    }
-    
-    inPath =[super absPath:inPath];
-    BOOL isCreateFileSuccess = [uexFile initWithFileType:F_TYPE_FILE path:inPath mode:[inMode intValue] euexObj:self];
-    
-    if (!isCreateFileSuccess) {
-        [self jsSuccessWithName:@"uexFileMgr.cbOpenSecure" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-    }else {
-        //保存key
-        if (inKey && inKey.length > 0) {
-            [uexFile setKeyString:inKey];
-        }else {
-            
-        }
-        [fobjDict setObject:uexFile forKey:inOpId];
-        [self jsSuccessWithName:@"uexFileMgr.cbOpenSecure" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
-    }
-
-}
 
 //1.创建文件
--(void)createFile:(NSMutableArray *)inArguments {
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    NSString *inPath = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:1]);
-    //12.29--xll
+- (UEX_BOOL)createFile:(NSMutableArray *)inArguments {
+    __block BOOL result = NO;
+    ACArgsUnpack(NSString *inOpId,NSString *inPath) = inArguments;
+    @onExit{
+        [self intCallbackWithFunc:@"uexFileMgr.cbCreateFile" opid:inOpId isSuccess:result];
+    };
+
+    if ([self.fobjDict objectForKey:inOpId]) {
+        return UEX_FALSE;
+    }
+    EUExFile * uexFile=[[EUExFile alloc]init];
+    inPath =[self absPath:inPath];
+    result = [uexFile initWithFileType:F_TYPE_FILE path:inPath mode:F_FILE_OPEN_MODE_NEW euexObj:self];
+
+    
+    return result ? UEX_TRUE : UEX_FALSE;
+}
+
+
+
+
+
+
+//2.创建目录
+- (UEX_BOOL)createDir:(NSMutableArray *)inArguments {
+    __block BOOL result = NO;
+    ACArgsUnpack(NSString *inOpId,NSString *inPath) = inArguments;
+    @onExit{
+        [self intCallbackWithFunc:@"uexFileMgr.cbCreateDir" opid:inOpId isSuccess:result];
+    };
     EUExFile *uexFile;
-    if ([fobjDict objectForKey:inOpId]) {
-        [self jsSuccessWithName:@"uexFileMgr.cbCreateFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-        return;
-    } else {
-        uexFile=[[EUExFile alloc]init];
+    if ([self.fobjDict objectForKey:inOpId]) {
+        return UEX_FALSE;
+    }
+    uexFile = [[EUExFile alloc] init];
+    inPath =[super absPath:inPath];
+    BOOL isCreateFileSuccess = [uexFile initWithFileType:F_TYPE_DIR path:inPath mode:F_FILE_OPEN_MODE_NEW euexObj:self];
+    if (isCreateFileSuccess) {
+        result = YES;
     }
     
-    inPath =[self absPath:inPath];
-    BOOL isCreateFileSuccess = [uexFile initWithFileType:F_TYPE_FILE path:inPath mode:F_FILE_OPEN_MODE_NEW euexObj:self];
-    if (!isCreateFileSuccess) {
-        [self jsSuccessWithName:@"uexFileMgr.cbCreateFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-    }else {
-        [fobjDict setObject:uexFile forKey:inOpId];
-        [self jsSuccessWithName:@"uexFileMgr.cbCreateFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
-    }
-    //12.29---xll
-
+    return result ? UEX_TRUE : UEX_FALSE;
 }
-//2.创建目录
--(void)createDir:(NSMutableArray *)inArguments {
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    NSString *inPath = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:1]);
-    EUExFile *uexFile;
-    if ([fobjDict objectForKey:inOpId]) {
-        [self jsSuccessWithName:@"uexFileMgr.cbCreateDir" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-        return;
-    }else {
-        uexFile = [[EUExFile alloc] init];
-    }
-    inPath =[super absPath:inPath];
-    PluginLog(@"[EUExFileMgr createDir],inpath = %@",inPath);
-    BOOL isCreateFileSuccess = [uexFile initWithFileType:F_TYPE_DIR path:inPath mode:F_FILE_OPEN_MODE_NEW euexObj:self];
-    if (!isCreateFileSuccess) {
-        [self jsSuccessWithName:@"uexFileMgr.cbCreateDir" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-    }else {
-        [fobjDict setObject:uexFile forKey:inOpId];
-        [self jsSuccessWithName:@"uexFileMgr.cbCreateDir" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
-    }
 
-}
+
+
+
 //3.打开文件
--(void)openFile:(NSMutableArray *)inArguments {
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    NSString *inPath = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:1]);
-    NSString *inMode = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:2]);
-    EUExFile *uexFile = [fobjDict objectForKey:inOpId];
+- (UEX_BOOL)openFile:(NSMutableArray *)inArguments {
+    __block BOOL result = NO;
+    ACArgsUnpack( NSString *inOpId,NSString *inPath,NSString *inMode) = inArguments;
+    @onExit{
+        [self intCallbackWithFunc:@"uexFileMgr.cbOpenFile" opid:inOpId isSuccess:result];
+        
+    };
+    EUExFile *uexFile = [self.fobjDict objectForKey:inOpId];
     if (uexFile) {
         inPath =[super absPath:inPath];
         BOOL isCreateFileSuccess = [uexFile initWithFileType:F_TYPE_FILE path:inPath mode:[inMode intValue] euexObj:self];
-        if (!isCreateFileSuccess) {
-            [self jsSuccessWithName:@"uexFileMgr.cbOpenFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-        }else {
-            [self jsSuccessWithName:@"uexFileMgr.cbOpenFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
+        if (isCreateFileSuccess) {
+            result = YES;
         }
-        return;
-    }else {
-        uexFile = [[EUExFile alloc] init];
+        return result ? UEX_TRUE : UEX_FALSE;
     }
-    
+    uexFile = [[EUExFile alloc] init];
     inPath =[super absPath:inPath];
     BOOL isCreateFileSuccess = [uexFile initWithFileType:F_TYPE_FILE path:inPath mode:[inMode intValue] euexObj:self];
-    
-    if (!isCreateFileSuccess) {
-        [self jsSuccessWithName:@"uexFileMgr.cbOpenFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-    }else {
-        [fobjDict setObject:uexFile forKey:inOpId];
-        [self jsSuccessWithName:@"uexFileMgr.cbOpenFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
+    if (isCreateFileSuccess) {
+        result = YES;
+        [self.fobjDict setObject:uexFile forKey:inOpId];
     }
-
+    return result ? UEX_TRUE : UEX_FALSE;
 }
+
+
+
 //4.打开目录
--(void)openDir:(NSMutableArray *)inArguments {
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    NSString *inPath = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:1]);
-    EUExFile *uexFile = [fobjDict objectForKey:inOpId];
+- (UEX_BOOL)openDir:(NSMutableArray *)inArguments {
+    __block BOOL result = NO;
+    ACArgsUnpack(NSString *inOpId,NSString *inPath) = inArguments;
+    @onExit{
+        [self intCallbackWithFunc:@"uexFileMgr.cbOpenDir" opid:inOpId isSuccess:result];
+    };
+    EUExFile *uexFile = [self.fobjDict objectForKey:inOpId];
     if (uexFile) {
-        [self jsSuccessWithName:@"uexFileMgr.cbOpenFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-        return;
-    }else {
-        uexFile = [[EUExFile alloc] init];
+        return UEX_FALSE;
     }
+    uexFile = [[EUExFile alloc] init];
     inPath = [super absPath:inPath];
     BOOL isCreateFileSuccess = [uexFile initWithFileType:F_TYPE_DIR	path:inPath mode:0 euexObj:self];
-    
-    if (!isCreateFileSuccess) {
-        [self jsSuccessWithName:@"uexFileMgr.cbOpenDir" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-    }else {
-        [fobjDict setObject:uexFile forKey:inOpId];
-        [self jsSuccessWithName:@"uexFileMgr.cbOpenDir" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
+    if (isCreateFileSuccess) {
+        result = YES;
+        [self.fobjDict setObject:uexFile forKey:inOpId];
     }
-
+    return result ? UEX_TRUE : UEX_FALSE;
 }
+
+
+
 //5.通过path删除文件
--(void)deleteFileByPath:(NSMutableArray *)inArguments {
-    NSString *inPath = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    inPath =[super absPath:inPath];
-    
-    //创建文件对象
-    //如果文件存在，删除
-    if ([File fileIsExist:inPath]) {
-        if([File removeFile:inPath]){
-            [self jsSuccessWithName:@"uexFileMgr.cbDeleteFileByPath" opId:0 dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
-        }else {
-            [self jsSuccessWithName:@"uexFileMgr.cbDeleteFileByPath" opId:0 dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-        }
-    }else {
-        //失败
-        [self jsSuccessWithName:@"uexFileMgr.cbDeleteFileByPath" opId:0 dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
+- (UEX_BOOL)deleteFileByPath:(NSMutableArray *)inArguments {
+    BOOL result = NO;
+    ACArgsUnpack(NSString *inPath) = inArguments;
+    inPath =[self absPath:inPath];
+    if ([File fileIsExist:inPath] && [File removeFile:inPath]) {
+        result = YES;
     }
+    [self intCallbackWithFunc:@"uexFileMgr.cbDeleteFileByPath" opid:@"0" isSuccess:result];
+    return result ? UEX_TRUE : UEX_FALSE;
 }
 //6.删除一个文件通过ID
--(void)deleteFileByID:(NSMutableArray *)inArguments {
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    EUExFile *object;
-    if (fobjDict) {
-        object = [fobjDict objectForKey:inOpId];
-    }else {
-        [self jsFailedWithOpId:0 errorCode:1090501 errorDes:UEX_ERROR_DESCRIBE_ARGS];
-        return;
+- (UEX_BOOL)deleteFileByID:(NSMutableArray *)inArguments {
+    BOOL result = NO;
+    ACArgsUnpack(NSString *inOpId) = inArguments;
+    EUExFile *object = [self.fobjDict objectForKey:inOpId];;
+    NSString *truePath = object.appFilePath;
+    if (truePath && [File fileIsExist:truePath] && [File removeFile:truePath]) {
+        [self.fobjDict removeObjectForKey:inOpId];
+        result = YES;
     }
-    if (object!=nil) {
-        NSString *truePath =object.appFilePath;
-        if ([File fileIsExist:truePath]) {
-            if ([File removeFile:truePath]) {
-                [fobjDict removeObjectForKey:inOpId];
-                [self jsSuccessWithName:@"uexFileMgr.cbDeleteFileByID" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
-            }else {
-                [self jsSuccessWithName:@"uexFileMgr.cbDeleteFileByID" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-            }
-        }else {
-            [self jsSuccessWithName:@"uexFileMgr.cbDeleteFileByID" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-        }
-    }else{
-        [self jsSuccessWithName:@"uexFileMgr.cbDeleteFileByID" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-    }
-    
+    [self intCallbackWithFunc:@"uexFileMgr.cbDeleteFileByID" opid:inOpId isSuccess:result];
+    return result ? UEX_TRUE : UEX_FALSE;
 }
 //7.根据 path 判断文件类型
--(void)getFileTypeByPath:(NSMutableArray *)inArguments {
-    NSString *inPath = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    inPath =[super absPath:inPath];
-    if ([File fileIsExist:inPath]) {
-        int isDir = [File fileisDirectoy:inPath];
-        if (isDir==1) {
-            [self jsSuccessWithName:@"uexFileMgr.cbGetFileTypeByPath" opId:0 dataType:UEX_CALLBACK_DATATYPE_INT intData:F_TYPE_DIR];
-        }else{
-            [self jsSuccessWithName:@"uexFileMgr.cbGetFileTypeByPath" opId:0 dataType:UEX_CALLBACK_DATATYPE_INT intData:F_TYPE_FILE];
-        }
-    }
+- (NSNumber *)getFileTypeByPath:(NSMutableArray *)inArguments {
+    ACArgsUnpack(NSString *inPath) = inArguments;
+    inPath = [self absPath:inPath];
+    NSInteger result = [File fileisDirectoy:inPath];
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileTypeByPath" arguments:ACArgsPack(@0,@2,@(result))];
+    return @(result);
 }
+
+
 //8.根据 id判断文件类型
--(void)getFileTypeByID:(NSMutableArray *)inArguments {
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    EUExFile *object = [fobjDict objectForKey:inOpId];
-    if (object!=nil) {
+- (NSNumber *)getFileTypeByID:(NSMutableArray *)inArguments {
+    ACArgsUnpack(NSString *inOpId) = inArguments;
+    NSInteger result = -1;
+    EUExFile *object = [self.fobjDict objectForKey:inOpId];
+    if (object) {
         NSString *truePath = object.appFilePath;
-        truePath = [truePath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        if ([File fileIsExist:truePath]) {
-            int isDir = [File fileisDirectoy:truePath];
-            if (isDir==1) {
-                [self jsSuccessWithName:@"uexFileMgr.cbGetFileTypeById" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:F_TYPE_DIR];
-            }else{
-                [self jsSuccessWithName:@"uexFileMgr.cbGetFileTypeById" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:F_TYPE_FILE];
-            }
-        }else {
-            [self jsFailedWithOpId:0 errorCode:1090702 errorDes:UEX_ERROR_DESCRIBE_FILE_EXIST];
-        }
-    }else {
-        [self jsFailedWithOpId:0 errorCode:1090701 errorDes:UEX_ERROR_DESCRIBE_ARGS];
+        result = [File fileisDirectoy:truePath];
     }
-    
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileTypeById" arguments:ACArgsPack(@0,@2,@(result))];
+    return @(result);
+
 }
 
 //9.根据路径判断文件存在
--(void)isFileExistByPath:(NSMutableArray *)inArguments {
+- (UEX_BOOL)isFileExistByPath:(NSMutableArray *)inArguments {
     NSString *inOpId = nil;
     NSString *inPath = nil;
-    if ([inArguments count]==2) {
-        inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-        inPath = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:1]);
-    }else {
-        inPath = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    }
-    int retOpid = 0;
-    if (inOpId) {
-        retOpid = [inOpId intValue];
-    }
-    inPath = [super absPath:inPath];
-    BOOL isExist = [File fileIsExist:inPath];
-    if (isExist) {
-        [self jsSuccessWithName:@"uexFileMgr.cbIsFileExistByPath" opId:retOpid dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CTRUE];
+    __block BOOL result = NO;
+    @onExit{
+        [self intCallbackWithFunc:@"uexFileMgr.cbIsFileExistByPath" opid:inOpId isSuccess:result];
+    };
+    if ([inArguments count] == 0) {
+        return UEX_FALSE;
+    }else if([inArguments count] == 1){
+        inPath = stringArg(inArguments[0]);
     }else{
-        [self jsSuccessWithName:@"uexFileMgr.cbIsFileExistByPath" opId:retOpid dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFALSE];
+        inOpId = stringArg(inArguments[0]);
+        inPath = stringArg(inArguments[1]);
     }
+    if (!inOpId) {
+        inOpId = @"0";
+    }
+    inPath = [self absPath:inPath];
+    result = [File fileIsExist:inPath];
+    return result ? UEX_TRUE : UEX_FALSE;
 }
 
 //10.根据ID判断文件存在
--(void)isFileExistByID:(NSMutableArray *)inArguments{
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    EUExFile *object = [fobjDict objectForKey:inOpId];
-    if (object!=nil) {
-        NSString *truePath = object.appFilePath;
-        truePath = [truePath stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        BOOL isExist = [File fileIsExist:truePath];
-        if (isExist) {
-            [self jsSuccessWithName:@"uexFileMgr.cbIsFileExistById" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CTRUE];
-        }else{
-            [self jsSuccessWithName:@"uexFileMgr.cbIsFileExistById" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFALSE];
-        }
-    }else {
-        [self jsFailedWithOpId:0 errorCode:1090901 errorDes:UEX_ERROR_DESCRIBE_ARGS];
+- (UEX_BOOL)isFileExistByID:(NSMutableArray *)inArguments{
+    ACArgsUnpack(NSString *inOpId) = inArguments;
+    BOOL result = NO;
+
+    EUExFile *object = [self.fobjDict objectForKey:inOpId];
+    if (object) {
+        result = [File fileIsExist:object.appFilePath];
     }
+    [self intCallbackWithFunc:@"uexFileMgr.cbIsFileExistById" opid:inOpId isSuccess:result];
+    return result ? UEX_TRUE : UEX_FALSE;
 }
+
 //11.文件浏览器
 
--(void)explorer:(NSMutableArray *)inArguments {
-    NSString *inPath = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    if (inPath == nil) {
-        [super jsFailedWithOpId:0 errorCode:1091001 errorDes:UEX_ERROR_DESCRIBE_ARGS];
+- (void)explorer:(NSMutableArray *)inArguments {
+    if (self.singlepicker) {
+        return;
     }
-    if ([inPath length]==0) {
-        inPath = [File getDocumentsPath:@""];
-    }else {
-        inPath =[super absPath:inPath];
-    }
-    //open a file explorer
-    fExplorer = [[FileExplorer alloc] init];
-    [fExplorer openWithEuex:self rootPath:inPath];
     
+    ACArgsUnpack(NSString *inPath,ACJSFunctionRef *cb) = inArguments;
+    __block UEX_ERROR err = kUexNoError;
+    void (^callback)(NSString *result) = ^(NSString *result){
+        [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbExplorer" arguments:ACArgsPack(@0,@0,result)];
+        [cb executeWithArguments:ACArgsPack(err,result)];
+    };
+    if (!inPath) {
+        callback(nil);
+    }
+    inPath = (inPath.length == 0) ? [File getDocumentsPath:@""] : [self absPath:inPath];
+    
+    self.singlepicker = [[FileExplorer alloc]initWithEUExObj:self rootPath:inPath];
+    @weakify(self);
+    [self.singlepicker presentControllerWithCompletion:^(NSString *selectedPath) {
+        @strongify(self);
+        if (!selectedPath) {
+            err = uexErrorMake(1,@"用户取消选择");
+        }
+        callback(selectedPath);
+        self.singlepicker = nil;
+    }];
 }
 //multiExplorer
--(void)multiExplorer:(NSMutableArray*)inArguments{
-    NSString * inPath = nil;
-    if ([inArguments count] > 0) {
-        inPath = [self absPath:UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0])];
+- (void)multiExplorer:(NSMutableArray*)inArguments{
+    
+    if (self.multipicker) {
+        return;
     }
     
-    FileListViewController* filesView = [[FileListViewController alloc] init];
-    filesView.callBack = self;
+    ACArgsUnpack(NSString *inPath,ACJSFunctionRef *cb) = inArguments;
+    inPath = [self absPath:inPath];
+    @weakify(self);
+    FileListViewController* filesView = [[FileListViewController alloc] initWithRootPath:inPath completion:^(NSArray<NSString *> *selectedPaths) {
+        UEX_ERROR err = selectedPaths ? kUexNoError : uexErrorMake(1,@"用户取消选择");
+        @strongify(self);
+        [self.multipicker dismissViewControllerAnimated:YES completion:^{
+            [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbMultiExplorer" arguments:ACArgsPack(@0,@1,selectedPaths)];
+            [cb executeWithArguments:ACArgsPack(err,selectedPaths)];
+            self.multipicker = nil;
+        }];
+        
+    }];
+
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:filesView];
-    [EUtility brwView:[super meBrwView] presentModalViewController:nav animated:(BOOL)YES];
-
-
+    self.multipicker = nav;
+    [[self.webViewEngine viewController]presentViewController:nav animated:YES completion:nil];
 }
+
+
+
+
 //12.设置文件偏移
--(void)seekFile:(NSMutableArray *)inArguments {
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    NSString *inPos = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:1]);
-    EUExFile *object = [fobjDict objectForKey:inOpId];
-    if (object!=nil) {
-        [object seek:inPos];
-    }else{
-        [self jsFailedWithOpId:[inOpId intValue] errorCode:1091101 errorDes:UEX_ERROR_DESCRIBE_ARGS];
+- (NSNumber *)seekFile:(NSMutableArray *)inArguments {
+    ACArgsUnpack(NSString *inOpId,NSString *inPos) = inArguments;
+    EUExFile *object = [self.fobjDict objectForKey:inOpId];
+    if (object) {
+        return @([object seek:inPos]);
+
     }
+    return @(-1);
 }
+
 //13.文件偏移到开始
--(void)seekBeginOfFile:(NSMutableArray *)inArguments {
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    EUExFile *object = [fobjDict objectForKey:inOpId];
-    if (object!=nil) {
-        [object seekBeginOfFile];
-    }else {
-        [self jsFailedWithOpId:[inOpId intValue] errorCode:1091201 errorDes:UEX_ERROR_DESCRIBE_ARGS];
+- (NSNumber *)seekBeginOfFile:(NSMutableArray *)inArguments {
+    ACArgsUnpack(NSString *inOpId) = inArguments;
+    EUExFile *object = [self.fobjDict objectForKey:inOpId];
+    if (object) {
+        return @([object seekBeginOfFile]);
     }
+    return @(-1);
 }
+
 //14.文件偏移到最后
--(void)seekEndOfFile:(NSMutableArray *)inArguments {
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    EUExFile *object = [fobjDict objectForKey:inOpId];
-    if (object!=nil) {
-        [object seekEndOfFile];
-    }else {
-        [self jsFailedWithOpId:[inOpId intValue] errorCode:1091301 errorDes:UEX_ERROR_DESCRIBE_ARGS];
+- (NSNumber *)seekEndOfFile:(NSMutableArray *)inArguments {
+    ACArgsUnpack(NSString *inOpId) = inArguments;
+    EUExFile *object = [self.fobjDict objectForKey:inOpId];
+    if (object) {
+        return  @([object seekEndOfFile]);
     }
-    
+    return @(-1);
 }
 
 //15.写文件
--(void)writeFile:(NSMutableArray *)inArguments {
-    
-    if ([inArguments count] < 3) {
-        
+- (void)writeFile:(NSMutableArray *)inArguments {
+    ACArgsUnpack(NSString * inOpId,NSNumber *opt,NSString * inData) = inArguments;
+    ACJSFunctionRef *cb = JSFunctionArg(inArguments.lastObject);
+    uexFileMgrFileWritingOption option = (uexFileMgrFileWritingOption)[opt integerValue];
+    EUExFile * object = [self.fobjDict objectForKey:inOpId];
+    if (!object) {
+        [self intCallbackWithFunc:@"uexFileMgr.cbWriteFile" opid:inOpId isSuccess:NO];
+        [cb executeWithArguments:ACArgsPack(UEX_FILE_NOT_FOUND_ERROR)];
         return;
-        
     }
-    
-    NSString * inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    uexFileMgrFileWritingOption option = (uexFileMgrFileWritingOption)[inArguments[1] integerValue];
-    NSString * inData = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:2]);
-    
-    EUExFile * object = [fobjDict objectForKey:inOpId];
-    
-    if (object != nil) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            BOOL ret = [object writeWithData:inData option:option];
-            NSNumber *result = @1;
-            if (ret) {
-                result = @0;
-            }
-            NSString *jsStr = [NSString stringWithFormat:@"if(uexFileMgr.cbWriteFile){uexFileMgr.cbWriteFile(%@,%@,%@)}",inOpId,@(UEX_CALLBACK_DATATYPE_INT),result];
-            [EUtility brwView:self.meBrwView evaluateScript:jsStr];
-        });
-    } else {
-        [self jsSuccessWithName:@"uexFileMgr.cbWriteFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-        [self jsFailedWithOpId:[inOpId intValue] errorCode:1091401 errorDes:UEX_ERROR_DESCRIBE_ARGS];
-    }
-}
 
-//获取哈希值
-- (void)getFileHashValue:(NSMutableArray *)inArguments {
-    
-    id info =[inArguments[0] JSONValue];
-    
-    NSString *path = [info objectForKey:@"path"];
-    NSString *type = [info objectForKey:@"algorithm"];
-    NSString *thepath = [self absPath:path];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
-        NSString *fileHashValue = @"";
-        
-        if ([type isEqualToString:@"SHA-1"]) {
-            
-            NSData *data = [[NSFileManager defaultManager] contentsAtPath:thepath];
-            fileHashValue = [self sha1:data];
-            
-            NSLog(@"appcan-->EUExFileMgr-->getFileHashValue-->has1 = %@", fileHashValue);
-            
-        } else {
-            
-            fileHashValue = [EUExFileMgr getFileMD5WithPath:thepath];
-            
-            NSLog(@"appcan-->EUExFileMgr-->getFileHashValue-->MD5 = %@", fileHashValue);
-            
+    UEX_DO_IN_BACKGROUND(^{
+        BOOL ret = [object writeWithData:inData option:option];
+        [self intCallbackWithFunc:@"uexFileMgr.cbWriteFile" opid:inOpId isSuccess:ret];
+        UEX_ERROR err = kUexNoError;
+        if (!ret) {
+            err = uexErrorMake(1,@"文件写入失败");
         }
-        NSString *jsStr = @"";
-        
-        if (fileHashValue.length >0) {
-            
-            jsStr = [NSString stringWithFormat:@"if(uexFileMgr.cbGetFileHashValue!=null){uexFileMgr.cbGetFileHashValue(%d,%d,\'%@\')}",0,UEX_CALLBACK_DATATYPE_TEXT,fileHashValue];
-            
-            
-        } else {
-            
-            jsStr = [NSString stringWithFormat:@"if(uexFileMgr.cbGetFileHashValue!=null){uexFileMgr.cbGetFileHashValue(%d,%d,\'%@\')}",0,UEX_CALLBACK_DATATYPE_TEXT,@"获取失败"];
-            
-        }
-        [EUtility brwView:self.meBrwView evaluateScript:jsStr];
-        
+        [cb executeWithArguments:ACArgsPack(err)];
     });
-    
 }
 
-- (NSString*)sha1:(NSData *)data {
-    
-    //const char *cstr = [inString cStringUsingEncoding:NSUTF8StringEncoding];
-    //NSData *data = [NSData dataWithBytes:cstr length:inString.length];
-    //使用对应的CC_SHA1,CC_SHA256,CC_SHA384,CC_SHA512的长度分别是20,32,48,64
-    
-    uint8_t digest[CC_SHA1_DIGEST_LENGTH];
-    //使用对应的CC_SHA256,CC_SHA384,CC_SHA512
-    CC_SHA1(data.bytes, (unsigned int)data.length, digest);
-    
-    NSMutableString* output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
-    
-    for(int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
-        [output appendFormat:@"%02x", digest[i]];
-    
-    return output;
-    
-}
-
-- (NSString *)md5:(NSString *)inString {
-    
-    const char *cStr = [inString UTF8String];
-    unsigned char digest[CC_MD5_DIGEST_LENGTH];
-    
-    CC_MD5( cStr, (unsigned int)strlen(cStr), digest );
-    
-    NSMutableString *output = [NSMutableString stringWithCapacity:CC_MD5_DIGEST_LENGTH * 2];
-    
-    for(int i = 0; i < CC_MD5_DIGEST_LENGTH; i++)
-        
-        [output appendFormat:@"%02x", digest[i]];
-    
-    return output;
-    
-}
-
-+ (NSString *)getFileMD5WithPath:(NSString*)path {
-    
-    return (__bridge_transfer NSString *)FileMD5HashCreateWithPath((__bridge CFStringRef)path, FileHashDefaultChunkSizeForReadingData);
-}
-
-CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath,size_t chunkSizeForReadingData) {
-    
-    // Declare needed variables
-    CFStringRef result = NULL;
-    
-    CFReadStreamRef readStream = NULL;
-    
-    // Get the file URL
-    CFURLRef fileURL =
-    
-    CFURLCreateWithFileSystemPath(kCFAllocatorDefault,
-                                  
-                                  (CFStringRef)filePath,
-                                  
-                                  kCFURLPOSIXPathStyle,
-                                  
-                                  (Boolean)false);
-    
-    if (!fileURL) goto done;
-    
-    // Create and open the read stream
-    readStream = CFReadStreamCreateWithFile(kCFAllocatorDefault,
-                                            
-                                            (CFURLRef)fileURL);
-    
-    if (!readStream) goto done;
-    
-    bool didSucceed = (bool)CFReadStreamOpen(readStream);
-    
-    if (!didSucceed) goto done;
-    
-    // Initialize the hash object
-    CC_MD5_CTX hashObject;
-    
-    CC_MD5_Init(&hashObject);
-    
-    // Make sure chunkSizeForReadingData is valid
-    if (!chunkSizeForReadingData) {
-        
-        chunkSizeForReadingData = FileHashDefaultChunkSizeForReadingData;
-        
-    }
-    
-    // Feed the data to the hash object
-    
-    bool hasMoreData = true;
-    
-    while (hasMoreData) {
-        
-        uint8_t buffer[chunkSizeForReadingData];
-        
-        CFIndex readBytesCount = CFReadStreamRead(readStream,(UInt8 *)buffer,(CFIndex)sizeof(buffer));
-        
-        if (readBytesCount == -1) break;
-        
-        if (readBytesCount == 0) {
-            
-            hasMoreData = false;
-            
-            continue;
-            
-        }
-        
-        CC_MD5_Update(&hashObject,(const void *)buffer,(CC_LONG)readBytesCount);
-        
-    }
-    
-    // Check if the read operation succeeded
-    didSucceed = !hasMoreData;
-    
-    // Compute the hash digest
-    unsigned char digest[CC_MD5_DIGEST_LENGTH];
-    
-    CC_MD5_Final(digest, &hashObject);
-    
-    // Abort if the read operation failed
-    if (!didSucceed) goto done;
-    
-    // Compute the string result
-    char hash[2 * sizeof(digest) + 1];
-    
-    for (size_t i = 0; i < sizeof(digest); ++i) {
-        
-        snprintf(hash + (2 * i), 3, "%02x", (int)(digest[i]));
-        
-    }
-    
-    result = CFStringCreateWithCString(kCFAllocatorDefault,(const char *)hash,kCFStringEncodingUTF8);
-    
-    
-    
-done:
-    
-    if (readStream) {
-        
-        CFReadStreamClose(readStream);
-        
-        CFRelease(readStream);
-        
-    }
-    
-    if (fileURL) {
-        
-        CFRelease(fileURL);
-        
-    }
-    
-    return result;
-    
-}
 
 //16.读文件
--(void)readFile:(NSMutableArray *)inArguments {
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    long long len = [[inArguments objectAtIndex:1] longLongValue];
+- (void)readFile:(NSMutableArray *)inArguments {
+    ACArgsUnpack(NSString * inOpId,NSNumber *length,NSNumber *opt) = inArguments;
+    ACJSFunctionRef *cb = JSFunctionArg(inArguments.lastObject);
+    long long len = [length longLongValue];
     uexFileMgrFileReadingOption option = 0;
-    if (inArguments.count > 2) {
-        option = (uexFileMgrFileReadingOption)[inArguments[2] integerValue];
+    if (opt) {
+        option = (uexFileMgrFileReadingOption)[opt integerValue];
     }
-    EUExFile *object = [fobjDict objectForKey:inOpId];
-    if (object!=nil) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSString *outStr = [object read:len option:option];
-            if ([EUtility respondsToSelector:@selector(browserView:callbackWithFunctionKeyPath:arguments:completion:)]) {
-
-                [EUtility browserView:self.meBrwView
-          callbackWithFunctionKeyPath:@"uexFileMgr.cbReadFile"
-                            arguments:@[inOpId,@(UEX_CALLBACK_DATATYPE_TEXT),outStr?:[NSNull null]]
-                           completion:nil];
-            }else{
-                NSString *jsStr = [NSString stringWithFormat:@"if(uexFileMgr.cbReadFile){uexFileMgr.cbReadFile(%@,%@,%@)}",inOpId,@(UEX_CALLBACK_DATATYPE_TEXT),outStr.JSONFragment];
-                [EUtility brwView:self.meBrwView evaluateScript:jsStr];
-            }
-        });
-        
-    }else {
-        [self jsSuccessWithName:@"uexFileMgr.cbReadFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
+    EUExFile *object = [self.fobjDict objectForKey:inOpId];
+    if (!object) {
+        UEX_ERROR err = UEX_FILE_NOT_FOUND_ERROR;
+        [cb executeWithArguments:ACArgsPack(err,nil)];
+        [self intCallbackWithFunc:@"uexFileMgr.cbReadFile" opid:inOpId isSuccess:NO];
     }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *outStr = [object read:len option:option];
+        [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbReadFile" arguments:ACArgsPack(@(inOpId.integerValue),@0,outStr)];
+        [cb executeWithArguments:ACArgsPack(kUexNoError,outStr)];
+    });
 }
+
+
 //文件夹大小
--(void)getFileSizeByPath:(NSMutableArray *)inArguments {
-    if(inArguments.count <1){
+- (void)getFileSizeByPath:(NSMutableArray *)inArguments {
+    
+    ACArgsUnpack(NSDictionary *info,ACJSFunctionRef *cb) = inArguments;
+    if(!info){
         return;
     }
-    id info =[inArguments[0] JSONValue];
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([info objectForKey:@"id"]);
-    NSString *inPath = [info objectForKey:@"path"];
-    NSString *unit = [info objectForKey:@"unit"];
-    NSMutableDictionary *result=[NSMutableDictionary dictionary];
-    long long folderSize = 0;
-    int errorCode=0;
-    NSFileManager* manager = [NSFileManager defaultManager];
-    if ([manager fileExistsAtPath:[self absPath:inPath]]){
-        folderSize=[self folderSizeAtPath:[self absPath:inPath]];
-    }
-    else{
-        errorCode=1;
-    }
+    NSString *inOpId = stringArg(info[@"id"]);
+    NSString *inPath = stringArg(info[@"path"]);
+    NSString *unit = stringArg(info[@"unit"]).uppercaseString;
     
-    if([unit isEqualToString:@"KB"]){
-        folderSize=folderSize/1024;
-    }
-    if([unit isEqualToString:@"MB"]){
-        folderSize=folderSize/1024/1024;
-    }
-    if([unit isEqualToString:@"GB"]){
-        folderSize=folderSize/1024/1024/1024;
-    }
-    [result setValue:@(errorCode) forKey:@"errorCode"];
-    [result setValue:inOpId forKey:@"id"];
-    [result setValue:@(folderSize) forKey:@"data"];
-    [result setValue:unit forKey:@"unit"];
-    
-    NSString *cbStr=[NSString stringWithFormat:@"if(uexFileMgr.cbGetFileSizeByPath != null){uexFileMgr.cbGetFileSizeByPath('%@');}",[result JSONFragment]];
-    [EUtility  brwView:meBrwView evaluateScript:cbStr];
+    UEX_DO_IN_BACKGROUND((^{
+
+        
+        CGFloat folderSize = [self folderSizeAtPath:[self absPath:inPath]];
+        UEX_ERROR err = kUexNoError;
+        
+        NSInteger errorCode = (folderSize < 0) ? 1 : 0;
+        NSMutableDictionary *result = [NSMutableDictionary dictionary];
+
+
+        if([unit isEqual:@"KB"]){
+            folderSize = folderSize / 1024;
+        }
+        if([unit isEqual:@"MB"]){
+            folderSize = folderSize / 1024 / 1024;
+        }
+        if([unit isEqual:@"GB"]){
+            folderSize = folderSize / 1024 / 1024 / 1024;
+        }
+        [result setValue:inOpId forKey:@"id"];
+        [result setValue:@(folderSize) forKey:@"data"];
+        [result setValue:unit forKey:@"unit"];
+        [result setValue:@(errorCode) forKey:@"errorCode"];
+
+        [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileSizeByPath" arguments:ACArgsPack(result.ac_JSONFragment)];
+        if (folderSize < 0) {
+            err = uexErrorMake(1,@"文件或文件夹不存在");
+            result = nil;
+        }
+        [cb executeWithArguments:ACArgsPack(err,result)];
+    }));
 }
-- (long long) fileSizeAtPath:(NSString*) filePath{
+
+
+
+
+- (CGFloat) fileSizeAtPath:(NSString*) filePath{
     NSFileManager* manager = [NSFileManager defaultManager];
     if ([manager fileExistsAtPath:filePath]){
-        return [[manager attributesOfItemAtPath:filePath error:nil] fileSize];
+        return (CGFloat)[[manager attributesOfItemAtPath:filePath error:nil] fileSize];
     }
-    return 0;
+    return -1;
 }
-- (float ) folderSizeAtPath:(NSString*) folderPath{
+- (CGFloat) folderSizeAtPath:(NSString*) folderPath{
     NSFileManager* manager = [NSFileManager defaultManager];
-    if (![manager fileExistsAtPath:folderPath]) return 0;
-    NSEnumerator *childFilesEnumerator = [[manager subpathsAtPath:folderPath] objectEnumerator];
-    NSString* fileName;
-    long long folderSize = 0;
-    while ((fileName = [childFilesEnumerator nextObject]) != nil){
-        NSString* fileAbsolutePath = [folderPath stringByAppendingPathComponent:fileName];
-        folderSize += [self fileSizeAtPath:fileAbsolutePath];
+    if (![manager fileExistsAtPath:folderPath]){
+        return -1;
     }
+    NSArray<NSString *> *subpaths = [manager subpathsAtPath:folderPath];
+    __block CGFloat folderSize = 0;
+    [subpaths enumerateObjectsUsingBlock:^(NSString * _Nonnull fileName, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSString* fileAbsolutePath = [folderPath stringByAppendingPathComponent:fileName];
+        CGFloat fileSize = [self fileSizeAtPath:fileAbsolutePath];
+        if (fileSize >= 0) {
+            folderSize += fileSize;
+        }
+    }];
     return folderSize;
 }
 //17.文件大小
--(void)getFileSize:(NSMutableArray *)inArguments {
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    EUExFile *object = [fobjDict objectForKey:inOpId];
-    if (object!=nil) {
-        long outSize = [object getSize];
-        [self jsSuccessWithName:@"uexFileMgr.cbGetFileSize" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:outSize];
-    }else {
-        [self jsFailedWithOpId:[inOpId intValue] errorCode:1091601 errorDes:UEX_ERROR_DESCRIBE_ARGS];
+- (NSNumber *)getFileSize:(NSMutableArray *)inArguments {
+    ACArgsUnpack(NSString *inOpId) = inArguments;
+    NSNumber *fileSize = @(-1);
+    EUExFile *object = [self.fobjDict objectForKey:inOpId];
+    if (object) {
+        fileSize = @([[object getSize] longLongValue]);
     }
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileSize" arguments:ACArgsPack(@(inOpId.integerValue),@2,fileSize)];
+    return fileSize;
 }
 
--(void)getFilePath:(NSMutableArray *)inArguments {
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    EUExFile *object = [fobjDict objectForKey:inOpId];
-    if (object!=nil) {
-        NSString *outPath = [object getFilePath];
-        [self jsSuccessWithName:@"uexFileMgr.cbGetFilePath" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_TEXT strData:outPath];
+- (NSString *)getFilePath:(NSMutableArray *)inArguments {
+    ACArgsUnpack(NSString *inOpId) = inArguments;
+    NSString *path = nil;
+    EUExFile *object = [self.fobjDict objectForKey:inOpId];
+    if (object) {
+        path = [object getFilePath];
+        [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFilePath" arguments:ACArgsPack(@(inOpId.integerValue),@0,path)];
     }else {
-        [self jsSuccessWithName:@"uexFileMgr.cbGetFilePath" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-        
+        UEX_FILE_NOT_FOUND_ERROR;
+        [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFilePath" arguments:ACArgsPack(@(inOpId.integerValue),@2,@0)];
     }
+    return path;
 }
+
+
 
 //19.关闭文件
--(void)closeFile:(NSMutableArray *)inArguments {
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    if ([fobjDict count]==0) {
-        return;
+- (UEX_BOOL)closeFile:(NSMutableArray *)inArguments {
+    ACArgsUnpack(NSString *inOpId) = inArguments;
+    EUExFile *object = [self.fobjDict objectForKey:inOpId];
+    if (object) {
+        [self.fobjDict removeObjectForKey:inOpId];
+        return UEX_TRUE;
     }
-    EUExFile *object = [fobjDict objectForKey:inOpId];
-    if (object!=nil) {
-        [fobjDict removeObjectForKey:inOpId];
-    }else {
-        [self jsFailedWithOpId:[inOpId intValue] errorCode:1091801 errorDes:UEX_ERROR_DESCRIBE_ARGS];
-    }
+    return UEX_FALSE;
 }
 //20. 返回阅读器的偏移值
--(void)getReaderOffset:(NSMutableArray *)inArguments {
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    EUExFile *object = [fobjDict objectForKey:inOpId];
-    if (object!=nil) {
-        long readerOffset = [object getReaderOffset];
-        [self jsSuccessWithName:@"uexFileMgr.cbGetReaderOffset" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:readerOffset];
-    }else {
-        [self jsFailedWithOpId:[inOpId intValue] errorCode:1091901 errorDes:UEX_ERROR_DESCRIBE_ARGS];
+- (NSNumber *)getReaderOffset:(NSMutableArray *)inArguments {
+    ACArgsUnpack(NSString *inOpId) = inArguments;
+    NSNumber *offset = @(-1);
+    EUExFile *object = [self.fobjDict objectForKey:inOpId];
+    if (object) {
+        offset = @([object getReaderOffset]);
+        
     }
-    
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetReaderOffset" arguments:ACArgsPack(@(inOpId.integerValue),@2,offset)];
+    return offset;
     
 }
 //21.以阅读器形式读取指定数据
--(void)readPercent:(NSMutableArray *)inArguments {
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    NSString *inPercent = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:1]);
-    NSString *inLen = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:2]);
-    EUExFile *object = [fobjDict objectForKey:inOpId];
-    if (object!=nil) {
-        NSString *res = [object readPercent:inPercent Len:inLen];
-        [self jsSuccessWithName:@"uexFileMgr.cbReadPercent" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_TEXT strData:res];
-    }else {
-        [self jsSuccessWithName:@"uexFileMgr.cbReadPercent" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-    }
+- (void)readPercent:(NSMutableArray *)inArguments {
+    ACArgsUnpack(NSString *inOpId,NSString *inPercent,NSString *inLen,ACJSFunctionRef *cb) = inArguments;
+    
+    EUExFile *object = [self.fobjDict objectForKey:inOpId];
+    UEX_DO_IN_BACKGROUND(^{
+        NSString *data = nil;
+        UEX_ERROR error = kUexNoError;
+        if (!object) {
+            error = UEX_FILE_NOT_FOUND_ERROR;
+        }else{
+            data = [object readPercent:inPercent Len:inLen];
+        }
+        [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbReadPercent" arguments:ACArgsPack(@(inOpId.integerValue),@0,data)];
+        [cb executeWithArguments:ACArgsPack(error,data)];
+        
+    });
 }
+
+
+
 //22.以阅读器形式读取下一页
--(void)readNext:(NSMutableArray *)inArguments {
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    NSString *inLen = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:1]);
-    EUExFile *object = [fobjDict objectForKey:inOpId];
-    if (object!=nil) {
-        NSString *res = [object readNext:inLen];
-        [self jsSuccessWithName:@"uexFileMgr.cbReadNext" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_TEXT strData:res];
-    }else {
-        [self jsSuccessWithName:@"uexFileMgr.cbReadNext" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-    }
+- (void)readNext:(NSMutableArray *)inArguments {
+    ACArgsUnpack( NSString *inOpId,NSString *inLen,ACJSFunctionRef *cb) = inArguments;
+    
+    UEX_DO_IN_BACKGROUND(^{
+        EUExFile *object = [self.fobjDict objectForKey:inOpId];
+        NSString *data = nil;
+        UEX_ERROR error = kUexNoError;
+        if (!object) {
+            error = UEX_FILE_NOT_FOUND_ERROR;
+        }else{
+             data = [object readNext:inLen];
+        }
+        [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbReadNext" arguments:ACArgsPack(@(inOpId.integerValue),@0,data)];
+        [cb executeWithArguments:ACArgsPack(error,data)];
+    });
 }
 //23.以阅读器形式读取上一页
--(void)readPre:(NSMutableArray *)inArguments {
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    NSString *inLen = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:1]);
-    EUExFile *object = [fobjDict objectForKey:inOpId];
-    if (object!=nil) {
-        NSString *res = [object readPre:inLen];
-        [self jsSuccessWithName:@"uexFileMgr.cbReadPre" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_TEXT strData:res];
-    }else {
-        [self jsSuccessWithName:@"uexFileMgr.cbReadPre" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_TEXT intData:UEX_CFAILED];
-    }
+- (void)readPre:(NSMutableArray *)inArguments {
+    ACArgsUnpack( NSString *inOpId,NSString *inLen,ACJSFunctionRef *cb) = inArguments;
+    
+    
+    
+    UEX_DO_IN_BACKGROUND(^{
+        EUExFile *object = [self.fobjDict objectForKey:inOpId];
+        NSString *data = nil;
+        UEX_ERROR error = kUexNoError;
+        if (!object) {
+            error = UEX_FILE_NOT_FOUND_ERROR;
+        }else{
+            data = [object readPre:inLen];
+        }
+        [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbReadPre" arguments:ACArgsPack(@(inOpId.integerValue),@0,data)];
+        [cb executeWithArguments:ACArgsPack(error,data)];
+    });
 }
 //24.拷贝文件
-- (void)copyFile:(NSMutableArray *)inArguments
-{
-    
-    NSString * inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    NSString * inPath = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:1]);
-    NSString * toPath = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:2]);
-    
-    NSString *string = @"/";
-    NSRange range = [inPath rangeOfString:string options:NSBackwardsSearch];
-    
-    NSString *filestring = [inPath substringFromIndex:range.location + 1];
-    NSLog(@"%@",filestring);
-    NSString *path = [NSString stringWithFormat:@"%@/%@",toPath,filestring];
-    NSLog(@"%@",path);
-    inPath = [self absPath:inPath];
-    toPath = [self absPath:path];
-    NSFileManager *manager = [NSFileManager defaultManager];
-    
-    NSError *error = [[NSError alloc]init];
-    BOOL isCopySuc = [manager copyItemAtPath:inPath toPath:toPath error:&error];
-    
-    if (isCopySuc) {
-        [self jsSuccessWithName:@"uexFileMgr.cbCopyFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CSUCCESS];
-    }
-    else
-    {
-        [self jsSuccessWithName:@"uexFileMgr.cbCopyFile" opId:[inOpId intValue] dataType:UEX_CALLBACK_DATATYPE_INT intData:UEX_CFAILED];
-    }
-    
-    
+- (void)copyFile:(NSMutableArray *)inArguments{
+
+    ACArgsUnpack(NSString *inOpId,NSString *inPath,NSString *toPath,ACJSFunctionRef *cb) = inArguments;
+
+
+    NSString *fileName = [inPath lastPathComponent];
+    toPath = [toPath stringByAppendingPathComponent:fileName];
+    UEX_DO_IN_BACKGROUND(^{
+        BOOL result = [[NSFileManager defaultManager] copyItemAtPath:[self absPath:inPath]
+                                                              toPath:[self absPath:toPath]
+                                                               error:nil];
+        [self intCallbackWithFunc:@"uexFileMgr.cbCopyFile" opid:inOpId isSuccess:result];
+        [cb executeWithArguments:ACArgsPack(@(result))];
+    });
 }
+
 
 
 //获取文件的创建时间
--(void)getFileCreateTime:(NSMutableArray *)inArguments{
-    NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    NSString *path = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:1]);
-     path =[super absPath:path];
-    NSFileManager *fmanager;
-    fmanager = [NSFileManager defaultManager];
-    NSDictionary *fileAttributes = [fmanager attributesOfItemAtPath:path error:nil];
-
-    NSString *time = [fileAttributes objectForKey:NSFileModificationDate];
-    NSDate *localeDate =[fileAttributes objectForKey:NSFileCreationDate];
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-    NSString *destDateString = [dateFormatter stringFromDate:localeDate];
-
-    if (time) {
-        [self jsSuccessWithName:@"uexFileMgr.cbGetFileCreateTime" opId:[inOpId intValue] dataType:0 strData:destDateString];
+- (NSString *)getFileCreateTime:(NSMutableArray *)inArguments{
+    NSString *path = stringArg(inArguments.lastObject);
+    NSString *inOpid = inArguments.count > 1 ? stringArg(inArguments[0]) : nil;
+    NSString *dateStr = nil;
+    
+    NSDictionary *fileAttributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[self absPath:path] error:nil];
+    NSDate *creationDate =[fileAttributes objectForKey:NSFileCreationDate];
+    if (creationDate) {
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        dateStr = [dateFormatter stringFromDate:creationDate];
     }
+    
+    [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileCreateTime" arguments:ACArgsPack(@(inOpid.integerValue),@0,dateStr)];
+    return dateStr;
 }
 
 
 
 //真实路径
--(void)getFileRealPath:(NSMutableArray *)inArguments {
-    
-    if ([inArguments count] < 1) {
-        return;
+- (NSString *)getFileRealPath:(NSMutableArray *)inArguments {
+
+
+    ACArgsUnpack(NSString *inPath,NSString *cbFuncName) = inArguments;
+    if (!inPath || inPath.length == 0) {
+        return nil;
     }
     
-    NSString *inPath = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-    
+
     NSString *outPath = [self absPath:inPath];
-    
-    if ([inArguments count] > 1) {
-        NSString * fun = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:1]);
-        
-        if (outPath) {
-            NSString * jsStr = [NSString stringWithFormat:@"uexFileMgr.%@(\"%@\")",fun,outPath];
-            
-            [(UIWebView *)self.meBrwView stringByEvaluatingJavaScriptFromString:jsStr];
-        }
-        
-    } else {
-        
-        if (outPath) {
-            [self jsSuccessWithName:@"uexFileMgr.cbGetFileRealPath" opId:0 dataType:UEX_CALLBACK_DATATYPE_TEXT strData:outPath];
-        }
-        
+    if (cbFuncName && cbFuncName.length > 0) {
+        [self.webViewEngine callbackWithFunctionKeyPath:[@"uexFileMgr." stringByAppendingString:cbFuncName] arguments:ACArgsPack(outPath)];
+    }else{
+        [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileRealPath" arguments:ACArgsPack(outPath)];
     }
-    
-    
+    return outPath;
 }
 
-//真实路径
--(void)getFileListByPath:(NSMutableArray *)inArguments {
-    if ([inArguments isKindOfClass:[NSMutableArray class]] && [inArguments count]>0) {
-        @autoreleasepool {
-            NSString *inPath = UEX_FILE_MGR_STRING_VALUE([inArguments objectAtIndex:0]);
-            if ([inPath isKindOfClass:[NSString class]] && inPath.length>0) {
-                NSString *path = [super absPath:inPath];
-                //判断文件是否存在
-                NSFileManager *fmanager = [NSFileManager defaultManager];
-                if ([fmanager fileExistsAtPath:path]) {
-                    //判断是否是文件夹
-                    if ([File fileisDirectoy:path]) {
-                        //NSArray *files = [fmanager subpathsAtPath:path];
-                        NSError *error=nil;
-                        NSArray *files = [fmanager contentsOfDirectoryAtPath:path error:&error];
-                        if(error){
-                            [self jsSuccessWithName:@"uexFileMgr.cbGetFileListByPath" opId:0 dataType:UEX_CALLBACK_DATATYPE_TEXT strData:@""];
-                            return;
-                        }
-                        NSMutableArray *array_ = [NSMutableArray arrayWithCapacity:2];
-                        if ([files isKindOfClass:[NSArray class]] && [files count]>0) {
-                            for (NSString *fileName in files) {
-                                NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:1];
-                                [dict setObject:fileName forKey:@"fileName"];
-                                [dict setObject:[path stringByAppendingPathComponent:[NSString stringWithFormat:@"%@",fileName]] forKey:@"filePath"];
-                                if ([File fileisDirectoy:fileName]) {
-                                    [dict setObject:@"1" forKey:@"fileType"];
-                                }else{
-                                    [dict setObject:@"0" forKey:@"fileType"];
-                                }
-                                [array_ addObject:dict];
-                            }
-                        }else{
-                            
-                        }
-                        [self jsSuccessWithName:@"uexFileMgr.cbGetFileListByPath" opId:0 dataType:UEX_CALLBACK_DATATYPE_TEXT strData:[array_ JSONFragment]];
-                    }
-                }else{
-                    [self jsSuccessWithName:@"uexFileMgr.cbGetFileListByPath" opId:0 dataType:UEX_CALLBACK_DATATYPE_TEXT strData:@""];
-                }
-            }else{
-                [self jsSuccessWithName:@"uexFileMgr.cbGetFileListByPath" opId:0 dataType:UEX_CALLBACK_DATATYPE_TEXT strData:@""];
-            }
-        }
-    }
-}
 
--(void)uexOnFileMgrExplorerWithOpId:(int)inOpId dataType:(int)inDataType data:(NSString*)inData{
-    inData =[inData stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    [self jsSuccessWithName:@"uexFileMgr.cbExplorer" opId:inOpId dataType:inDataType strData:inData];
+- (NSArray *)getFileListByPath:(NSMutableArray *)inArguments {
+    ACArgsUnpack(NSString *path) = inArguments;
+    __block NSMutableArray *result = nil;
+    @onExit{
+        [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileListByPath" arguments:ACArgsPack(@0,@0,[result ac_JSONFragment])];
+    };
+    BOOL isDir = NO;
+    NSFileManager *mgr = [NSFileManager defaultManager];
+    path = [self absPath:path];
+    if (![mgr fileExistsAtPath:path isDirectory:&isDir] || !isDir) {
+        return result;
+    }
+    result = [NSMutableArray array];
+    [[mgr contentsOfDirectoryAtPath:path error:nil] enumerateObjectsUsingBlock:^(NSString * _Nonnull fileName, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSMutableDictionary *info = [NSMutableDictionary dictionary];
+        [info setValue:fileName forKey:@"fileName"];
+        NSString *filePath = [path stringByAppendingPathComponent:fileName];
+        [info setValue:filePath forKey:@"filePath"];
+        BOOL isDir = NO;
+        [mgr fileExistsAtPath:filePath isDirectory:&isDir];
+        NSNumber *fileType = isDir ? @1 : @0;
+        [info setValue:fileType forKey:@"fileType"];
+        [result addObject:info];
+    }];
+    return  result;
+
 }
 
 /**
  *  重命名文件
  */
--(void)renameFile:(NSMutableArray *)inArguments{
+- (void)renameFile:(NSMutableArray *)inArguments{
+    ACArgsUnpack(NSDictionary *info,ACJSFunctionRef *cb) = inArguments;
+    __block UEX_ERROR err = kUexNoError;
+    void (^callback)(NSInteger) = ^(NSInteger result){
+        NSDictionary *resultDict = @{@"result":@(result)};
+        [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbRenameFile" arguments:ACArgsPack(resultDict.ac_JSONFragment)];
+        [cb executeWithArguments:ACArgsPack(err)];
+    };
+    NSString *oldPath = stringArg(info[@"oldFilePath"]);
+    NSString *newPath = stringArg(info[@"newFilePath"]);
     
-    if([inArguments count]<1){
-        [self cbRenameFile:0];
+    if (!oldPath || !newPath) {
+        callback(0);
         return;
-    }
-    NSError *error=nil;
-    NSData *jsonData= [inArguments[0] dataUsingEncoding:NSUTF8StringEncoding];
-    id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                    options:NSJSONReadingMutableContainers
-                                                      error:&error];
-
-    if(error||![jsonObject objectForKey:@"oldFilePath"]||![jsonObject objectForKey:@"newFilePath"]){
-        [self cbRenameFile:0];
-        return;
-    }
-    NSFileManager *fmgr = [NSFileManager defaultManager];
-    NSString *oldFilePath=[self absPath:[jsonObject objectForKey:@"oldFilePath"]];
-    NSString *newFilePath=[self absPath:[jsonObject objectForKey:@"newFilePath"]];
-    [fmgr moveItemAtPath:oldFilePath toPath:newFilePath error:&error];
-    if(error){
-        [self cbRenameFile:0];
-    }else{
-        [self cbRenameFile:1];
     }
     
-}
-
--(void)cbRenameFile:(NSInteger)type{
-    NSDictionary *dict;
-    if(type == 0){
-        dict=@{@"result":@"0"};
-    }else if(type == 1){
-        dict=@{@"result":@"1"};
-    }else return;
-
-    NSString *callBackStr=[NSString stringWithFormat:@"if(uexFileMgr.cbRenameFile != null){uexFileMgr.cbRenameFile('%@');}",[dict JSONFragment]];
-    [EUtility brwView:meBrwView evaluateScript:callBackStr];
-}
-
-
--(void)search:(NSMutableArray *)inArguments{
-    if([inArguments count]<1){
-        [self cbSearch:NO result:nil];
-        return;
-    }
-    id info =[inArguments[0] JSONValue];
-    if(![info isKindOfClass:[NSDictionary class]]||![info objectForKey:@"path"]||![[info objectForKey:@"path"] isKindOfClass:[NSString class]]){
-        [self cbSearch:NO result:nil];
-        return;
-    }
-    uexFileMgrSearchOption opt =uexFileMgrSearchNone;
-    if([info objectForKey:@"option"]){
-        NSInteger num=[[info objectForKey:@"option"] integerValue];
-        if(num >-1 && num <9){
-            opt=(uexFileMgrSearchOption)num;
+    UEX_DO_IN_BACKGROUND(^{
+        NSError *error = nil;
+        
+        BOOL suc =[[NSFileManager defaultManager] moveItemAtPath:[self absPath:oldPath]
+                                                          toPath:[self absPath:newPath]
+                                                           error:&error];
+        NSInteger result = 0;
+        if (suc && !error) {
+            result = 1;
+            err = uexErrorMake(1,error.localizedDescription);
         }
-    }
-    NSArray *keywords=nil;
+        callback(result);
+    });
+
+}
+
+
+
+- (void)search:(NSMutableArray *)inArguments{
     
-    if([info objectForKey:@"keywords"] && [[info objectForKey:@"keywords"] isKindOfClass:[NSArray class]]){
-        keywords=[info objectForKey:@"keywords"];
-    }
-    NSArray * suffixes=nil;
-    if([info objectForKey:@"suffixes"] && [[info objectForKey:@"suffixes"] isKindOfClass:[NSArray class]]){
-        suffixes=[info objectForKey:@"suffixes"];
+    ACArgsUnpack(NSDictionary *info,ACJSFunctionRef *cb) = inArguments;
+    NSString *path = stringArg(info[@"path"]);
+    void (^callback)(BOOL isSuccess,NSArray *result) = ^(BOOL isSuccess,NSArray *result){
+        NSMutableDictionary *dict =[NSMutableDictionary dictionary];
+        UEX_ERROR err = kUexNoError;
+        if(isSuccess){
+            [dict setValue:@(YES) forKey:@"isSuccess"];
+            [dict setValue:result forKey:@"result"];
+        }else{
+            err = uexErrorMake(1,@"search failed");
+            [dict setValue:@(NO) forKey:@"isSuccess"];
+        }
+        [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbSearch" arguments:ACArgsPack([dict ac_JSONFragment])];
+        [cb executeWithArguments:ACArgsPack(err,result)];
+    };
+    
+    if (!path || path.length == 0) {
+        callback(NO,nil);
+        return;
     }
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    
+    
+    uexFileMgrSearchOption opt =uexFileMgrSearchNone;
+    NSNumber *optNum = numberArg(info[@"option"]);
+    if (!optNum) {
+        optNum = numberArg(info[@"flag"]);
+    }
+    if (optNum) {
+        opt = optNum.integerValue;
+    }
+
+    NSArray *keywords = arrayArg(info[@"keywords"]);
+    NSArray *suffixes = arrayArg(info[@"suffixes"]);
+    UEX_DO_IN_BACKGROUND(^{
         [EUExFile searchFilesByPath:[self absPath:[info objectForKey:@"path"]]
                              option:opt
                            keywords:keywords
                            suffixes:suffixes
-                         conpletion:^(BOOL isSuccess, NSArray *result) {
-                             [self cbSearch:isSuccess result:result];
-                         }];
+                         completion:callback];
     });
     
-    
-    
+
+
+
 }
 
 
--(void)cbSearch:(BOOL)isSuccess result:(NSArray *)result{
-    NSMutableDictionary *dict =[NSMutableDictionary dictionary];
+
+//1.使用密钥创建本地文件
+- (UEX_BOOL)createSecure:(NSMutableArray *)inArguments {
+    ACArgsUnpack(NSString *inOpId,NSString *inPath,NSString *inKey) = inArguments;
+    __block BOOL result = NO;
+    @onExit{
+        [self intCallbackWithFunc:@"uexFileMgr.cbCreateSecure" opid:inOpId isSuccess:result];
+    };
     
-    if(isSuccess){
-        [dict setValue:@(YES) forKey:@"isSuccess"];
-        [dict setValue:result forKey:@"result"];
-        
-    }else{
-        [dict setValue:@(NO) forKey:@"isSuccess"];
+
+    EUExFile *uexFile;
+    if ([self.fobjDict objectForKey:inOpId]) {
+        return UEX_FALSE;
     }
-    NSString *cbStr=[NSString stringWithFormat:@"if(uexFileMgr.cbSearch != null){uexFileMgr.cbSearch('%@');}",[dict JSONFragment]];
-    [EUtility brwView:meBrwView evaluateScript:cbStr];
+    uexFile=[[EUExFile alloc]init];
+    inPath =[self absPath:inPath];
+    
+    BOOL isCreateFileSuccess = [uexFile initWithFileType:F_TYPE_FILE path:inPath mode:F_FILE_OPEN_MODE_NEW euexObj:self];
+    if (!isCreateFileSuccess) {
+        return UEX_FALSE;
+    }
+    //保存key
+    if (inKey && inKey.length > 0) {
+        [uexFile setKeyString:inKey];
+    }
+    [self.fobjDict setObject:uexFile forKey:inOpId];
+    result = YES;
+    return UEX_TRUE;
+}
 
+//2.使用密钥打开本地文件
+- (UEX_BOOL)openSecure:(NSMutableArray *)inArguments {
+    ACArgsUnpack(NSString *inOpId,NSString *inPath,NSString *inMode,NSString *inKey) = inArguments;
+    __block BOOL result = NO;
+    @onExit{
+        [self intCallbackWithFunc:@"uexFileMgr.cbOpenSecure" opid:inOpId isSuccess:result];
+    };
+    EUExFile *uexFile = [self.fobjDict objectForKey:inOpId];
+    if (uexFile) {
+        return UEX_FALSE;
+    }
+    uexFile = [[EUExFile alloc] init];
+    inPath =[self absPath:inPath];
+    BOOL isCreateFileSuccess = [uexFile initWithFileType:F_TYPE_FILE path:inPath mode:[inMode intValue] euexObj:self];
+
+    if (!isCreateFileSuccess) {
+        return UEX_FALSE;
+    }
+    //保存key
+    if (inKey && inKey.length > 0) {
+        [uexFile setKeyString:inKey];
+    }
+    [self.fobjDict setObject:uexFile forKey:inOpId];
+    result = YES;
+    return UEX_TRUE;
+}
+
+#pragma mark - 4.0 API
+
+- (NSString *)create:(NSMutableArray *)inArguments{
+    ACArgsUnpack(NSDictionary *info) = inArguments;
+    NSString *path = [self absPath:stringArg(info[@"path"])];
+    NSString *opid = stringArg(info[@"id"]) ?: newUUID();
+    if (self.fobjDict[opid] || !path) {
+        return nil;
+    }
+    
+    EUExFile *uexFile=[[EUExFile alloc] init];
+    BOOL isSuccess = [uexFile initWithFileType:F_TYPE_FILE path:path mode:F_FILE_OPEN_MODE_NEW euexObj:self];
+    if (!isSuccess) {
+        return nil;
+    }
+    
+    [self.fobjDict setValue:uexFile forKey:opid];
+    
+    return opid;
+}
+
+- (UEX_BOOL)mkdir:(NSMutableArray *)inArguments{
+    ACArgsUnpack(NSDictionary *info) = inArguments;
+    NSString *path = [self absPath:stringArg(info[@"path"])];
+    EUExFile *uexFile = [[EUExFile alloc] init];
+    BOOL isSuccess = [uexFile initWithFileType:F_TYPE_DIR path:path mode:F_FILE_OPEN_MODE_NEW euexObj:self];
+    return isSuccess ? UEX_TRUE : UEX_FALSE;
+}
+
+- (NSString *)open:(NSMutableArray *)inArguments{
+    ACArgsUnpack(NSDictionary *info) = inArguments;
+    NSString *path = [self absPath:stringArg(info[@"path"])];
+    NSNumber *modeNum = numberArg(info[@"mode"]);
+    NSString *opid = stringArg(info[@"id"]) ?: newUUID();
+    if (!path || !modeNum) {
+        ACLogDebug(@"file open error - invalid parameters with path:%@ mode:%@",path,modeNum);
+        return nil;
+    }
+
+    EUExFile *uexFile = [self.fobjDict objectForKey:opid];
+    if (uexFile) {
+        if ([uexFile initWithFileType:F_TYPE_FILE path:path mode:[modeNum intValue] euexObj:self]) {
+            return opid;
+        }else{
+            return nil;
+        }
+    }
+    uexFile = [[EUExFile alloc] init];
+    BOOL isSuccess = [uexFile initWithFileType:F_TYPE_FILE path:path mode:[modeNum intValue] euexObj:self];
+    if (!isSuccess) {
+        return nil;
+    }
+    [self.fobjDict setValue:uexFile forKey:opid];
+    return opid;
+}
+
+- (void)copy:(NSMutableArray *)inArguments{
+    ACArgsUnpack(NSDictionary *info,ACJSFunctionRef *cbFunc) = inArguments;
+    NSString *src = stringArg(info[@"src"]);
+    NSString *target = stringArg(info[@"target"]);
+    __block UEX_ERROR err = kUexNoError;
+    void (^callback)() = ^{
+        [cbFunc executeWithArguments:ACArgsPack(err)];
+    };
+    if (!src || !target) {
+        err = uexErrorMake(1,@"copy parameters error");
+        callback();
+        return;
+    }
+    UEX_DO_IN_BACKGROUND(^{
+        
+        @onExit{
+            callback(err);
+        };
+        NSError *error = nil;
+        NSFileManager *fm = [NSFileManager defaultManager];
+        NSString *srcPath = [self absPath:src];
+
+        if (![fm fileExistsAtPath:srcPath]) {
+            err = uexErrorMake(1,@"copy error: source path invalid");
+            return;
+        }
+        NSString *desFolderPath = [self absPath:target];
+        BOOL isFolder = NO;
+        if (![fm fileExistsAtPath:desFolderPath isDirectory:&isFolder] || !isFolder) {
+            err = uexErrorMake(1,@"copy error: target folder not exist");
+            return;
+        }
+        if (![[NSFileManager defaultManager]copyItemAtPath:srcPath toPath:[desFolderPath stringByAppendingPathComponent:srcPath.lastPathComponent] error:&error] || error) {
+            err = uexErrorMake(1,@"copy error",@{@"info":error.localizedDescription});
+            return;
+        }
+    });
+}
+
+- (NSString *)createWithPassword:(NSMutableArray *)inArguments{
+    ACArgsUnpack(NSDictionary *info) = inArguments;
+    NSString *opid = stringArg(info[@"id"]) ?: newUUID();
+    NSString *path = stringArg(info[@"path"]);
+    NSString *password = stringArg(info[@"password"]);
+    if (!path || !password || password.length == 0 || self.fobjDict[opid]) {
+        return nil;
+    }
+    NSString *truePath = [self absPath:path];
+    EUExFile *file = [[EUExFile alloc]init];
+    if (![file initWithFileType:F_TYPE_FILE path:truePath mode:F_FILE_OPEN_MODE_NEW euexObj:self]) {
+        return nil;
+    }
+    [file setKeyString:password];
+    [self.fobjDict setValue:file forKey:opid];
+    return opid;
+}
+
+
+- (NSString *)openWithPassword:(NSMutableArray *)inArguments{
+    ACArgsUnpack(NSDictionary *info) = inArguments;
+    NSString *opid = stringArg(info[@"id"]) ?: newUUID();
+    NSString *path = stringArg(info[@"path"]);
+    NSString *password = stringArg(info[@"password"]);
+    NSNumber *modeNum = numberArg(info[@"mode"]);
+    if (!path || !password || !modeNum || self.fobjDict[opid]) {
+        return nil;
+    }
+    NSString *truePath = [self absPath:path];
+    EUExFile *file = [[EUExFile alloc]init];
+    if (![file initWithFileType:F_TYPE_FILE path:truePath mode:[modeNum intValue] euexObj:self]) {
+        return nil;
+    }
+    [file setKeyString:password];
+    [self.fobjDict setValue:file forKey:opid];
+    return opid;
+}
+
+
+
+
+
+//获取哈希值
+- (void)getFileHashValue:(NSMutableArray *)inArguments {
+    ACArgsUnpack(NSDictionary *info,ACJSFunctionRef *cb) = inArguments;
+    NSString *path = [self absPath:stringArg(info[@"path"])];
+    NSString *type = stringArg(info[@"algorithm"]);
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        __block NSString *result = nil;
+        
+        @onExit{
+            [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileHashValue" arguments:ACArgsPack(@0,@0,result ?: @"获取失败")];
+            [cb executeWithArguments:ACArgsPack(result)];
+        };
+        NSString *hash = nil;
+        if ([type.lowercaseString isEqualToString:@"sha-1"]) {
+            hash = [[uexFileHashCalculator SHA1Calculator] hashOfFileAtPath:path];
+        }else{
+            hash = [[uexFileHashCalculator MD5Calculator] hashOfFileAtPath:path];
+        }
+        if (hash && hash.length > 0) {
+            result = hash;
+        }
+    });
     
 }
 
--(void)clean{
 
-    [fobjDict removeAllObjects];
+
+
+
+
+
+
+
+#pragma mark - UUID
+
+static inline NSString * newUUID(){
+    return [NSUUID UUID].UUIDString;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 @end

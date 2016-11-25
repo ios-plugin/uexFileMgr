@@ -7,7 +7,7 @@
 //
 
 #import "FileSelectorViewController.h"
-#import "EUtility.h"
+
 #import "FileExplorerItem.h"
 #import "File.h"
 
@@ -82,29 +82,10 @@
     self.navigationItem.title = UEX_LOCALIZEDSTRING(@"文件浏览器");
     
 
-//	 if ([UIApplication sharedApplication].statusBarHidden) {
-//		 headView = [[UIView alloc] initWithFrame:CGRectMake(0,44, [EUtility screenWidth], 20)];
-//	 }else {
-//		 headView = [[UIView alloc] initWithFrame:CGRectMake(0,64, [EUtility screenWidth], 20)];
-//	 }
 
-//	headLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 2, [EUtility screenWidth], 16)];
-//	[headLabel setBackgroundColor:[UIColor clearColor]];
-//	[headView addSubview:headLabel];
-//	[self.navigationController.view  addSubview:headView];
-    CGRect rect;
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    if (__IPHONE_OS_VERSION_MAX_ALLOWED>=__IPHONE_7_0) {
-//        [headView setBackgroundColor:[UIColor whiteColor]];
-        rect = CGRectMake(0,0, screenRect.size.width, screenRect.size.height-20);
-    }else{
-//        [headView setBackgroundColor:[UIColor colorWithRed:147/255.0 green:147/255.0 blue:147/255.0 alpha:1.0]];
-        rect =CGRectMake(0,20, [EUtility screenWidth], [EUtility screenHeight]-64);
-//      	self.navigationController.navigationBar.barStyle = UIBarStyleBlackOpaque;
-    }
-    
+
 //    NSLog(@"%@", NSStringFromCGRect(rect));
-	fTableView = [[UITableView alloc] initWithFrame:rect];
+	fTableView = [[UITableView alloc] initWithFrame:self.view.frame];
 	[fTableView setDelegate:self];
 	[fTableView setDataSource:self];
 	[self.view addSubview:fTableView];
@@ -199,7 +180,7 @@
     //如果有问题换成[[NSMutableString alloc]initWithString:chuanRuPath]；
     if ([currentPath isEqualToString:_chuanRuPath]) {
 		[self.navigationItem.leftBarButtonItem setEnabled:NO];
-        if(_delegate!=nil && [_delegate respondsToSelector: @selector(fileSelectCancled:)] == YES){
+        if(_delegate!=nil && [_delegate respondsToSelector: @selector(fileSelectCancled:)]){
             [_delegate fileSelectCancled:self];
         }
         
@@ -207,7 +188,6 @@
 	}
 	[currentPath setString:[currentPath stringByDeletingLastPathComponent]];
  	[self loadData:currentPath];
- 
 	[self.fTableView reloadData];
 }
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -216,7 +196,7 @@
  
 	NSString *fileName = item.fileName;
 	[currentPath setString:[currentPath stringByAppendingPathComponent:fileName]];
-	if ([item.itemType intValue]==1&&[item.subItems count]==0) {
+	if ([item.itemType intValue] == 1 && [item.subItems count] == 0) {
 		[currentPath setString:[currentPath stringByDeletingLastPathComponent]];
 		return;
 	}
@@ -231,10 +211,9 @@
 		[self.fTableView reloadData];
 	}else {
 		//file
-		if(_delegate!=nil && [_delegate respondsToSelector: @selector(fileSelectEnded:)] == YES){			
+		if(_delegate!=nil && [_delegate respondsToSelector: @selector(fileSelectEnded:)]){
 			[_delegate fileSelectEnded:currentPath];		
-		}		
-		[self dismissModalViewControllerAnimated:YES];	
+		}
 	}
 }
 

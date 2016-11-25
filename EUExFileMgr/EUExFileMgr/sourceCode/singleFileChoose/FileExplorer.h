@@ -9,8 +9,10 @@
 #import <Foundation/Foundation.h>
 #import "FileSelectorViewController.h"
 @class EUExFileMgr;
-@interface FileExplorer : NSObject <FileSelectorDelegate>{
-	EUExFileMgr *euexObj;
-}
--(void)openWithEuex:(EUExFileMgr *)euexObj_ rootPath:(NSString *)inPath;
+@interface FileExplorer : NSObject <FileSelectorDelegate>
+
+- (instancetype)initWithEUExObj:(EUExFileMgr *)euexObj rootPath:(NSString *)path;
+- (void)presentControllerWithCompletion:(void (^)(NSString *selectedPath))completion;
+
+
 @end

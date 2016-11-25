@@ -6,17 +6,13 @@
 	<dict>
 		<key>Info.plist</key>
 		<data>
-		JSy1pI4y9b8l/xTJJL2P67XImEM=
-		</data>
-		<key>embedded.mobileprovision</key>
-		<data>
-		JKbXoT98W7zj86Z2W3qbeHZe/kE=
+		d1hkBPvF3Szh9JIRGbBUG1ZvGqk=
 		</data>
 		<key>uexFileMgr.bundle/en.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			LNDg4QOXK8Nm+NP8gosTpaDTeB0=
+			q1Zw9ECvsXR41OWs1XdhYc7Vi5U=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -141,7 +137,7 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			w9cURdYeDpMnQ/UARVmsD6yJ6IM=
+			KqFNhufC21RfHVnJiLEv4OchPaA=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -149,26 +145,15 @@
 	</dict>
 	<key>files2</key>
 	<dict>
-		<key>embedded.mobileprovision</key>
-		<dict>
-			<key>hash</key>
-			<data>
-			JKbXoT98W7zj86Z2W3qbeHZe/kE=
-			</data>
-			<key>hash2</key>
-			<data>
-			0p8akoZIUNhnEHSrm+cwtP59I1VEbMUe0Gn2IpgCK98=
-			</data>
-		</dict>
 		<key>uexFileMgr.bundle/en.lproj/Localizable.strings</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			LNDg4QOXK8Nm+NP8gosTpaDTeB0=
+			q1Zw9ECvsXR41OWs1XdhYc7Vi5U=
 			</data>
 			<key>hash2</key>
 			<data>
-			ZMjr/e6M7NZ5SecLz1oFEdkv6GjPWJbaDP2HQekKWIk=
+			EwfGtSqSnvpk4Uo+O2ML0tFdBTfWWbCJTO8o9Tmq7sk=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -496,11 +481,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			w9cURdYeDpMnQ/UARVmsD6yJ6IM=
+			KqFNhufC21RfHVnJiLEv4OchPaA=
 			</data>
 			<key>hash2</key>
 			<data>
-			ExtzdOWD38fSZ0I2Pb66v61rKVfy5SkKrtKzBfGszX0=
+			zDLIkM2JmrSJlXRCg0ds1deBr3Cd7OpVRgvh+qg+12g=
 			</data>
 			<key>optional</key>
 			<true/>
@@ -523,6 +508,11 @@
 			<true/>
 			<key>weight</key>
 			<real>1100</real>
+		</dict>
+		<key>^Base\.lproj/</key>
+		<dict>
+			<key>weight</key>
+			<real>1010</real>
 		</dict>
 		<key>^version.plist$</key>
 		<true/>
@@ -568,6 +558,11 @@
 			<true/>
 			<key>weight</key>
 			<real>1100</real>
+		</dict>
+		<key>^Base\.lproj/</key>
+		<dict>
+			<key>weight</key>
+			<real>1010</real>
 		</dict>
 		<key>^Info\.plist$</key>
 		<dict>

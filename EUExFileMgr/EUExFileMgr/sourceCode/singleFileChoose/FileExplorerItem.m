@@ -8,7 +8,7 @@
 
 #import "FileExplorerItem.h"
 #import "File.h"
-#import "EUtility.h"
+
 @implementation FileExplorerItem
 @synthesize itemType,fileIcon,fileCreateTime,fileSize,fileName,fileType,subItems;
 -(void)setFileTypeWithName:(NSString *)filename{
@@ -75,7 +75,7 @@
         NSString *dateStr = [df stringFromDate:filedate];
   
         self.fileCreateTime = dateStr;
-        self.fileSize = [NSNumber numberWithInt:[File getFileLength:inPath]];
+        self.fileSize = @([File getFileLength:inPath]);
         
         return self;
     }else{

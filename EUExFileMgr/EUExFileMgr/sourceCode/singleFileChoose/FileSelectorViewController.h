@@ -11,7 +11,7 @@
 @protocol FileSelectorDelegate <NSObject>
 
 - (void)fileSelectEnded:(NSString *)filepath; 
-- (void)fileSelectCancled:(id)filePicker;
+- (void)fileSelectCancled:(UIViewController *)filePicker;
 
 @end
 
