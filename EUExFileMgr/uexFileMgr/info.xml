@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <uexplugins>
     <plugin
-        uexName="uexFileMgr" version="4.0.1" build="1">
-        <info>1:新增getFileHashValue接口</info>
+        uexName="uexFileMgr" version="4.0.2" build="2">
+        <info>2:兼容性更新</info>
+        <build>1:新增getFileHashValue接口</build>
         <build>0:文件管理插件</build>
     </plugin>
 </uexplugins>

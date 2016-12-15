@@ -240,7 +240,7 @@
     NSString *inPath = nil;
     __block BOOL result = NO;
     @onExit{
-        [self intCallbackWithFunc:@"uexFileMgr.cbIsFileExistByPath" opid:inOpId isSuccess:result];
+        [self intCallbackWithFunc:@"uexFileMgr.cbIsFileExistByPath" opid:inOpId isSuccess:!result];
     };
     if ([inArguments count] == 0) {
         return UEX_FALSE;
@@ -267,7 +267,7 @@
     if (object) {
         result = [File fileIsExist:object.appFilePath];
     }
-    [self intCallbackWithFunc:@"uexFileMgr.cbIsFileExistById" opid:inOpId isSuccess:result];
+    [self intCallbackWithFunc:@"uexFileMgr.cbIsFileExistById" opid:inOpId isSuccess:!result];
     return result ? UEX_TRUE : UEX_FALSE;
 }
 
