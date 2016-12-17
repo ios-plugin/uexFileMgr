@@ -236,7 +236,7 @@
 
 //9.根据路径判断文件存在
 - (UEX_BOOL)isFileExistByPath:(NSMutableArray *)inArguments {
-    NSString *inOpId = nil;
+    __block NSString *inOpId = nil;
     NSString *inPath = nil;
     __block BOOL result = NO;
     @onExit{
@@ -638,7 +638,7 @@
     if (cbFuncName && cbFuncName.length > 0) {
         [self.webViewEngine callbackWithFunctionKeyPath:[@"uexFileMgr." stringByAppendingString:cbFuncName] arguments:ACArgsPack(outPath)];
     }else{
-        [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileRealPath" arguments:ACArgsPack(outPath)];
+        [self.webViewEngine callbackWithFunctionKeyPath:@"uexFileMgr.cbGetFileRealPath" arguments:ACArgsPack(@0,@0,outPath)];
     }
     return outPath;
 }
