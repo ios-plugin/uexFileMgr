@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <uexplugins>
     <plugin
-        uexName="uexFileMgr" version="4.0.2" build="2">
-        <info>2:兼容性更新</info>
+        uexName="uexFileMgr" version="4.0.3" build="3">
+        <info>3:修正部分cb旧接口的参数问题</info>
+        <build>2:兼容性更新</build>
         <build>1:新增getFileHashValue接口</build>
         <build>0:文件管理插件</build>
     </plugin>
