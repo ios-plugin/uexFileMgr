@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <uexplugins>
     <plugin
-        uexName="uexFileMgr" version="4.0.3" build="3">
-        <info>3:修正部分cb旧接口的参数问题</info>
+        uexName="uexFileMgr" version="4.0.4" build="4">
+        <info>4:修复getFileSizeByPath方法传入非文件夹路径时返回大小为0的bug</info>
+        <build>3:修正部分cb旧接口的参数问题</build>
         <build>2:兼容性更新</build>
         <build>1:新增getFileHashValue接口</build>
         <build>0:文件管理插件</build>
