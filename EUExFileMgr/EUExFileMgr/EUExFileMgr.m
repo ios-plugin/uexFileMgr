@@ -657,6 +657,9 @@ done:
     if(inArguments.count <1){
         return;
     }
+    
+    NSLog(@"appcan-->EUExFileMgr-->getFileSizeByPath-->inArguments = %@", inArguments);
+    
     id info =[inArguments[0] JSONValue];
     NSString *inOpId = UEX_FILE_MGR_STRING_VALUE([info objectForKey:@"id"]);
     NSString *inPath = [info objectForKey:@"path"];
@@ -686,6 +689,8 @@ done:
     [result setValue:@(folderSize) forKey:@"data"];
     [result setValue:unit forKey:@"unit"];
     
+    NSLog(@"appcan-->EUExFileMgr-->getFileSizeByPath-->result = %@", [result JSONFragment]);
+    
     NSString *cbStr=[NSString stringWithFormat:@"if(uexFileMgr.cbGetFileSizeByPath != null){uexFileMgr.cbGetFileSizeByPath('%@');}",[result JSONFragment]];
     [EUtility  brwView:meBrwView evaluateScript:cbStr];
 }
@@ -697,15 +702,32 @@ done:
     return 0;
 }
 - (float ) folderSizeAtPath:(NSString*) folderPath{
+    
+    NSLog(@"appcan-->EUExFileMgr-->获取路径文件夹内文件大小 folderSizeAtPath-->传入文件路径为 %@",folderPath);
+    
     NSFileManager* manager = [NSFileManager defaultManager];
-    if (![manager fileExistsAtPath:folderPath]) return 0;
+    if (![manager fileExistsAtPath:folderPath])
+    {
+        NSLog(@"appcan-->EUExFileMgr-->获取路径文件夹内文件大小 folderSizeAtPath-->文件路径不存在");
+        return 0;
+    }
     NSEnumerator *childFilesEnumerator = [[manager subpathsAtPath:folderPath] objectEnumerator];
     NSString* fileName;
     long long folderSize = 0;
+    
+    if ([childFilesEnumerator nextObject] == nil) {
+        folderSize = [[manager attributesOfItemAtPath:folderPath error:nil] fileSize];
+        NSLog(@"appcan-->EUExFileMgr-->获取路径文件夹内文件大小 folderSizeAtPath-->没有子文件 return folderSize = %lld,dic = %@",folderSize,[manager attributesOfItemAtPath:folderPath error:nil]);
+        return folderSize;
+    }
+    
     while ((fileName = [childFilesEnumerator nextObject]) != nil){
         NSString* fileAbsolutePath = [folderPath stringByAppendingPathComponent:fileName];
         folderSize += [self fileSizeAtPath:fileAbsolutePath];
     }
+    
+    NSLog(@"appcan-->EUExFileMgr-->获取路径文件夹内文件大小 folderSizeAtPath-->return folderSize = %lld,dic = %@",folderSize,[manager attributesOfItemAtPath:folderPath error:nil]);
+    
     return folderSize;
 }
 //17.文件大小
