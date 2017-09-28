@@ -466,6 +466,14 @@
     if (![manager fileExistsAtPath:folderPath]){
         return -1;
     }
+    
+    NSEnumerator *childFilesEnumerator = [[manager subpathsAtPath:folderPath] objectEnumerator];
+    if ([childFilesEnumerator nextObject] == nil) {
+        long long oneFolderSize = [[manager attributesOfItemAtPath:folderPath error:nil] fileSize];
+        //NSLog(@"appcan-->EUExFileMgr-->获取路径文件夹内文件大小 folderSizeAtPath-->没有子文件 return folderSize = %lld,dic = %@",oneFolderSize,[manager attributesOfItemAtPath:folderPath error:nil]);
+        return (CGFloat)oneFolderSize;
+    }
+    
     NSArray<NSString *> *subpaths = [manager subpathsAtPath:folderPath];
     __block CGFloat folderSize = 0;
     [subpaths enumerateObjectsUsingBlock:^(NSString * _Nonnull fileName, NSUInteger idx, BOOL * _Nonnull stop) {
