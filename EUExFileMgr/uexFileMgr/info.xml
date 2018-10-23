@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <uexplugins>
-  <plugin uexName="uexFileMgr" version="3.0.29" build="29">
-    <info>29: 修复getFileSizeByPath方法传入非文件夹路径时返回大小为0的bug</info>
+  <plugin uexName="uexFileMgr" version="3.0.29.1" build="2017122201">
+    <info>29.1: Xcode8打包</info>
+    <build>29: 修复getFileSizeByPath方法传入非文件夹路径时返回大小为0的bug</build>
     <build>28: 增加uexFileMgr.getFileHashValue方法获取文件哈希值</build>
     <build>27: IDE证书更新</build>
     <build>26: 修复readFile被错误转义的问题</build>
